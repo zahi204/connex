@@ -1,0 +1,25 @@
+{
+  "app": { "name": "Connex", "tagline": "ניהול משאבים ופרויקטים" },
+  "auth": {
+    "phone_label": "מספר טלפון",
+    "send_otp": "שלח קוד",
+    "enter_otp": "הזן קוד אימות",
+    "verify": "אמת",
+    "select_role": "בחר תפקיד",
+    "roles": {
+      "worker": "עובד",
+      "developer": "יזם / קבלן ראשי",
+      "subcontractor": "קבלן משנה",
+      "agency": "חברת כוח אדם"
+    }
+  },
+  "common": {
+    "save": "שמור",
+    "cancel": "ביטול",
+    "submit": "שלח",
+    "loading": "טוען...",
+    "search": "חיפוש",
+    "filter": "סינון",
+    "actions": "פעולות"
+  }
+}

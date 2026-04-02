@@ -1,0 +1,25 @@
+{
+  "app": { "name": "Connex", "tagline": "Resource & Project Management" },
+  "auth": {
+    "phone_label": "Phone Number",
+    "send_otp": "Send Code",
+    "enter_otp": "Enter Verification Code",
+    "verify": "Verify",
+    "select_role": "Select Your Role",
+    "roles": {
+      "worker": "Worker",
+      "developer": "Developer / Large Contractor",
+      "subcontractor": "Subcontractor",
+      "agency": "Staffing Agency"
+    }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "search": "Search",
+    "filter": "Filter",
+    "actions": "Actions"
+  }
+}

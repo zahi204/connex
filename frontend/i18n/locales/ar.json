@@ -1,0 +1,25 @@
+{
+  "app": { "name": "Connex", "tagline": "إدارة الموارد والمشاريع" },
+  "auth": {
+    "phone_label": "رقم الهاتف",
+    "send_otp": "إرسال الرمز",
+    "enter_otp": "أدخل رمز التحقق",
+    "verify": "تحقق",
+    "select_role": "اختر الدور",
+    "roles": {
+      "worker": "عامل",
+      "developer": "مطور / مقاول رئيسي",
+      "subcontractor": "مقاول من الباطن",
+      "agency": "شركة توظيف"
+    }
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "submit": "إرسال",
+    "loading": "جارٍ التحميل...",
+    "search": "بحث",
+    "filter": "تصفية",
+    "actions": "إجراءات"
+  }
+}

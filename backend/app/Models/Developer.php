@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\Traits\HasApproval;
+use Database\Factories\DeveloperFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
+
+class Developer extends Model
+{
+    /** @use HasFactory<DeveloperFactory> */
+    use HasFactory, SoftDeletes, HasApproval;
+
+    protected $guarded = ['id'];
+
+    protected function casts(): array
+    {
+        return [
+            'areas_of_operation' => 'array',
+            'specializations' => 'array',
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+}
