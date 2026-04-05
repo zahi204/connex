@@ -10,6 +10,10 @@ export default defineNuxtConfig({
     },
   },
 
+  css: [
+    '~/assets/css/design-system.css',
+  ],
+
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/i18n',

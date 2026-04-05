@@ -2,26 +2,30 @@
   <div class="role-page">
     <div class="role-container">
       <h1>{{ $t('auth.select_role') }}</h1>
-      <p class="subtitle">Choose how you'll use Connex</p>
+      <p class="cx-text-muted" style="margin: 0 0 2rem; font-weight: 600;">Choose how you'll use Connex</p>
 
       <div class="roles-grid">
         <button
           v-for="role in roles"
           :key="role.key"
-          class="role-card"
+          class="role-card cx-card"
           :class="{ selected: selectedRole === role.key }"
           @click="selectedRole = role.key"
         >
           <div class="role-icon">{{ role.icon }}</div>
           <div class="role-name">{{ $t(`auth.roles.${role.key}`) }}</div>
-          <div class="role-desc">{{ role.desc }}</div>
+          <div class="role-desc cx-text-muted">{{ role.desc }}</div>
+          <div v-if="selectedRole === role.key" class="selected-indicator">
+            <span class="cx-led cx-led-green" />
+          </div>
         </button>
       </div>
 
-      <div v-if="error" class="error-message">{{ error }}</div>
+      <div v-if="error" class="cx-error" style="margin-bottom: 1.25rem; text-align: center;">{{ error }}</div>
 
       <button
-        class="btn-continue"
+        class="cx-btn cx-btn-primary"
+        style="width: 100%;"
         :disabled="!selectedRole || loading"
         @click="handleContinue"
       >
@@ -73,25 +77,20 @@ const handleContinue = async () => {
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  background: var(--cx-bg-primary);
 }
 
 .role-container {
   text-align: center;
   width: 100%;
-  max-width: 600px;
+  max-width: 640px;
 }
 
 .role-container h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: white;
+  font-size: var(--cx-font-xl);
+  font-weight: 900;
+  color: var(--cx-text-primary);
   margin: 0 0 0.5rem;
-}
-
-.subtitle {
-  color: rgba(255, 255, 255, 0.5);
-  margin: 0 0 2.5rem;
-  font-size: 0.95rem;
 }
 
 .roles-grid {
@@ -102,74 +101,43 @@ const handleContinue = async () => {
 }
 
 .role-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 1.5rem 1rem;
   cursor: pointer;
-  transition: all 0.2s;
   text-align: center;
+  padding: 1.75rem 1.25rem;
+  position: relative;
+  min-height: 140px;
 }
 
 .role-card:hover {
-  border-color: rgba(99, 102, 241, 0.4);
-  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--cx-accent);
 }
 
 .role-card.selected {
-  border-color: #6366f1;
-  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--cx-accent);
+  background: var(--cx-accent-soft);
+  box-shadow: 0 0 20px var(--cx-accent-glow);
 }
 
 .role-icon {
-  font-size: 2rem;
+  font-size: 2.25rem;
   margin-bottom: 0.75rem;
 }
 
 .role-name {
-  color: white;
-  font-weight: 600;
-  font-size: 1rem;
+  color: var(--cx-text-primary);
+  font-weight: 700;
+  font-size: var(--cx-font-sm);
   margin-bottom: 0.4rem;
 }
 
 .role-desc {
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 0.8rem;
-  line-height: 1.3;
+  font-size: var(--cx-font-xs);
+  line-height: 1.4;
 }
 
-.btn-continue {
-  width: 100%;
-  padding: 0.85rem;
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.1s;
-}
-
-.btn-continue:hover:not(:disabled) {
-  opacity: 0.9;
-}
-
-.btn-continue:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.error-message {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  margin-bottom: 1.25rem;
-  text-align: center;
+.selected-indicator {
+  position: absolute;
+  top: 0.75rem;
+  inset-inline-end: 0.75rem;
 }
 </style>

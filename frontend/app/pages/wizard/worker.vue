@@ -1,6 +1,6 @@
 <template>
-  <div class="wizard-page">
-    <h1>Worker Registration</h1>
+  <div class="wizard-page cx-page">
+    <h1 class="cx-page-title" style="text-align: center;">Worker Registration</h1>
     <WizardStepper
       :steps="steps"
       :current-step="step"
@@ -12,69 +12,69 @@
     >
       <template #step-0>
         <div class="form-grid">
-          <div class="field"><label>Full Name *</label><input v-model="form.full_name" type="text" /></div>
-          <div class="field"><label>ID Number</label><input v-model="form.id_number" type="text" /></div>
+          <div class="field"><label class="cx-label">Full Name *</label><input v-model="form.full_name" type="text" class="cx-input" /></div>
+          <div class="field"><label class="cx-label">ID Number</label><input v-model="form.id_number" type="text" class="cx-input cx-mono" /></div>
         </div>
       </template>
       <template #step-1>
         <div class="form-grid">
-          <div class="field"><label>Country of Origin</label><input v-model="form.country_of_origin" type="text" /></div>
-          <div class="field"><label>Languages (comma separated)</label><input v-model="languagesStr" type="text" /></div>
-          <div class="field"><label>Date of Arrival</label><input v-model="form.date_of_arrival" type="date" /></div>
+          <div class="field"><label class="cx-label">Country of Origin</label><input v-model="form.country_of_origin" type="text" class="cx-input" /></div>
+          <div class="field"><label class="cx-label">Languages (comma separated)</label><input v-model="languagesStr" type="text" class="cx-input" /></div>
+          <div class="field"><label class="cx-label">Date of Arrival</label><input v-model="form.date_of_arrival" type="date" class="cx-input cx-mono" /></div>
         </div>
       </template>
       <template #step-2>
         <div class="form-grid">
           <div class="field">
-            <label>Primary Skill</label>
-            <select v-model="form.primary_skill">
+            <label class="cx-label">Primary Skill</label>
+            <select v-model="form.primary_skill" class="cx-select">
               <option value="">Select...</option>
               <option v-for="s in skills" :key="s" :value="s">{{ s }}</option>
             </select>
           </div>
           <div class="field">
-            <label>Secondary Skill</label>
-            <select v-model="form.secondary_skill">
+            <label class="cx-label">Secondary Skill</label>
+            <select v-model="form.secondary_skill" class="cx-select">
               <option value="">Select...</option>
               <option v-for="s in skills" :key="s" :value="s">{{ s }}</option>
             </select>
           </div>
-          <div class="field full"><label>Previous Experience</label><textarea v-model="form.previous_experience" rows="3" /></div>
+          <div class="field full"><label class="cx-label">Previous Experience</label><textarea v-model="form.previous_experience" rows="3" class="cx-textarea" /></div>
         </div>
       </template>
       <template #step-3>
         <div class="form-grid">
-          <div class="field">
-            <label>Preferred Work Area</label>
+          <div class="field full">
+            <label class="cx-label">Preferred Work Area</label>
             <div class="radio-group">
-              <label v-for="a in areas" :key="a"><input type="radio" v-model="form.preferred_work_area" :value="a" /> {{ a }}</label>
+              <label v-for="a in areas" :key="a" class="radio-option"><input type="radio" v-model="form.preferred_work_area" :value="a" /> <span class="cx-uppercase">{{ a }}</span></label>
             </div>
           </div>
-          <div class="field"><label><input type="checkbox" v-model="form.available_daily" /> Available for Daily Work</label></div>
-          <div class="field"><label><input type="checkbox" v-model="form.available_contract" /> Available for Contract Work</label></div>
+          <div class="field"><label class="toggle-label"><input type="checkbox" v-model="form.available_daily" /> Available for Daily Work</label></div>
+          <div class="field"><label class="toggle-label"><input type="checkbox" v-model="form.available_contract" /> Available for Contract Work</label></div>
         </div>
       </template>
       <template #step-4>
         <div class="form-grid">
-          <p class="hint">Document uploads will be available after registration.</p>
+          <p class="cx-text-muted" style="grid-column: 1 / -1; font-weight: 600;">Document uploads will be available after registration.</p>
         </div>
       </template>
       <template #step-5>
         <div class="form-grid">
-          <p class="hint">If you were referred by a staffing agency, select it here. Otherwise, skip this step.</p>
+          <p class="cx-text-muted" style="grid-column: 1 / -1; font-weight: 600;">If you were referred by a staffing agency, select it here. Otherwise, skip this step.</p>
         </div>
       </template>
       <template #step-6>
         <div class="review-section">
           <h3>Review Your Information</h3>
-          <div class="review-item"><strong>Name:</strong> {{ form.full_name }}</div>
-          <div class="review-item"><strong>Skill:</strong> {{ form.primary_skill || 'Not set' }}</div>
-          <div class="review-item"><strong>Area:</strong> {{ form.preferred_work_area || 'Not set' }}</div>
-          <div class="review-item"><strong>Country:</strong> {{ form.country_of_origin || 'Not set' }}</div>
+          <div class="review-row"><span class="cx-label" style="margin: 0;">Name</span><span class="cx-text-primary">{{ form.full_name }}</span></div>
+          <div class="review-row"><span class="cx-label" style="margin: 0;">Skill</span><span class="cx-badge-orange">{{ form.primary_skill || 'Not set' }}</span></div>
+          <div class="review-row"><span class="cx-label" style="margin: 0;">Area</span><span class="cx-text-secondary">{{ form.preferred_work_area || 'Not set' }}</span></div>
+          <div class="review-row"><span class="cx-label" style="margin: 0;">Country</span><span class="cx-text-secondary">{{ form.country_of_origin || 'Not set' }}</span></div>
         </div>
       </template>
     </WizardStepper>
-    <div v-if="error" class="error-message">{{ error }}</div>
+    <div v-if="error" class="cx-error" style="text-align: center; margin-top: 1rem;">{{ error }}</div>
   </div>
 </template>
 
@@ -141,22 +141,25 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-.wizard-page { min-height: 100vh; padding: 2rem; }
-.wizard-page h1 { text-align: center; color: white; font-size: 1.5rem; margin-bottom: 2rem; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.field { display: flex; flex-direction: column; gap: 0.25rem; }
+.wizard-page { min-height: 100vh; background: var(--cx-bg-primary); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.field { display: flex; flex-direction: column; gap: 0.35rem; }
 .field.full { grid-column: 1 / -1; }
-.field label { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
-.field input, .field select, .field textarea {
-  padding: 0.65rem 0.75rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 8px; color: white; font-size: 0.9rem;
+.radio-group { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.25rem; }
+.radio-option {
+  display: flex; align-items: center; gap: 0.5rem;
+  color: var(--cx-text-secondary); font-size: var(--cx-font-sm); font-weight: 600;
+  cursor: pointer; min-height: var(--cx-tap-min);
 }
-.radio-group { display: flex; gap: 1rem; flex-wrap: wrap; }
-.radio-group label { display: flex; align-items: center; gap: 0.3rem; color: rgba(255,255,255,0.7); }
-.hint { color: rgba(255,255,255,0.5); font-style: italic; grid-column: 1 / -1; }
-.review-section { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; }
-.review-section h3 { color: white; margin: 0 0 1rem; }
-.review-item { color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; }
-.review-item strong { color: rgba(255,255,255,0.9); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 0.75rem; border-radius: 10px; text-align: center; margin-top: 1rem; }
+.toggle-label {
+  display: flex; align-items: center; gap: 0.5rem;
+  color: var(--cx-text-secondary); font-size: var(--cx-font-sm); font-weight: 600;
+  cursor: pointer; min-height: var(--cx-tap-min);
+}
+.review-section { padding: 0.5rem 0; }
+.review-section h3 { color: var(--cx-text-primary); font-weight: 800; margin: 0 0 1.25rem; }
+.review-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.75rem 0; border-bottom: 1px solid var(--cx-border);
+}
 </style>

@@ -1,38 +1,69 @@
 <template>
-  <div class="portal-page">
-    <h1>Subcontractor Dashboard</h1>
-    <div v-if="loading" class="loading">Loading...</div>
-    <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else-if="profile" class="dashboard">
-      <div class="welcome">
-        <h2>{{ profile.company_name || profile.full_name }}</h2>
-        <span class="status-badge" :class="profile.status">{{ profile.status }}</span>
+  <div class="cx-page">
+    <h1 class="cx-page-title">Subcontractor Dashboard</h1>
+
+    <div v-if="loading" class="cx-loading">Loading...</div>
+    <div v-else-if="error" class="cx-error">{{ error }}</div>
+
+    <template v-else-if="profile">
+      <!-- Status LED Banner -->
+      <div class="cx-card" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+        <span
+          class="cx-led"
+          :class="statusLedClass"
+        />
+        <span style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+          {{ profile.status ?? 'Unknown' }}
+        </span>
+        <span class="cx-text-muted" style="margin-inline-start: auto;">
+          {{ profile.company_name || profile.full_name }}
+        </span>
       </div>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Current Assignment</div>
-          <div class="stat-value">{{ profile.current_assignment || 'None' }}</div>
+
+      <!-- Bento Grid -->
+      <div class="cx-bento">
+        <!-- Rating -->
+        <div class="cx-bento-item">
+          <div class="cx-bento-value">{{ profile.rating ?? '--' }}</div>
+          <div class="cx-bento-label">Rating</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Rating</div>
-          <div class="stat-value">{{ profile.rating ?? 'N/A' }}</div>
+
+        <!-- Current Assignment -->
+        <div class="cx-bento-item">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <span
+              class="cx-led"
+              :class="profile.current_assignment ? 'cx-led-green' : 'cx-led-yellow'"
+            />
+            <span class="cx-mono cx-text-accent" style="font-weight: 700;">
+              {{ profile.current_assignment || 'None' }}
+            </span>
+          </div>
+          <div class="cx-bento-label">Current Assignment</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Availability</div>
-          <div class="stat-value">{{ profile.availability || 'N/A' }}</div>
+
+        <!-- Availability Date -->
+        <div class="cx-bento-item">
+          <div class="cx-bento-value" style="font-size: 1.25rem;">
+            {{ profile.availability_date || profile.availability || '--' }}
+          </div>
+          <div class="cx-bento-label">Availability Date</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Total Assignments</div>
-          <div class="stat-value">{{ profile.total_assignments ?? 0 }}</div>
+
+        <!-- Worker Count -->
+        <div class="cx-bento-item">
+          <div class="cx-bento-value">{{ profile.worker_count ?? 0 }}</div>
+          <div class="cx-bento-label">Worker Count</div>
         </div>
       </div>
-      <div class="quick-links">
-        <NuxtLink to="/subcontractor/assignments" class="quick-link">My Assignments</NuxtLink>
-        <NuxtLink to="/subcontractor/rating" class="quick-link">My Rating</NuxtLink>
-        <NuxtLink to="/subcontractor/availability" class="quick-link">Update Availability</NuxtLink>
-        <NuxtLink to="/subcontractor/documents" class="quick-link">Documents</NuxtLink>
+
+      <!-- Quick Action -->
+      <div style="margin-top: 1.5rem;">
+        <NuxtLink to="/subcontractor/availability" class="cx-btn cx-btn-primary">
+          Update Availability
+        </NuxtLink>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -43,6 +74,16 @@ const { apiFetch } = useApi()
 const loading = ref(true)
 const error = ref('')
 const profile = ref<any>(null)
+
+const statusLedClass = computed(() => {
+  switch (profile.value?.status) {
+    case 'available': case 'active': return 'cx-led-green'
+    case 'assigned': return 'cx-led-blue'
+    case 'pending': return 'cx-led-yellow'
+    case 'suspended': case 'rejected': return 'cx-led-red'
+    default: return 'cx-led-yellow'
+  }
+})
 
 onMounted(async () => {
   try {
@@ -55,22 +96,3 @@ onMounted(async () => {
   }
 })
 </script>
-
-<style scoped>
-.portal-page { padding: 1.5rem; }
-.portal-page h1 { color: white; font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: rgba(255,255,255,0.5); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 0.75rem; border-radius: 10px; }
-.welcome { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-.welcome h2 { color: white; font-size: 1.25rem; margin: 0; }
-.status-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-.status-badge.active { background: rgba(34,197,94,0.2); color: #4ade80; }
-.status-badge.pending { background: rgba(234,179,8,0.2); color: #facc15; }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-.stat-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; }
-.stat-label { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 0.5rem; }
-.stat-value { color: white; font-size: 1.5rem; font-weight: 700; }
-.quick-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-.quick-link { padding: 0.6rem 1.2rem; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; border-radius: 8px; text-decoration: none; font-size: 0.85rem; transition: background 0.2s; }
-.quick-link:hover { background: rgba(59,130,246,0.25); }
-</style>

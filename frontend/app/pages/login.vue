@@ -1,35 +1,36 @@
 <template>
   <div class="login-page">
     <div class="login-card">
-      <div class="logo">
-        <div class="logo-icon">C</div>
+      <div class="brand">
+        <div class="brand-icon">C</div>
         <h1>{{ $t('app.name') }}</h1>
-        <p class="tagline">{{ $t('app.tagline') }}</p>
+        <p class="cx-text-muted">{{ $t('app.tagline') }}</p>
       </div>
 
-      <div v-if="error" class="error-message">{{ error }}</div>
+      <div v-if="error" class="cx-error" style="margin-bottom: 1.25rem; text-align: center;">{{ error }}</div>
 
       <div class="form-section">
         <div v-if="!otpSent" class="phone-step">
-          <label>{{ $t('auth.phone_label') }}</label>
+          <label class="cx-label">{{ $t('auth.phone_label') }}</label>
           <div class="phone-input-wrapper">
-            <span class="prefix">+972</span>
+            <span class="prefix cx-mono">+972</span>
             <input
               v-model="phone"
               type="tel"
               maxlength="10"
               placeholder="50-000-0000"
               dir="ltr"
+              class="cx-mono"
               @keyup.enter="handleSendOtp"
             />
           </div>
-          <button class="btn-primary" :disabled="loading || !phone" @click="handleSendOtp">
+          <button class="cx-btn cx-btn-primary btn-full" :disabled="loading || !phone" @click="handleSendOtp">
             {{ loading ? $t('common.loading') : $t('auth.send_otp') }}
           </button>
         </div>
 
         <div v-else class="otp-step">
-          <label>{{ $t('auth.enter_otp') }}</label>
+          <label class="cx-label">{{ $t('auth.enter_otp') }}</label>
           <div class="otp-inputs" dir="ltr">
             <input
               v-for="(_, i) in 6"
@@ -37,16 +38,16 @@
               type="text"
               inputmode="numeric"
               maxlength="1"
-              class="otp-digit"
+              class="otp-digit cx-mono"
               :value="otpDigits[i]"
               @input="onOtpInput(i, $event)"
               @keydown="onOtpKeydown(i, $event)"
             />
           </div>
-          <button class="btn-primary" :disabled="loading || otpDigits.join('').length !== 6" @click="handleVerifyOtp">
+          <button class="cx-btn cx-btn-primary btn-full" :disabled="loading || otpDigits.join('').length !== 6" @click="handleVerifyOtp">
             {{ loading ? $t('common.loading') : $t('auth.verify') }}
           </button>
-          <button class="btn-text" @click="otpSent = false; error = ''">
+          <button class="btn-back" @click="otpSent = false; error = ''">
             {{ $t('common.cancel') }}
           </button>
         </div>
@@ -132,90 +133,79 @@ const onOtpKeydown = (index: number, event: KeyboardEvent) => {
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  background: var(--cx-bg-primary);
 }
 
 .login-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+  background: var(--cx-bg-card);
+  border: 2px solid var(--cx-border);
+  border-radius: var(--cx-radius-xl);
+  box-shadow: var(--cx-shadow-elevated);
   padding: 3rem 2.5rem;
   width: 100%;
-  max-width: 420px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  max-width: 440px;
 }
 
-.logo {
+.brand {
   text-align: center;
   margin-bottom: 2.5rem;
 }
 
-.logo-icon {
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  border-radius: 16px;
+.brand-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--cx-accent);
+  border-radius: var(--cx-radius-lg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 1.75rem;
-  font-weight: 700;
-  color: white;
+  font-weight: 900;
+  color: var(--cx-text-inverse);
   margin-bottom: 1rem;
+  box-shadow: 0 0 24px var(--cx-accent-glow);
 }
 
-.logo h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: white;
+.brand h1 {
+  font-size: var(--cx-font-2xl);
+  font-weight: 900;
+  color: var(--cx-text-primary);
   margin: 0;
-}
-
-.tagline {
-  color: rgba(255, 255, 255, 0.6);
-  margin: 0.5rem 0 0;
-  font-size: 0.95rem;
-}
-
-.form-section label {
-  display: block;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin-bottom: 0.75rem;
+  letter-spacing: -0.03em;
 }
 
 .phone-input-wrapper {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
+  background: var(--cx-bg-input);
+  border: 2px solid var(--cx-border);
+  border-radius: var(--cx-radius-md);
   overflow: hidden;
   margin-bottom: 1.25rem;
-  transition: border-color 0.2s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .phone-input-wrapper:focus-within {
-  border-color: #3b82f6;
+  border-color: var(--cx-accent);
+  box-shadow: 0 0 0 3px var(--cx-accent-glow);
 }
 
 .phone-input-wrapper .prefix {
-  padding: 0.85rem 1rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.95rem;
-  border-inline-end: 1px solid rgba(255, 255, 255, 0.1);
-  font-weight: 500;
+  padding: 1rem 1rem;
+  color: var(--cx-text-muted);
+  font-size: var(--cx-font-sm);
+  border-inline-end: 2px solid var(--cx-border);
+  font-weight: 700;
 }
 
 .phone-input-wrapper input {
   flex: 1;
-  padding: 0.85rem 1rem;
+  padding: 1rem;
   background: transparent;
   border: none;
-  color: white;
-  font-size: 1.1rem;
-  letter-spacing: 1px;
+  color: var(--cx-text-primary);
+  font-size: 1.2rem;
+  letter-spacing: 2px;
   outline: none;
 }
 
@@ -227,66 +217,41 @@ const onOtpKeydown = (index: number, event: KeyboardEvent) => {
 }
 
 .otp-digit {
-  width: 48px;
-  height: 56px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  color: white;
+  width: 52px;
+  height: 60px;
+  background: var(--cx-bg-input);
+  border: 2px solid var(--cx-border);
+  border-radius: var(--cx-radius-md);
+  color: var(--cx-text-primary);
   font-size: 1.5rem;
   text-align: center;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .otp-digit:focus {
-  border-color: #3b82f6;
+  border-color: var(--cx-accent);
+  box-shadow: 0 0 0 3px var(--cx-accent-glow);
 }
 
-.btn-primary {
+.btn-full {
   width: 100%;
-  padding: 0.85rem;
-  background: linear-gradient(135deg, #3b82f6, #6366f1);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.1s;
 }
 
-.btn-primary:hover {
-  opacity: 0.9;
-}
-
-.btn-primary:active {
-  transform: scale(0.98);
-}
-
-.btn-text {
+.btn-back {
   width: 100%;
+  min-height: var(--cx-tap-min);
   padding: 0.75rem;
   background: transparent;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--cx-text-muted);
   border: none;
-  font-size: 0.9rem;
+  font-size: var(--cx-font-sm);
+  font-weight: 600;
   cursor: pointer;
   margin-top: 0.5rem;
 }
 
-.btn-text:hover {
-  color: white;
-}
-
-.error-message {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  margin-bottom: 1.25rem;
-  text-align: center;
+.btn-back:hover {
+  color: var(--cx-text-primary);
 }
 </style>

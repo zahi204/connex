@@ -1,38 +1,89 @@
 <template>
-  <div class="portal-page">
-    <h1>Agency Dashboard</h1>
-    <div v-if="loading" class="loading">Loading...</div>
-    <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else-if="quality" class="dashboard">
-      <div class="welcome">
-        <h2>{{ quality.agency_name || 'Agency Overview' }}</h2>
-        <span v-if="quality.status" class="status-badge" :class="quality.status">{{ quality.status }}</span>
+  <div class="cx-page">
+    <h1 class="cx-page-title">Agency Dashboard</h1>
+
+    <div v-if="loading" class="cx-loading">Loading...</div>
+    <div v-else-if="error" class="cx-error">{{ error }}</div>
+
+    <template v-else-if="quality">
+      <!-- Bento Grid -->
+      <div class="cx-bento">
+        <!-- Total Workers -->
+        <div class="cx-bento-item">
+          <div class="cx-bento-value">{{ quality.worker_count ?? 0 }}</div>
+          <div class="cx-bento-label">Total Workers</div>
+        </div>
+
+        <!-- Average Quality Rating -->
+        <div class="cx-bento-item">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <span
+              class="cx-led"
+              :class="ratingLedClass"
+            />
+            <span class="cx-bento-value" style="margin-bottom: 0;">
+              {{ quality.average_rating ?? '--' }}
+            </span>
+          </div>
+          <div class="cx-bento-label">Average Quality Rating</div>
+        </div>
+
+        <!-- Workers Trained -->
+        <div class="cx-bento-item">
+          <div class="cx-bento-value">{{ quality.workers_trained ?? 0 }}</div>
+          <div class="cx-bento-label">Workers Trained</div>
+        </div>
+
+        <!-- Outstanding Balance -->
+        <div class="cx-bento-item">
+          <div class="cx-bento-value">
+            {{ formatNIS(quality.outstanding_balance) }}
+          </div>
+          <div class="cx-bento-label">Outstanding Balance</div>
+        </div>
       </div>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Total Workers</div>
-          <div class="stat-value">{{ quality.worker_count ?? 0 }}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Average Rating</div>
-          <div class="stat-value">{{ quality.average_rating ?? 'N/A' }}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Training Pass Rate</div>
-          <div class="stat-value">{{ quality.training_pass_rate ? quality.training_pass_rate + '%' : 'N/A' }}</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Quality Score</div>
-          <div class="stat-value">{{ quality.quality_score ?? 'N/A' }}</div>
+
+      <!-- Quality Metrics Section -->
+      <div class="cx-card" style="margin-top: 1.5rem;">
+        <h2 style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; font-size: 1rem;">
+          Quality Metrics
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+          <div>
+            <div class="cx-bento-label">Training Pass Rate</div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+              <span
+                class="cx-led"
+                :class="passRateLedClass"
+              />
+              <span class="cx-mono cx-text-accent" style="font-size: 1.25rem; font-weight: 700;">
+                {{ quality.training_pass_rate != null ? quality.training_pass_rate + '%' : '--' }}
+              </span>
+            </div>
+          </div>
+          <div>
+            <div class="cx-bento-label">Quality Score</div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+              <span
+                class="cx-led"
+                :class="qualityScoreLedClass"
+              />
+              <span class="cx-mono cx-text-accent" style="font-size: 1.25rem; font-weight: 700;">
+                {{ quality.quality_score ?? '--' }}
+              </span>
+            </div>
+          </div>
+          <div>
+            <div class="cx-bento-label">Agency Status</div>
+            <div style="margin-top: 0.25rem;">
+              <span :class="statusBadgeClass">
+                {{ quality.status ?? 'Unknown' }}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="quick-links">
-        <NuxtLink to="/agency/workers" class="quick-link">My Workers</NuxtLink>
-        <NuxtLink to="/agency/training" class="quick-link">Training Results</NuxtLink>
-        <NuxtLink to="/agency/billing" class="quick-link">Billing</NuxtLink>
-        <NuxtLink to="/agency/profile" class="quick-link">Agency Profile</NuxtLink>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -43,6 +94,49 @@ const { apiFetch } = useApi()
 const loading = ref(true)
 const error = ref('')
 const quality = ref<any>(null)
+
+function formatNIS(value: number | null | undefined): string {
+  if (value == null) return '--'
+  return new Intl.NumberFormat('he-IL', {
+    style: 'currency',
+    currency: 'ILS',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value)
+}
+
+const ratingLedClass = computed(() => {
+  const r = quality.value?.average_rating
+  if (r == null) return 'cx-led-yellow'
+  if (r >= 4) return 'cx-led-green'
+  if (r >= 3) return 'cx-led-yellow'
+  return 'cx-led-red'
+})
+
+const passRateLedClass = computed(() => {
+  const r = quality.value?.training_pass_rate
+  if (r == null) return 'cx-led-yellow'
+  if (r >= 80) return 'cx-led-green'
+  if (r >= 60) return 'cx-led-yellow'
+  return 'cx-led-red'
+})
+
+const qualityScoreLedClass = computed(() => {
+  const s = quality.value?.quality_score
+  if (s == null) return 'cx-led-yellow'
+  if (s >= 80) return 'cx-led-green'
+  if (s >= 60) return 'cx-led-yellow'
+  return 'cx-led-red'
+})
+
+const statusBadgeClass = computed(() => {
+  switch (quality.value?.status) {
+    case 'active': case 'approved': return 'cx-badge-green'
+    case 'pending': return 'cx-badge-yellow'
+    case 'suspended': case 'rejected': return 'cx-badge-red'
+    default: return 'cx-badge-gray'
+  }
+})
 
 onMounted(async () => {
   try {
@@ -55,22 +149,3 @@ onMounted(async () => {
   }
 })
 </script>
-
-<style scoped>
-.portal-page { padding: 1.5rem; }
-.portal-page h1 { color: white; font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: rgba(255,255,255,0.5); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 0.75rem; border-radius: 10px; }
-.welcome { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-.welcome h2 { color: white; font-size: 1.25rem; margin: 0; }
-.status-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-.status-badge.active { background: rgba(34,197,94,0.2); color: #4ade80; }
-.status-badge.pending { background: rgba(234,179,8,0.2); color: #facc15; }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-.stat-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; }
-.stat-label { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 0.5rem; }
-.stat-value { color: white; font-size: 1.5rem; font-weight: 700; }
-.quick-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-.quick-link { padding: 0.6rem 1.2rem; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; border-radius: 8px; text-decoration: none; font-size: 0.85rem; transition: background 0.2s; }
-.quick-link:hover { background: rgba(59,130,246,0.25); }
-</style>

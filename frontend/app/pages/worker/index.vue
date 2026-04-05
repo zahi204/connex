@@ -1,38 +1,72 @@
 <template>
-  <div class="portal-page">
-    <h1>Worker Dashboard</h1>
-    <div v-if="loading" class="loading">Loading...</div>
-    <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else-if="profile" class="dashboard">
-      <div class="welcome">
-        <h2>Welcome, {{ profile.full_name }}</h2>
-        <span class="status-badge" :class="profile.status">{{ profile.status }}</span>
+  <div class="cx-page">
+    <h1 class="cx-page-title">Worker Dashboard</h1>
+
+    <div v-if="loading" class="cx-loading">Loading...</div>
+    <div v-else-if="error" class="cx-error">{{ error }}</div>
+
+    <template v-else-if="profile">
+      <!-- Status LED Banner -->
+      <div class="cx-card" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+        <span
+          class="cx-led"
+          :class="statusLedClass"
+        />
+        <span style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+          {{ profile.status ?? 'Unknown' }}
+        </span>
+        <span class="cx-text-muted" style="margin-inline-start: auto;">
+          {{ profile.full_name }}
+        </span>
       </div>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Professional Rating</div>
-          <div class="stat-value">{{ profile.professional_rating ?? 'N/A' }}</div>
+
+      <!-- Bento Grid -->
+      <div class="cx-bento">
+        <!-- Professional Rating -->
+        <div class="cx-bento-item">
+          <div class="cx-bento-value">{{ profile.professional_rating ?? '--' }}</div>
+          <div class="cx-bento-label">Professional Rating</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Training Score</div>
-          <div class="stat-value">{{ profile.training_score ?? 'N/A' }}</div>
+
+        <!-- Training Score -->
+        <div class="cx-bento-item">
+          <div class="cx-bento-value">{{ profile.training_score ?? '--' }}</div>
+          <div class="cx-bento-label">Training Score</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Payment Status</div>
-          <div class="stat-value">{{ profile.payment_status ?? 'N/A' }}</div>
+
+        <!-- Payment Status -->
+        <div class="cx-bento-item">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <span
+              class="cx-led"
+              :class="paymentLedClass"
+            />
+            <span
+              class="cx-mono"
+              :class="paymentBadgeClass"
+            >
+              {{ profile.payment_status ?? 'N/A' }}
+            </span>
+          </div>
+          <div class="cx-bento-label">Payment Status</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Primary Skill</div>
-          <div class="stat-value">{{ profile.primary_skill ?? 'N/A' }}</div>
+
+        <!-- Current Assignment -->
+        <div class="cx-bento-item">
+          <div class="cx-bento-value" style="font-size: 1.25rem;">
+            {{ profile.current_assignment || 'None' }}
+          </div>
+          <div class="cx-bento-label">Current Assignment</div>
         </div>
       </div>
-      <div class="quick-links">
-        <NuxtLink to="/worker/assignments" class="quick-link">My Assignments</NuxtLink>
-        <NuxtLink to="/worker/training" class="quick-link">Training</NuxtLink>
-        <NuxtLink to="/worker/payments" class="quick-link">Payments</NuxtLink>
-        <NuxtLink to="/worker/documents" class="quick-link">Documents</NuxtLink>
+
+      <!-- Quick Action -->
+      <div style="margin-top: 1.5rem;">
+        <NuxtLink to="/worker/assignments" class="cx-btn cx-btn-primary">
+          View Assignments
+        </NuxtLink>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -43,6 +77,35 @@ const { apiFetch } = useApi()
 const loading = ref(true)
 const error = ref('')
 const profile = ref<any>(null)
+
+const statusLedClass = computed(() => {
+  switch (profile.value?.status) {
+    case 'available': return 'cx-led-green'
+    case 'assigned': return 'cx-led-blue'
+    case 'active': return 'cx-led-green'
+    case 'pending': return 'cx-led-yellow'
+    case 'suspended': return 'cx-led-red'
+    default: return 'cx-led-yellow'
+  }
+})
+
+const paymentLedClass = computed(() => {
+  switch (profile.value?.payment_status) {
+    case 'paid': case 'current': return 'cx-led-green'
+    case 'pending': return 'cx-led-yellow'
+    case 'overdue': case 'failed': return 'cx-led-red'
+    default: return 'cx-led-yellow'
+  }
+})
+
+const paymentBadgeClass = computed(() => {
+  switch (profile.value?.payment_status) {
+    case 'paid': case 'current': return 'cx-badge-green'
+    case 'pending': return 'cx-badge-yellow'
+    case 'overdue': case 'failed': return 'cx-badge-red'
+    default: return 'cx-badge-gray'
+  }
+})
 
 onMounted(async () => {
   try {
@@ -55,23 +118,3 @@ onMounted(async () => {
   }
 })
 </script>
-
-<style scoped>
-.portal-page { padding: 1.5rem; }
-.portal-page h1 { color: white; font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: rgba(255,255,255,0.5); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 0.75rem; border-radius: 10px; }
-.welcome { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-.welcome h2 { color: white; font-size: 1.25rem; margin: 0; }
-.status-badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-.status-badge.active { background: rgba(34,197,94,0.2); color: #4ade80; }
-.status-badge.pending { background: rgba(234,179,8,0.2); color: #facc15; }
-.status-badge.suspended { background: rgba(239,68,68,0.2); color: #f87171; }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-.stat-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.25rem; }
-.stat-label { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 0.5rem; }
-.stat-value { color: white; font-size: 1.5rem; font-weight: 700; }
-.quick-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-.quick-link { padding: 0.6rem 1.2rem; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; border-radius: 8px; text-decoration: none; font-size: 0.85rem; transition: background 0.2s; }
-.quick-link:hover { background: rgba(59,130,246,0.25); }
-</style>

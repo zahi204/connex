@@ -1,0 +1,501 @@
+/* ============================================================
+   CONNEX DESIGN SYSTEM — "Refined Utility"
+   Rugged enough for a job site, refined enough for a boardroom.
+   ============================================================ */
+
+/* ---- 1. CSS Custom Properties ---- */
+:root {
+  /* High-Contrast Canvas */
+  --cx-bg-primary: #000000;
+  --cx-bg-secondary: #0a0a0a;
+  --cx-bg-surface: #111111;
+  --cx-bg-card: #161616;
+  --cx-bg-card-hover: #1c1c1c;
+  --cx-bg-elevated: #1e1e1e;
+  --cx-bg-input: #0d0d0d;
+
+  /* Safety Accent — International Orange */
+  --cx-accent: #FF6B00;
+  --cx-accent-hover: #FF8C33;
+  --cx-accent-glow: rgba(255, 107, 0, 0.25);
+  --cx-accent-soft: rgba(255, 107, 0, 0.08);
+
+  /* Text */
+  --cx-text-primary: #FFFFFF;
+  --cx-text-secondary: #A3A3A3;
+  --cx-text-muted: #666666;
+  --cx-text-inverse: #000000;
+
+  /* Borders */
+  --cx-border: #222222;
+  --cx-border-strong: #333333;
+  --cx-border-accent: rgba(255, 107, 0, 0.3);
+
+  /* Status LEDs */
+  --cx-led-green: #00E676;
+  --cx-led-green-glow: rgba(0, 230, 118, 0.35);
+  --cx-led-red: #FF1744;
+  --cx-led-red-glow: rgba(255, 23, 68, 0.35);
+  --cx-led-yellow: #FFD600;
+  --cx-led-yellow-glow: rgba(255, 214, 0, 0.35);
+  --cx-led-blue: #2979FF;
+  --cx-led-blue-glow: rgba(41, 121, 255, 0.35);
+  --cx-led-gray: #555555;
+  --cx-led-gray-glow: rgba(85, 85, 85, 0.2);
+
+  /* Spacing */
+  --cx-radius-sm: 6px;
+  --cx-radius-md: 10px;
+  --cx-radius-lg: 14px;
+  --cx-radius-xl: 20px;
+
+  /* Typography Scale (18pt base) */
+  --cx-font-base: 18px;
+  --cx-font-sm: 15px;
+  --cx-font-xs: 13px;
+  --cx-font-lg: 22px;
+  --cx-font-xl: 28px;
+  --cx-font-2xl: 36px;
+  --cx-font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Shadows — Stamped Metal / Beveled */
+  --cx-shadow-card: inset 0 1px 0 rgba(255,255,255,0.04), 0 2px 8px rgba(0,0,0,0.5);
+  --cx-shadow-pressed: inset 0 2px 6px rgba(0,0,0,0.6), inset 0 -1px 0 rgba(255,255,255,0.03);
+  --cx-shadow-elevated: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.3);
+
+  /* Button min-height — Gloved-Hand Fitts's Law */
+  --cx-btn-min-h: 56px;
+  --cx-tap-min: 48px;
+}
+
+/* ---- 2. Global Reset & Base ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--cx-font-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  background: var(--cx-bg-primary);
+  color: var(--cx-text-primary);
+  line-height: 1.5;
+}
+
+/* ---- 3. Typography — Heavy-Duty Legibility ---- */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h1 { font-size: var(--cx-font-2xl); }
+h2 { font-size: var(--cx-font-xl); }
+h3 { font-size: var(--cx-font-lg); }
+
+/* Monospace for data/measurements */
+.cx-mono {
+  font-family: var(--cx-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* ---- 4. Industrial Card — Stamped Metal ---- */
+.cx-card {
+  background: var(--cx-bg-card);
+  border: 1px solid var(--cx-border);
+  border-radius: var(--cx-radius-lg);
+  box-shadow: var(--cx-shadow-card);
+  padding: 1.25rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.cx-card:hover {
+  border-color: var(--cx-border-strong);
+}
+
+.cx-card-accent {
+  border-left: 3px solid var(--cx-accent);
+}
+
+/* ---- 5. Buttons — Gloved-Hand 56px Targets ---- */
+.cx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--cx-btn-min-h);
+  padding: 0 1.5rem;
+  border-radius: var(--cx-radius-md);
+  font-size: var(--cx-font-sm);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cx-btn-primary {
+  background: var(--cx-accent);
+  color: var(--cx-text-inverse);
+  border-color: var(--cx-accent);
+  box-shadow: 0 0 0 0 var(--cx-accent-glow);
+}
+
+.cx-btn-primary:hover {
+  background: var(--cx-accent-hover);
+  box-shadow: 0 0 20px var(--cx-accent-glow);
+}
+
+.cx-btn-primary:active {
+  box-shadow: var(--cx-shadow-pressed);
+  transform: scale(0.97);
+}
+
+.cx-btn-primary:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.cx-btn-secondary {
+  background: var(--cx-bg-card);
+  color: var(--cx-text-primary);
+  border-color: var(--cx-border-strong);
+  box-shadow: var(--cx-shadow-card);
+}
+
+.cx-btn-secondary:hover {
+  border-color: var(--cx-text-secondary);
+  background: var(--cx-bg-card-hover);
+}
+
+.cx-btn-danger {
+  background: rgba(255, 23, 68, 0.12);
+  color: var(--cx-led-red);
+  border-color: rgba(255, 23, 68, 0.3);
+}
+
+.cx-btn-danger:hover {
+  background: rgba(255, 23, 68, 0.2);
+  box-shadow: 0 0 16px var(--cx-led-red-glow);
+}
+
+/* ---- 6. Form Inputs — Industrial ---- */
+.cx-input,
+.cx-select,
+.cx-textarea {
+  width: 100%;
+  min-height: var(--cx-tap-min);
+  padding: 0.75rem 1rem;
+  background: var(--cx-bg-input);
+  border: 2px solid var(--cx-border);
+  border-radius: var(--cx-radius-md);
+  color: var(--cx-text-primary);
+  font-size: var(--cx-font-sm);
+  font-weight: 500;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.cx-input:focus,
+.cx-select:focus,
+.cx-textarea:focus {
+  border-color: var(--cx-accent);
+  box-shadow: 0 0 0 3px var(--cx-accent-glow);
+}
+
+.cx-input::placeholder {
+  color: var(--cx-text-muted);
+}
+
+.cx-label {
+  display: block;
+  color: var(--cx-text-secondary);
+  font-size: var(--cx-font-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+
+/* ---- 7. Status LED Indicators ---- */
+.cx-led {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.cx-led::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: cx-pulse 2s ease-in-out infinite;
+}
+
+.cx-led-green { background: var(--cx-led-green); }
+.cx-led-green::after { box-shadow: 0 0 8px 4px var(--cx-led-green-glow); }
+.cx-led-red { background: var(--cx-led-red); }
+.cx-led-red::after { box-shadow: 0 0 8px 4px var(--cx-led-red-glow); }
+.cx-led-yellow { background: var(--cx-led-yellow); }
+.cx-led-yellow::after { box-shadow: 0 0 8px 4px var(--cx-led-yellow-glow); }
+.cx-led-blue { background: var(--cx-led-blue); }
+.cx-led-blue::after { box-shadow: 0 0 8px 4px var(--cx-led-blue-glow); }
+.cx-led-gray { background: var(--cx-led-gray); }
+.cx-led-gray::after { box-shadow: 0 0 6px 3px var(--cx-led-gray-glow); }
+
+@keyframes cx-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* ---- 8. Badge — Industrial Tags ---- */
+.cx-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--cx-radius-sm);
+  font-size: var(--cx-font-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.cx-badge-green { background: rgba(0, 230, 118, 0.12); color: var(--cx-led-green); border: 1px solid rgba(0, 230, 118, 0.2); }
+.cx-badge-red { background: rgba(255, 23, 68, 0.12); color: var(--cx-led-red); border: 1px solid rgba(255, 23, 68, 0.2); }
+.cx-badge-yellow { background: rgba(255, 214, 0, 0.12); color: var(--cx-led-yellow); border: 1px solid rgba(255, 214, 0, 0.2); }
+.cx-badge-blue { background: rgba(41, 121, 255, 0.12); color: var(--cx-led-blue); border: 1px solid rgba(41, 121, 255, 0.2); }
+.cx-badge-orange { background: var(--cx-accent-soft); color: var(--cx-accent); border: 1px solid var(--cx-border-accent); }
+.cx-badge-gray { background: rgba(85, 85, 85, 0.15); color: var(--cx-text-secondary); border: 1px solid rgba(85, 85, 85, 0.25); }
+
+/* ---- 9. Bento Grid — Blueprint Dashboard ---- */
+.cx-bento {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.cx-bento-item {
+  background: var(--cx-bg-card);
+  border: 1px solid var(--cx-border);
+  border-radius: var(--cx-radius-lg);
+  box-shadow: var(--cx-shadow-card);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cx-bento-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cx-accent) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.cx-bento-item:hover::before {
+  opacity: 1;
+}
+
+.cx-bento-value {
+  font-size: var(--cx-font-2xl);
+  font-weight: 800;
+  font-family: var(--cx-font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--cx-text-primary);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.cx-bento-label {
+  font-size: var(--cx-font-xs);
+  font-weight: 700;
+  color: var(--cx-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ---- 10. Data Table — Industrial Grid ---- */
+.cx-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.cx-table th {
+  text-align: start;
+  padding: 0.75rem 1rem;
+  color: var(--cx-text-muted);
+  font-size: var(--cx-font-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 2px solid var(--cx-border-strong);
+  background: var(--cx-bg-secondary);
+}
+
+.cx-table td {
+  padding: 0.85rem 1rem;
+  color: var(--cx-text-secondary);
+  font-size: var(--cx-font-sm);
+  border-bottom: 1px solid var(--cx-border);
+  transition: background 0.1s;
+}
+
+.cx-table tr:hover td {
+  background: rgba(255, 107, 0, 0.03);
+}
+
+/* ---- 11. Sidebar — Industrial Panel ---- */
+.cx-sidebar {
+  width: 260px;
+  background: var(--cx-bg-secondary);
+  border-inline-end: 2px solid var(--cx-border);
+  padding: 1.5rem 0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cx-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.cx-sidebar-logo {
+  width: 40px;
+  height: 40px;
+  background: var(--cx-accent);
+  border-radius: var(--cx-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cx-text-inverse);
+  font-weight: 800;
+  font-size: 1.2rem;
+  box-shadow: 0 0 16px var(--cx-accent-glow);
+}
+
+.cx-sidebar-title {
+  color: var(--cx-text-primary);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.cx-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  color: var(--cx-text-muted);
+  text-decoration: none;
+  font-size: var(--cx-font-sm);
+  font-weight: 600;
+  border-inline-start: 3px solid transparent;
+  transition: all 0.15s;
+  min-height: var(--cx-tap-min);
+}
+
+.cx-nav-item:hover {
+  color: var(--cx-text-primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cx-nav-item.router-link-active,
+.cx-nav-item.router-link-exact-active {
+  color: var(--cx-accent);
+  background: var(--cx-accent-soft);
+  border-inline-start-color: var(--cx-accent);
+}
+
+/* ---- 12. Top Bar — Control Panel Strip ---- */
+.cx-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--cx-bg-secondary);
+  border-bottom: 2px solid var(--cx-border);
+  min-height: 56px;
+}
+
+/* ---- 13. Utility Classes ---- */
+.cx-text-accent { color: var(--cx-accent); }
+.cx-text-muted { color: var(--cx-text-muted); }
+.cx-text-secondary { color: var(--cx-text-secondary); }
+.cx-text-sm { font-size: var(--cx-font-sm); }
+.cx-text-xs { font-size: var(--cx-font-xs); }
+.cx-font-bold { font-weight: 700; }
+.cx-font-black { font-weight: 900; }
+.cx-uppercase { text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ---- 14. Empty State ---- */
+.cx-empty {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--cx-text-muted);
+  font-weight: 600;
+}
+
+/* ---- 15. Loading ---- */
+.cx-loading {
+  color: var(--cx-text-muted);
+  font-weight: 600;
+  padding: 2rem;
+}
+
+/* ---- 16. Error ---- */
+.cx-error {
+  background: rgba(255, 23, 68, 0.08);
+  border: 2px solid rgba(255, 23, 68, 0.25);
+  color: var(--cx-led-red);
+  padding: 1rem 1.25rem;
+  border-radius: var(--cx-radius-md);
+  font-weight: 600;
+}
+
+/* ---- 17. Page Container ---- */
+.cx-page {
+  padding: 1.5rem;
+  max-width: 1400px;
+}
+
+.cx-page-title {
+  font-size: var(--cx-font-xl);
+  font-weight: 800;
+  color: var(--cx-text-primary);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+/* ---- 18. Scrollbar — Industrial ---- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--cx-bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--cx-border-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--cx-text-muted); }
