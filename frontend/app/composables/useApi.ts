@@ -12,10 +12,17 @@ export const useApi = () => {
     async onRequest({ options }) {
       const xsrfToken = useCookie('XSRF-TOKEN')
       if (xsrfToken.value) {
-        options.headers = {
-          ...options.headers,
-          'X-XSRF-TOKEN': xsrfToken.value,
+        let token = xsrfToken.value
+        // Laravel expects a decoded token value in X-XSRF-TOKEN.
+        try {
+          token = decodeURIComponent(token)
         }
+        catch {
+          // Keep the original token if it's already decoded.
+        }
+
+        options.headers = new Headers(options.headers as HeadersInit)
+        options.headers.set('X-XSRF-TOKEN', token)
       }
     },
     async onResponseError({ response }) {

@@ -4,7 +4,7 @@
       v-for="loc in availableLocales"
       :key="loc.code"
       :class="{ active: currentLocale === loc.code }"
-      @click="switchLocale(loc.code)"
+      @click="switchLocale(loc.code as LocaleCode)"
     >
       {{ loc.name }}
     </button>
@@ -20,7 +20,9 @@ const availableLocales = computed(() =>
   (locales.value as Array<{ code: string; name: string; dir: string }>)
 )
 
-const switchLocale = async (code: string) => {
+type LocaleCode = 'he' | 'ar' | 'en'
+
+const switchLocale = async (code: LocaleCode) => {
   await setLocale(code)
   const dir = availableLocales.value.find(l => l.code === code)?.dir || 'ltr'
   document.documentElement.setAttribute('dir', dir)

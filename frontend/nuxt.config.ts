@@ -6,7 +6,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
+      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000',
     },
   },
 
@@ -34,10 +34,15 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       '/api': {
-        target: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8000',
+        target: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000',
         changeOrigin: true,
       },
     },
+  },
+
+  devServer: {
+    host: '127.0.0.1',
+    port: 3000,
   },
 
   devtools: { enabled: true },
