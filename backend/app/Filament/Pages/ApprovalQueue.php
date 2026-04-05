@@ -17,13 +17,13 @@ class ApprovalQueue extends Page implements HasTable
 {
     use InteractsWithTable;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-check';
 
-    protected static ?string $navigationGroup = 'Operations';
+    protected static string|\UnitEnum|null $navigationGroup = 'Operations';
 
     protected static ?int $navigationSort = 10;
 
-    protected static string $view = 'filament.pages.approval-queue';
+    protected string $view = 'filament.pages.approval-queue';
 
     public function table(Table $table): Table
     {

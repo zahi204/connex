@@ -5,7 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\StaffingAgencyResource\RelationManagers;
 use App\Models\StaffingAgency;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Infolists;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -15,16 +16,17 @@ class StaffingAgencyResource extends Resource
 {
     protected static ?string $model = StaffingAgency::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-building-storefront';
 
-    protected static ?string $navigationGroup = 'Resources';
+    protected static string|\UnitEnum|null $navigationGroup = 'Resources';
 
     protected static ?int $navigationSort = 5;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\Tabs::make('Agency')
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('Agency Info')
@@ -93,6 +95,7 @@ class StaffingAgencyResource extends Resource
                             ]),
                     ])
                     ->columnSpanFull(),
+                ]),
             ]);
     }
 

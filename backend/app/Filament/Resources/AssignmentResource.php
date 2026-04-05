@@ -9,7 +9,8 @@ use App\Models\Subcontractor;
 use App\Models\Team;
 use App\Models\Worker;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,16 +19,17 @@ class AssignmentResource extends Resource
 {
     protected static ?string $model = Assignment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-check';
 
-    protected static ?string $navigationGroup = 'Operations';
+    protected static string|\UnitEnum|null $navigationGroup = 'Operations';
 
     protected static ?int $navigationSort = 2;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\Select::make('project_id')
                     ->relationship('project', 'name')
                     ->required()
@@ -78,6 +80,7 @@ class AssignmentResource extends Resource
                     ->required(),
                 Forms\Components\Textarea::make('notes')
                     ->rows(2),
+                ]),
             ]);
     }
 

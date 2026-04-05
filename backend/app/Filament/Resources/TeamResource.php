@@ -9,7 +9,8 @@ use App\Models\Project;
 use App\Models\Team;
 use App\Models\Worker;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,16 +19,17 @@ class TeamResource extends Resource
 {
     protected static ?string $model = Team::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'Resources';
+    protected static string|\UnitEnum|null $navigationGroup = 'Resources';
 
     protected static ?int $navigationSort = 2;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -55,6 +57,7 @@ class TeamResource extends Resource
                     ->numeric()
                     ->step(0.01)
                     ->disabled(),
+                ]),
             ]);
     }
 

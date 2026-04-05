@@ -4,7 +4,8 @@ namespace App\Filament\Resources\WorkerResource\RelationManagers;
 
 use App\Enums\DocumentType;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,10 +14,11 @@ class DocumentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'documents';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -28,6 +30,7 @@ class DocumentsRelationManager extends RelationManager
                     ->required(),
                 Forms\Components\Textarea::make('notes')
                     ->rows(2),
+                ]),
             ]);
     }
 

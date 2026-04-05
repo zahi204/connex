@@ -5,8 +5,9 @@ namespace App\Filament\Resources\DeveloperResource\RelationManagers;
 use App\Enums\ProjectStatus;
 use App\Enums\ProjectType;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -14,14 +15,16 @@ class ProjectsRelationManager extends RelationManager
 {
     protected static string $relationship = 'projects';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('name')->required()->maxLength(255),
-            Forms\Components\Select::make('project_type')->options(ProjectType::class)->required(),
-            Forms\Components\Select::make('status')->options(ProjectStatus::class)->required(),
-            Forms\Components\DatePicker::make('estimated_start_date'),
-            Forms\Components\DatePicker::make('estimated_completion'),
+        return $schema->schema([
+            FormContainer::make([
+                Forms\Components\TextInput::make('name')->required()->maxLength(255),
+                Forms\Components\Select::make('project_type')->options(ProjectType::class)->required(),
+                Forms\Components\Select::make('status')->options(ProjectStatus::class)->required(),
+                Forms\Components\DatePicker::make('estimated_start_date'),
+                Forms\Components\DatePicker::make('estimated_completion'),
+            ]),
         ]);
     }
 

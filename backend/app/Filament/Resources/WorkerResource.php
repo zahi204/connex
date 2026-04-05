@@ -9,7 +9,8 @@ use App\Enums\WorkerStatus;
 use App\Filament\Resources\WorkerResource\RelationManagers;
 use App\Models\Worker;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,16 +19,17 @@ class WorkerResource extends Resource
 {
     protected static ?string $model = Worker::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-group';
 
-    protected static ?string $navigationGroup = 'Resources';
+    protected static string|\UnitEnum|null $navigationGroup = 'Resources';
 
     protected static ?int $navigationSort = 1;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\Tabs::make('Worker')
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('Personal Info')
@@ -109,6 +111,7 @@ class WorkerResource extends Resource
                             ]),
                     ])
                     ->columnSpanFull(),
+                ]),
             ]);
     }
 

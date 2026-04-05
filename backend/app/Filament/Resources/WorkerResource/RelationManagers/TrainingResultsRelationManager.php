@@ -4,7 +4,8 @@ namespace App\Filament\Resources\WorkerResource\RelationManagers;
 
 use App\Enums\Suitability;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,10 +14,11 @@ class TrainingResultsRelationManager extends RelationManager
 {
     protected static string $relationship = 'trainingResults';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\Select::make('training_cycle_id')
                     ->relationship('trainingCycle', 'name')
                     ->required(),
@@ -35,6 +37,7 @@ class TrainingResultsRelationManager extends RelationManager
                     ->rows(2),
                 Forms\Components\TextInput::make('placement_recommendation')
                     ->maxLength(255),
+                ]),
             ]);
     }
 

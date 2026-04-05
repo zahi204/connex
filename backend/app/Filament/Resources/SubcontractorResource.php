@@ -6,7 +6,8 @@ use App\Enums\SubcontractorStatus;
 use App\Filament\Resources\SubcontractorResource\RelationManagers;
 use App\Models\Subcontractor;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -15,16 +16,17 @@ class SubcontractorResource extends Resource
 {
     protected static ?string $model = Subcontractor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-wrench-screwdriver';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-wrench-screwdriver';
 
-    protected static ?string $navigationGroup = 'Resources';
+    protected static string|\UnitEnum|null $navigationGroup = 'Resources';
 
     protected static ?int $navigationSort = 4;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\Tabs::make('Subcontractor')
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('Basic Info')
@@ -70,6 +72,7 @@ class SubcontractorResource extends Resource
                             ]),
                     ])
                     ->columnSpanFull(),
+                ]),
             ]);
     }
 

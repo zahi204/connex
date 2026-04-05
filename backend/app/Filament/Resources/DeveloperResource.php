@@ -5,7 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DeveloperResource\RelationManagers;
 use App\Models\Developer;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,16 +15,17 @@ class DeveloperResource extends Resource
 {
     protected static ?string $model = Developer::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static ?string $navigationGroup = 'Resources';
+    protected static string|\UnitEnum|null $navigationGroup = 'Resources';
 
     protected static ?int $navigationSort = 3;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\Tabs::make('Developer')
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('Company Info')
@@ -69,6 +71,7 @@ class DeveloperResource extends Resource
                             ]),
                     ])
                     ->columnSpanFull(),
+                ]),
             ]);
     }
 

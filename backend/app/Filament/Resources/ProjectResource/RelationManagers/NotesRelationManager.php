@@ -4,8 +4,9 @@ namespace App\Filament\Resources\ProjectResource\RelationManagers;
 
 use App\Enums\NoteType;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -13,11 +14,13 @@ class NotesRelationManager extends RelationManager
 {
     protected static string $relationship = 'notes';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\Select::make('note_type')->options(NoteType::class)->required(),
-            Forms\Components\Textarea::make('content')->required()->rows(4),
+        return $schema->schema([
+            FormContainer::make([
+                Forms\Components\Select::make('note_type')->options(NoteType::class)->required(),
+                Forms\Components\Textarea::make('content')->required()->rows(4),
+            ]),
         ]);
     }
 

@@ -7,7 +7,8 @@ use App\Filament\Resources\TrainingCycleResource\Pages;
 use App\Filament\Resources\TrainingCycleResource\RelationManagers;
 use App\Models\TrainingCycle;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -16,16 +17,17 @@ class TrainingCycleResource extends Resource
 {
     protected static ?string $model = TrainingCycle::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-academic-cap';
 
-    protected static ?string $navigationGroup = 'Operations';
+    protected static string|\UnitEnum|null $navigationGroup = 'Operations';
 
     protected static ?int $navigationSort = 3;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -36,6 +38,7 @@ class TrainingCycleResource extends Resource
                 Forms\Components\Select::make('status')
                     ->options(TrainingCycleStatus::class)
                     ->required(),
+                ]),
             ]);
     }
 

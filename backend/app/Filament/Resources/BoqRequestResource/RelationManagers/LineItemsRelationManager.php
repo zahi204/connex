@@ -4,7 +4,8 @@ namespace App\Filament\Resources\BoqRequestResource\RelationManagers;
 
 use App\Enums\UnitOfMeasure;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -17,10 +18,11 @@ class LineItemsRelationManager extends RelationManager
 
     protected static ?string $title = 'Line Items';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\TextInput::make('trade')
                     ->required()
                     ->maxLength(255),
@@ -46,6 +48,7 @@ class LineItemsRelationManager extends RelationManager
                     ->prefix('SAR')
                     ->disabled()
                     ->dehydrated(),
+                ]),
             ]);
     }
 

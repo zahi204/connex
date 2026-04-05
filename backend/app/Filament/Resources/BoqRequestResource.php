@@ -8,7 +8,8 @@ use App\Enums\BoqUrgency;
 use App\Filament\Resources\BoqRequestResource\RelationManagers;
 use App\Models\BoqRequest;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,18 +18,19 @@ class BoqRequestResource extends Resource
 {
     protected static ?string $model = BoqRequest::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationGroup = 'BOQ';
+    protected static string|\UnitEnum|null $navigationGroup = 'BOQ';
 
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'project_name';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\Tabs::make('BOQ Request')
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('Request Info')
@@ -78,6 +80,7 @@ class BoqRequestResource extends Resource
                             ]),
                     ])
                     ->columnSpanFull(),
+                ]),
             ]);
     }
 

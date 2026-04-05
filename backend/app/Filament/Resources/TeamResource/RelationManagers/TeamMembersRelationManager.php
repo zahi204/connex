@@ -4,7 +4,8 @@ namespace App\Filament\Resources\TeamResource\RelationManagers;
 
 use App\Models\Worker;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,10 +14,11 @@ class TeamMembersRelationManager extends RelationManager
 {
     protected static string $relationship = 'members';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
+                FormContainer::make([
                 Forms\Components\Select::make('worker_id')
                     ->label('Worker')
                     ->options(Worker::query()->pluck('full_name', 'id'))
@@ -27,6 +29,7 @@ class TeamMembersRelationManager extends RelationManager
                 Forms\Components\DatePicker::make('joined_at')
                     ->default(now()),
                 Forms\Components\DatePicker::make('left_at'),
+                ]),
             ]);
     }
 

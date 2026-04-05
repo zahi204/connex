@@ -39,8 +39,8 @@ php artisan serve
 ```bash
 cd frontend
 cp .env.example .env
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 ### Common Commands
@@ -61,3 +61,4 @@ connex/
 ├── frontend/    # Vuexy Nuxt 4 application
 └── docker-compose.yml
 ```
+
