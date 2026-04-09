@@ -5,15 +5,16 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Use npm (lockfile: package-lock.json). pnpm-lock.yaml exists too but we stick to one.
-COPY package.json package-lock.json* ./
-RUN npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+# Use pnpm to match local dev (pnpm-lock.yaml is the source of truth).
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-# Nuxt build consumes NUXT_PUBLIC_* at build time only for some cases,
-# but since apiBaseUrl uses runtimeConfig it's read at runtime — OK to leave unset here.
-RUN npm run build
+# Nuxt build. apiBaseUrl uses runtimeConfig so it's read at container start, not here.
+RUN pnpm run build
 
 # ---------- Runtime stage ----------
 FROM node:22-alpine AS runtime
