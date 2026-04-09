@@ -3,6 +3,9 @@
 namespace App\Filament\Resources\ProjectResource\RelationManagers;
 
 use App\Enums\NoteType;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Form as FormContainer;
@@ -33,8 +36,8 @@ class NotesRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('author.phone')->label('Author'),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
             ])
-            ->headerActions([Tables\Actions\CreateAction::make()])
-            ->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()])
+            ->headerActions([CreateAction::make()])
+            ->actions([EditAction::make(), DeleteAction::make()])
             ->defaultSort('created_at', 'desc');
     }
 }

@@ -3,6 +3,9 @@
 namespace App\Filament\Resources\SubcontractorResource\RelationManagers;
 
 use App\Enums\DocumentType;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Form as FormContainer;
@@ -34,7 +37,7 @@ class DocumentsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('document_type')->badge(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
             ])
-            ->headerActions([Tables\Actions\CreateAction::make()])
-            ->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);
+            ->headerActions([CreateAction::make()])
+            ->actions([EditAction::make(), DeleteAction::make()]);
     }
 }

@@ -13,7 +13,12 @@
         <NuxtLink to="/worker/training" class="cx-nav-item">{{ $t('nav.training') }}</NuxtLink>
         <NuxtLink to="/worker/documents" class="cx-nav-item">{{ $t('nav.documents') }}</NuxtLink>
         <NuxtLink to="/worker/payments" class="cx-nav-item">{{ $t('nav.payments') }}</NuxtLink>
-        <NuxtLink to="/worker/notifications" class="cx-nav-item">{{ $t('nav.notifications') }}</NuxtLink>
+        <NuxtLink to="/worker/availability" class="cx-nav-item">{{ $t('nav.availability') }}</NuxtLink>
+        <NuxtLink to="/worker/directory" class="cx-nav-item">{{ $t('directory.title') }}</NuxtLink>
+        <NuxtLink to="/worker/notifications" class="cx-nav-item cx-notification-badge">
+          {{ $t('nav.notifications') }}
+          <span v-if="unreadCount > 0" class="cx-notification-count">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+        </NuxtLink>
       </nav>
     </aside>
     <main class="main-content">
@@ -30,6 +35,10 @@
 
 <script setup lang="ts">
 const { logout } = useAuth()
+const { unreadCount, startPolling, stopPolling } = useNotifications()
+
+onMounted(() => startPolling(30_000))
+onUnmounted(() => stopPolling())
 </script>
 
 <style scoped>
@@ -48,4 +57,11 @@ const { logout } = useAuth()
   background: var(--cx-bg-primary);
 }
 .btn-sm { min-height: 40px; padding: 0 1rem; font-size: var(--cx-font-xs); }
+
+/* Notification badge on nav item */
+.cx-nav-item.cx-notification-badge {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
 </style>

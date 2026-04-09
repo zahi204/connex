@@ -78,6 +78,108 @@
     "area_label": "Area:",
     "skill_label": "Skill:"
   },
+  "profile": {
+    "full_name": "Full Name",
+    "id_number": "ID Number",
+    "primary_skill": "Primary Skill",
+    "secondary_skill": "Secondary Skill",
+    "country_of_origin": "Country of Origin",
+    "languages": "Languages",
+    "languages_hint": "e.g. hebrew, arabic",
+    "work_area": "Preferred Work Area",
+    "availability": "Availability",
+    "payment_status": "Payment Status",
+    "approval_hint": "Changes will be submitted for approval before taking effect.",
+    "submitted_approval": "Profile update submitted for approval.",
+    "save_failed": "Failed to save profile.",
+    "no_profile": "No profile loaded."
+  },
+  "assignments": {
+    "project": "Project",
+    "role": "Type",
+    "dates": "Dates",
+    "status": "Status",
+    "type": "Engagement Type",
+    "description": "Description",
+    "work_description": "Work Description",
+    "notes": "Notes",
+    "details": "Assignment Details",
+    "from": "From",
+    "to": "To",
+    "empty": "No assignments yet.",
+    "load_failed": "Failed to load assignments."
+  },
+  "team": {
+    "leader": "Team Leader",
+    "members": "Team Members",
+    "joined": "Joined",
+    "no_team": "You are not currently on a team.",
+    "no_members": "No team members found.",
+    "load_failed": "Failed to load team."
+  },
+  "training": {
+    "latest_score": "Latest Score",
+    "classification": "Classification",
+    "suitability": "Suitability",
+    "history": "Training History",
+    "score": "Score",
+    "cycle": "Cycle",
+    "certificate": "Certificate",
+    "no_certificate": "Certificate not yet issued.",
+    "empty": "No training results yet.",
+    "load_failed": "Failed to load training."
+  },
+  "documents": {
+    "upload": "Upload Document",
+    "name": "Document Name",
+    "name_placeholder": "e.g. My Passport",
+    "type": "Document Type",
+    "uploaded_at": "Uploaded",
+    "status": "Status",
+    "my_documents": "My Documents",
+    "empty": "No documents found.",
+    "fill_fields_first": "Fill in the document name and type above to enable upload.",
+    "uploaded_approval": "Document uploaded and submitted for approval.",
+    "load_failed": "Failed to load documents."
+  },
+  "payments": {
+    "month_status": "This Month",
+    "last_payment": "Last Payment",
+    "year_total": "Total This Year",
+    "description": "Description",
+    "date": "Date",
+    "amount": "Amount",
+    "status": "Status",
+    "empty": "No payment records found.",
+    "load_failed": "Failed to load payments."
+  },
+  "notifications": {
+    "mark_all_read": "Mark All Read",
+    "all": "All",
+    "assignment": "Assignment",
+    "payment": "Payment",
+    "training": "Training",
+    "system": "System",
+    "empty": "No notifications.",
+    "load_failed": "Failed to load notifications."
+  },
+  "availability": {
+    "update": "Update Availability",
+    "available_daily": "Available for daily work",
+    "available_contract": "Available for contract work",
+    "not_available_until": "Not available until (optional)",
+    "not_available_hint": "Leave blank if you are available now.",
+    "status": "Status Override",
+    "no_override": "— No override —",
+    "approval_hint": "Changes will be submitted for admin approval.",
+    "submitted_approval": "Availability change submitted for approval.",
+    "save_failed": "Failed to submit availability.",
+    "load_failed": "Failed to load profile."
+  },
+  "upload": {
+    "drop_or_click": "Drop a file here or click to browse",
+    "hint": "PDF, JPG or PNG · max 10 MB"
+  },
   "dashboard": {
     "worker": {
       "title": "Worker Dashboard",

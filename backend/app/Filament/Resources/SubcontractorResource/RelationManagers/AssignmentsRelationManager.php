@@ -4,6 +4,9 @@ namespace App\Filament\Resources\SubcontractorResource\RelationManagers;
 
 use App\Enums\AssignmentStatus;
 use App\Enums\EngagementType;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Form as FormContainer;
@@ -43,7 +46,7 @@ class AssignmentsRelationManager extends RelationManager
                     AssignmentStatus::Suspended => 'warning',
                 }),
             ])
-            ->headerActions([Tables\Actions\CreateAction::make()])
-            ->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);
+            ->headerActions([CreateAction::make()])
+            ->actions([EditAction::make(), DeleteAction::make()]);
     }
 }

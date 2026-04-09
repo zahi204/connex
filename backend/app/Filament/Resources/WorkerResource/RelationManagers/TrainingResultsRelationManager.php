@@ -3,10 +3,13 @@
 namespace App\Filament\Resources\WorkerResource\RelationManagers;
 
 use App\Enums\Suitability;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Form as FormContainer;
 use Filament\Schemas\Schema;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -19,24 +22,24 @@ class TrainingResultsRelationManager extends RelationManager
         return $schema
             ->schema([
                 FormContainer::make([
-                Forms\Components\Select::make('training_cycle_id')
-                    ->relationship('trainingCycle', 'name')
-                    ->required(),
-                Forms\Components\Toggle::make('attendance_day1'),
-                Forms\Components\Toggle::make('attendance_day2'),
-                Forms\Components\TextInput::make('professional_score')
-                    ->numeric()
-                    ->step(0.01),
-                Forms\Components\Select::make('suitability')
-                    ->options(Suitability::class),
-                Forms\Components\TextInput::make('classification')
-                    ->maxLength(100),
-                Forms\Components\TextInput::make('primary_field')
-                    ->maxLength(100),
-                Forms\Components\Textarea::make('notes')
-                    ->rows(2),
-                Forms\Components\TextInput::make('placement_recommendation')
-                    ->maxLength(255),
+                    Forms\Components\Select::make('training_cycle_id')
+                        ->relationship('trainingCycle', 'name')
+                        ->required(),
+                    Forms\Components\Toggle::make('attendance_day1'),
+                    Forms\Components\Toggle::make('attendance_day2'),
+                    Forms\Components\TextInput::make('professional_score')
+                        ->numeric()
+                        ->step(0.01),
+                    Forms\Components\Select::make('suitability')
+                        ->options(Suitability::class),
+                    Forms\Components\TextInput::make('classification')
+                        ->maxLength(100),
+                    Forms\Components\TextInput::make('primary_field')
+                        ->maxLength(100),
+                    Forms\Components\Textarea::make('notes')
+                        ->rows(2),
+                    Forms\Components\TextInput::make('placement_recommendation')
+                        ->maxLength(255),
                 ]),
             ]);
     }
@@ -46,7 +49,7 @@ class TrainingResultsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('trainingCycle.name')
-                    ->label('Cycle'),
+                    ->label('מחזור'),
                 Tables\Columns\IconColumn::make('attendance_day1')
                     ->boolean(),
                 Tables\Columns\IconColumn::make('attendance_day2')
@@ -58,11 +61,11 @@ class TrainingResultsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('classification'),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ]);
     }
 }

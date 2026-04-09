@@ -4,6 +4,9 @@ namespace App\Filament\Resources\DeveloperResource\RelationManagers;
 
 use App\Enums\ProjectStatus;
 use App\Enums\ProjectType;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Form as FormContainer;
@@ -44,7 +47,7 @@ class ProjectsRelationManager extends RelationManager
                 }),
                 Tables\Columns\TextColumn::make('estimated_start_date')->date(),
             ])
-            ->headerActions([Tables\Actions\CreateAction::make()])
-            ->actions([Tables\Actions\EditAction::make(), Tables\Actions\DeleteAction::make()]);
+            ->headerActions([CreateAction::make()])
+            ->actions([EditAction::make(), DeleteAction::make()]);
     }
 }

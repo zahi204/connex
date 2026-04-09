@@ -30,15 +30,19 @@ class DemoDataSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin & Coordinator
+        // Admin & Coordinator (Filament panel users — email + password login)
         $admin = User::factory()->create([
             'phone' => '+972500000001',
+            'email' => 'admin@connex.test',
+            'password' => 'password',
             'role' => UserRole::Admin,
             'role_locked' => true,
         ]);
 
         $coordinator = User::factory()->create([
             'phone' => '+972500000002',
+            'email' => 'coordinator@connex.test',
+            'password' => 'password',
             'role' => UserRole::Coordinator,
             'role_locked' => true,
         ]);

@@ -1,55 +1,145 @@
 <template>
-  <div class="portal-page">
-    <h1>My Profile</h1>
-    <div v-if="loading" class="loading">Loading...</div>
-    <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else-if="profile" class="profile-content">
-      <div v-if="successMsg" class="success-message">{{ successMsg }}</div>
-      <div class="profile-header">
-        <h2>{{ profile.full_name }}</h2>
-        <button v-if="!editing" class="btn-edit" @click="startEdit">Edit Profile</button>
-        <div v-else class="edit-actions">
-          <button class="btn-save" :disabled="saving" @click="saveProfile">{{ saving ? 'Saving...' : 'Save' }}</button>
-          <button class="btn-cancel" @click="cancelEdit">Cancel</button>
+  <div class="cx-page">
+    <h1 class="cx-page-title">{{ $t('nav.profile') }}</h1>
+
+    <SharedLoadingState v-if="loading" :rows="6" />
+    <div v-else-if="error" class="cx-toast cx-toast-error" style="position:static;margin-bottom:1rem;">{{ error }}</div>
+
+    <template v-else-if="profile">
+      <!-- Toast -->
+      <Transition name="fade">
+        <div v-if="toastMsg" class="cx-toast cx-toast-success">✓ {{ toastMsg }}</div>
+      </Transition>
+
+      <!-- Hero card -->
+      <div class="cx-card" style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+        <SharedWorkerAvatar :name="profile.full_name" :photo-url="profile.photo_url" :status="profile.status" size="xl" />
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:flex-start;gap:1rem;flex-wrap:wrap;">
+            <div>
+              <h2 style="font-family:var(--cx-font-display);font-size:1.5rem;font-weight:800;margin:0 0 0.3rem;color:var(--cx-text-primary);">
+                {{ profile.full_name }}
+              </h2>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+                <SharedStatusBadge :status="profile.status ?? 'unknown'" type="worker" />
+                <SharedRatingStars :rating="profile.professional_rating" :max="10" />
+              </div>
+            </div>
+            <div style="margin-inline-start:auto;">
+              <button v-if="!editing" class="cx-btn cx-btn-secondary" @click="startEdit">
+                {{ $t('common.actions') }} ✎
+              </button>
+              <div v-else style="display:flex;gap:0.5rem;">
+                <button class="cx-btn cx-btn-primary" :disabled="saving" @click="saveProfile">
+                  {{ saving ? $t('common.loading') : $t('common.save') }}
+                </button>
+                <button class="cx-btn cx-btn-ghost" @click="cancelEdit">{{ $t('common.cancel') }}</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div v-if="!editing" class="info-grid">
-        <div class="info-item"><span class="label">ID Number</span><span class="value">{{ profile.id_number || 'N/A' }}</span></div>
-        <div class="info-item"><span class="label">Primary Skill</span><span class="value">{{ profile.primary_skill || 'N/A' }}</span></div>
-        <div class="info-item"><span class="label">Secondary Skill</span><span class="value">{{ profile.secondary_skill || 'N/A' }}</span></div>
-        <div class="info-item"><span class="label">Country of Origin</span><span class="value">{{ profile.country_of_origin || 'N/A' }}</span></div>
-        <div class="info-item"><span class="label">Languages</span><span class="value">{{ (profile.languages || []).join(', ') || 'N/A' }}</span></div>
-        <div class="info-item"><span class="label">Work Area</span><span class="value">{{ profile.preferred_work_area || 'N/A' }}</span></div>
-        <div class="info-item"><span class="label">Status</span><span class="value">{{ profile.status }}</span></div>
-        <div class="info-item"><span class="label">Rating</span><span class="value">{{ profile.professional_rating ?? 'N/A' }}</span></div>
+      <!-- View mode: info grid -->
+      <div v-if="!editing" class="cx-bento" style="--cx-bento-min:220px;">
+        <div class="cx-card cx-info-row">
+          <div class="cx-info-label">{{ $t('profile.id_number') }}</div>
+          <div class="cx-info-value cx-mono">{{ profile.id_number || '—' }}</div>
+        </div>
+        <div class="cx-card cx-info-row">
+          <div class="cx-info-label">{{ $t('profile.primary_skill') }}</div>
+          <div class="cx-info-value">{{ profile.primary_skill || '—' }}</div>
+        </div>
+        <div class="cx-card cx-info-row">
+          <div class="cx-info-label">{{ $t('profile.secondary_skill') }}</div>
+          <div class="cx-info-value">{{ profile.secondary_skill || '—' }}</div>
+        </div>
+        <div class="cx-card cx-info-row">
+          <div class="cx-info-label">{{ $t('profile.country_of_origin') }}</div>
+          <div class="cx-info-value">{{ profile.country_of_origin || '—' }}</div>
+        </div>
+        <div class="cx-card cx-info-row">
+          <div class="cx-info-label">{{ $t('profile.languages') }}</div>
+          <div class="cx-info-value">
+            <span v-if="profile.languages?.length" style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+              <span v-for="lang in profile.languages" :key="lang" class="cx-chip">{{ lang }}</span>
+            </span>
+            <span v-else>—</span>
+          </div>
+        </div>
+        <div class="cx-card cx-info-row">
+          <div class="cx-info-label">{{ $t('profile.work_area') }}</div>
+          <div class="cx-info-value">{{ profile.preferred_work_area || '—' }}</div>
+        </div>
+        <div class="cx-card cx-info-row">
+          <div class="cx-info-label">{{ $t('profile.availability') }}</div>
+          <div class="cx-info-value" style="display:flex;gap:0.75rem;">
+            <span :class="profile.available_daily ? 'cx-badge-green' : 'cx-badge-gray'" class="cx-badge">Daily</span>
+            <span :class="profile.available_contract ? 'cx-badge-green' : 'cx-badge-gray'" class="cx-badge">Contract</span>
+          </div>
+        </div>
+        <div class="cx-card cx-info-row">
+          <div class="cx-info-label">{{ $t('profile.payment_status') }}</div>
+          <div class="cx-info-value">
+            <SharedStatusBadge :status="profile.payment_status ?? 'unknown'" type="payment" />
+          </div>
+        </div>
       </div>
 
-      <div v-else class="form-grid">
-        <div class="field"><label>Full Name</label><input v-model="form.full_name" type="text" /></div>
-        <div class="field"><label>ID Number</label><input v-model="form.id_number" type="text" /></div>
-        <div class="field"><label>Primary Skill</label><input v-model="form.primary_skill" type="text" /></div>
-        <div class="field"><label>Secondary Skill</label><input v-model="form.secondary_skill" type="text" /></div>
-        <div class="field"><label>Country of Origin</label><input v-model="form.country_of_origin" type="text" /></div>
-        <div class="field"><label>Languages (comma separated)</label><input v-model="languagesStr" type="text" /></div>
-        <div class="field"><label>Preferred Work Area</label><input v-model="form.preferred_work_area" type="text" /></div>
-        <p class="hint">Changes will be submitted for approval.</p>
+      <!-- Edit mode: form -->
+      <div v-else class="cx-card">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;">
+          <div>
+            <label class="cx-label">{{ $t('profile.full_name') }}</label>
+            <input v-model="form.full_name" class="cx-input" type="text" />
+          </div>
+          <div>
+            <label class="cx-label">{{ $t('profile.primary_skill') }}</label>
+            <select v-model="form.primary_skill" class="cx-select">
+              <option v-for="s in skillOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
+            </select>
+          </div>
+          <div>
+            <label class="cx-label">{{ $t('profile.secondary_skill') }}</label>
+            <select v-model="form.secondary_skill" class="cx-select">
+              <option value="">—</option>
+              <option v-for="s in skillOptions" :key="s.value" :value="s.value">{{ s.label }}</option>
+            </select>
+          </div>
+          <div>
+            <label class="cx-label">{{ $t('profile.work_area') }}</label>
+            <select v-model="form.preferred_work_area" class="cx-select">
+              <option v-for="a in areaOptions" :key="a.value" :value="a.value">{{ a.label }}</option>
+            </select>
+          </div>
+          <div>
+            <label class="cx-label">{{ $t('profile.languages') }}</label>
+            <input v-model="languagesStr" class="cx-input" type="text" :placeholder="$t('profile.languages_hint')" />
+          </div>
+          <div style="grid-column:1/-1;">
+            <p class="cx-label" style="color:var(--cx-text-muted);font-style:italic;">{{ $t('profile.approval_hint') }}</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </template>
+
+    <SharedEmptyState v-else icon="👷" :title="$t('profile.no_profile')" />
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({ layout: 'worker', middleware: ['auth'] })
 
+const { t } = useI18n()
+const { fetchProfile, profile, profileLoading: loading, profileError: error, updateProfile } = useWorkerPortal()
 const { apiFetch } = useApi()
-const loading = ref(true)
-const error = ref('')
-const saving = ref(false)
+
 const editing = ref(false)
-const successMsg = ref('')
-const profile = ref<any>(null)
+const saving = ref(false)
+const toastMsg = ref('')
 const form = reactive<any>({})
+const skillOptions = ref<any[]>([])
+const areaOptions = ref<any[]>([])
 
 const languagesStr = computed({
   get: () => (form.languages || []).join(', '),
@@ -57,20 +147,21 @@ const languagesStr = computed({
 })
 
 onMounted(async () => {
+  await fetchProfile()
   try {
-    const res = await apiFetch('/worker/profile') as any
-    profile.value = res.data
-  } catch (e: any) {
-    error.value = e?.data?.message || 'Failed to load profile'
-  } finally {
-    loading.value = false
-  }
+    const [sRes, aRes] = await Promise.all([
+      apiFetch('/reference/skills') as any,
+      apiFetch('/reference/work_areas') as any,
+    ])
+    skillOptions.value = sRes?.data ?? []
+    areaOptions.value = aRes?.data ?? []
+  } catch { /* reference data not critical */ }
 })
 
 function startEdit() {
   Object.assign(form, { ...profile.value })
   editing.value = true
-  successMsg.value = ''
+  toastMsg.value = ''
 }
 
 function cancelEdit() {
@@ -79,40 +170,15 @@ function cancelEdit() {
 
 async function saveProfile() {
   saving.value = true
-  error.value = ''
   try {
-    const res = await apiFetch('/worker/profile', { method: 'PUT', body: { ...form } }) as any
-    profile.value = res.data
+    await updateProfile({ ...form })
     editing.value = false
-    successMsg.value = 'Profile update submitted for approval.'
+    toastMsg.value = t('profile.submitted_approval')
+    setTimeout(() => { toastMsg.value = '' }, 4000)
   } catch (e: any) {
-    error.value = e?.data?.message || 'Failed to save profile'
+    error.value = e?.data?.message || t('profile.save_failed')
   } finally {
     saving.value = false
   }
 }
 </script>
-
-<style scoped>
-.portal-page { padding: 1.5rem; }
-.portal-page h1 { color: var(--cx-text-primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: var(--cx-text-muted); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--cx-led-red); padding: 0.75rem; border-radius: 10px; }
-.success-message { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: var(--cx-led-green); padding: 0.75rem; border-radius: 10px; margin-bottom: 1rem; }
-.profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-.profile-header h2 { color: var(--cx-text-primary); margin: 0; font-size: 1.2rem; }
-.btn-edit, .btn-save, .btn-cancel { padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
-.btn-edit { background: rgba(59,130,246,0.2); color: var(--cx-primary); border: 1px solid rgba(59,130,246,0.3); }
-.btn-save { background: rgba(34,197,94,0.2); color: var(--cx-led-green); border: 1px solid rgba(34,197,94,0.3); }
-.btn-cancel { background: var(--cx-bg-muted); color: var(--cx-text-secondary); border: 1px solid var(--cx-border); }
-.edit-actions { display: flex; gap: 0.5rem; }
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.info-item { background: var(--cx-bg-card); border-radius: 8px; padding: 1rem; }
-.info-item .label { display: block; color: var(--cx-text-muted); font-size: 0.75rem; margin-bottom: 0.25rem; }
-.info-item .value { color: var(--cx-text-primary); font-size: 0.95rem; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.field { display: flex; flex-direction: column; gap: 0.25rem; }
-.field label { color: var(--cx-text-secondary); font-size: 0.85rem; }
-.field input { padding: 0.65rem 0.75rem; background: var(--cx-bg-card); border: 1px solid var(--cx-border); border-radius: 8px; color: var(--cx-text-primary); font-size: 0.9rem; }
-.hint { color: var(--cx-text-muted); font-style: italic; grid-column: 1 / -1; font-size: 0.85rem; }
-</style>

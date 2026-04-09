@@ -1,60 +1,84 @@
 <template>
-  <div class="portal-page">
-    <h1>My Team</h1>
-    <div v-if="loading" class="loading">Loading...</div>
-    <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else-if="team">
-      <div class="team-header">
-        <h2>{{ team.name }}</h2>
-        <span v-if="team.leader" class="team-leader">Leader: {{ team.leader }}</span>
-      </div>
-      <div v-if="team.members && team.members.length" class="members-list">
-        <div v-for="m in team.members" :key="m.id" class="member-card">
-          <div class="member-name">{{ m.full_name }}</div>
-          <div class="member-details">
-            <span v-if="m.primary_skill">{{ m.primary_skill }}</span>
-            <span v-if="m.role" class="member-role">{{ m.role }}</span>
+  <div class="cx-page">
+    <h1 class="cx-page-title">{{ $t('nav.team') }}</h1>
+
+    <SharedLoadingState v-if="loading" :rows="6" />
+    <div v-else-if="error" class="cx-toast cx-toast-error" style="position:static;">{{ error }}</div>
+    <SharedEmptyState v-else-if="!team" icon="👥" :title="$t('team.no_team')" />
+
+    <template v-else>
+      <!-- Team header card -->
+      <div class="cx-card" style="margin-bottom:1.5rem;">
+        <div style="display:flex;align-items:flex-start;gap:1.25rem;flex-wrap:wrap;">
+          <div style="flex:1;min-width:0;">
+            <h2 style="font-family:var(--cx-font-display);font-size:1.4rem;font-weight:800;margin:0 0 0.5rem;color:var(--cx-text-primary);">
+              {{ team.name }}
+            </h2>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;">
+              <SharedStatusBadge v-if="team.status" :status="team.status" type="worker" />
+              <span v-if="team.current_project" class="cx-badge cx-badge-blue">
+                {{ team.current_project.name }}
+              </span>
+            </div>
+          </div>
+          <div v-if="team.leader" style="text-align:right;">
+            <div class="cx-info-label">{{ $t('team.leader') }}</div>
+            <div style="display:flex;align-items:center;gap:0.6rem;margin-top:0.3rem;">
+              <SharedWorkerAvatar :name="team.leader.full_name" size="sm" status="available" />
+              <span style="font-weight:600;color:var(--cx-text-primary);">{{ team.leader.full_name }}</span>
+            </div>
           </div>
         </div>
       </div>
-      <div v-else class="empty">No team members found.</div>
-    </div>
-    <div v-else class="empty">You are not currently assigned to a team.</div>
+
+      <!-- Members grid -->
+      <h2 class="cx-section-title">{{ $t('team.members') }}</h2>
+      <SharedEmptyState v-if="!team.members?.length" icon="👤" :title="$t('team.no_members')" />
+      <div v-else class="cx-bento" style="--cx-bento-min:200px;">
+        <div
+          v-for="m in team.members"
+          :key="m.id"
+          class="cx-card"
+          :class="{ 'cx-card-accent': m.is_leader }"
+          style="display:flex;flex-direction:column;gap:0.6rem;"
+        >
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <SharedWorkerAvatar :name="m.full_name" size="md" />
+            <div style="min-width:0;">
+              <div style="font-weight:700;color:var(--cx-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                {{ m.full_name }}
+              </div>
+              <div style="font-size:var(--cx-font-xs);color:var(--cx-text-muted);">
+                {{ m.primary_skill ?? '—' }}
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+            <span v-if="m.is_leader" class="cx-badge cx-badge-blue">{{ $t('team.leader') }}</span>
+            <span v-if="m.role" class="cx-badge cx-badge-gray">{{ m.role }}</span>
+          </div>
+          <div class="cx-info-row" style="margin-top:auto;">
+            <div class="cx-info-label">{{ $t('team.joined') }}</div>
+            <div class="cx-info-value cx-mono">{{ m.joined_at ?? '—' }}</div>
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({ layout: 'worker', middleware: ['auth'] })
 
-const { apiFetch } = useApi()
-const loading = ref(true)
+const { t } = useI18n()
+const { fetchTeam, team, teamLoading: loading } = useWorkerPortal()
 const error = ref('')
-const team = ref<any>(null)
 
 onMounted(async () => {
   try {
-    const res = await apiFetch('/worker/team') as any
-    team.value = res.data
+    await fetchTeam()
   } catch (e: any) {
-    error.value = e?.data?.message || 'Failed to load team info'
-  } finally {
-    loading.value = false
+    error.value = e?.data?.message || t('team.load_failed')
   }
 })
 </script>
-
-<style scoped>
-.portal-page { padding: 1.5rem; }
-.portal-page h1 { color: var(--cx-text-primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: var(--cx-text-muted); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--cx-led-red); padding: 0.75rem; border-radius: 10px; }
-.empty { color: var(--cx-text-muted); text-align: center; padding: 2rem; }
-.team-header { margin-bottom: 1.5rem; }
-.team-header h2 { color: var(--cx-text-primary); margin: 0 0 0.25rem; font-size: 1.2rem; }
-.team-leader { color: var(--cx-text-muted); font-size: 0.85rem; }
-.members-list { display: flex; flex-direction: column; gap: 0.5rem; }
-.member-card { background: var(--cx-bg-card); border: 1px solid var(--cx-border); border-radius: 10px; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
-.member-name { color: var(--cx-text-primary); font-weight: 500; }
-.member-details { display: flex; gap: 1rem; color: var(--cx-text-muted); font-size: 0.8rem; }
-.member-role { background: rgba(139,92,246,0.2); color: #c4b5fd; padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.7rem; }
-</style>

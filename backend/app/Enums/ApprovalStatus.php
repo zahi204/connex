@@ -2,12 +2,24 @@
 
 namespace App\Enums;
 
-enum ApprovalStatus: string
+use Filament\Support\Contracts\HasLabel;
+
+enum ApprovalStatus: string implements HasLabel
 {
     case Pending = 'pending';
     case Approved = 'approved';
     case Rejected = 'rejected';
     case ChangesRequired = 'changes_required';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::Pending => 'ממתין',
+            self::Approved => 'אושר',
+            self::Rejected => 'נדחה',
+            self::ChangesRequired => 'נדרשים שינויים',
+        };
+    }
 
     public function label(): string
     {

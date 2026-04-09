@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\BoqRequestController;
 use App\Http\Controllers\Api\V1\DeveloperPortalController;
 use App\Http\Controllers\Api\V1\NotificationController;
+use App\Http\Controllers\Api\V1\ReferenceController;
 use App\Http\Controllers\Api\V1\SubcontractorPortalController;
 use App\Http\Controllers\Api\V1\WizardController;
 use App\Http\Controllers\Api\V1\WorkerDirectoryController;
@@ -45,6 +46,9 @@ Route::prefix('v1')->group(function () {
             Route::get('boq-requests', [DeveloperPortalController::class, 'boqRequests']);
         });
 
+        // Reference data (all authenticated)
+        Route::get('reference/{type}', [ReferenceController::class, 'index']);
+
         // Worker routes
         Route::prefix('worker')->middleware('role:worker')->group(function () {
             Route::get('profile', [WorkerPortalController::class, 'profile']);
@@ -52,6 +56,7 @@ Route::prefix('v1')->group(function () {
             Route::get('assignments', [WorkerPortalController::class, 'assignments']);
             Route::get('team', [WorkerPortalController::class, 'team']);
             Route::get('training', [WorkerPortalController::class, 'training']);
+            Route::get('training/{resultId}/certificate', [WorkerPortalController::class, 'downloadCertificate']);
             Route::get('documents', [WorkerPortalController::class, 'documents']);
             Route::post('documents', [WorkerPortalController::class, 'uploadDocument']);
             Route::get('payments', [WorkerPortalController::class, 'payments']);

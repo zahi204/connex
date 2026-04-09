@@ -4,14 +4,21 @@ namespace App\Filament\Resources;
 
 use App\Enums\AssignmentStatus;
 use App\Enums\EngagementType;
+use App\Filament\Resources\AssignmentResource\Pages\CreateAssignment;
+use App\Filament\Resources\AssignmentResource\Pages\EditAssignment;
+use App\Filament\Resources\AssignmentResource\Pages\ListAssignments;
 use App\Models\Assignment;
 use App\Models\Subcontractor;
 use App\Models\Team;
 use App\Models\Worker;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
+use Filament\Resources\Resource;
 use Filament\Schemas\Components\Form as FormContainer;
 use Filament\Schemas\Schema;
-use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -21,65 +28,72 @@ class AssignmentResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-check';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Operations';
+    protected static string|\UnitEnum|null $navigationGroup = 'תפעול';
 
     protected static ?int $navigationSort = 2;
+
+    protected static ?string $modelLabel = 'שיבוץ';
+
+    protected static ?string $pluralModelLabel = 'שיבוצים';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
                 FormContainer::make([
-                Forms\Components\Select::make('project_id')
-                    ->relationship('project', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
-                Forms\Components\Select::make('resource_type')
-                    ->options([
-                        Worker::class => 'Worker',
-                        Team::class => 'Team',
-                        Subcontractor::class => 'Subcontractor',
-                    ])
-                    ->required()
-                    ->live(),
-                Forms\Components\Select::make('resource_id')
-                    ->label('Resource')
-                    ->options(function (Forms\Get $get) {
-                        $type = $get('resource_type');
-                        if (! $type) return [];
-                        return match ($type) {
-                            Worker::class => Worker::pluck('full_name', 'id'),
-                            Team::class => Team::pluck('name', 'id'),
-                            Subcontractor::class => Subcontractor::pluck('name', 'id'),
-                            default => [],
-                        };
-                    })
-                    ->required()
-                    ->searchable(),
-                Forms\Components\Select::make('engagement_type')
-                    ->options(EngagementType::class)
-                    ->required(),
-                Forms\Components\DatePicker::make('start_date')
-                    ->required(),
-                Forms\Components\DatePicker::make('estimated_end_date'),
-                Forms\Components\DatePicker::make('actual_end_date'),
-                Forms\Components\Textarea::make('work_description')
-                    ->rows(3),
-                Forms\Components\TextInput::make('price_per_day')
-                    ->numeric()
-                    ->prefix('NIS'),
-                Forms\Components\TextInput::make('contract_amount')
-                    ->numeric()
-                    ->prefix('NIS'),
-                Forms\Components\TextInput::make('commission_rate')
-                    ->numeric()
-                    ->suffix('%'),
-                Forms\Components\Select::make('status')
-                    ->options(AssignmentStatus::class)
-                    ->required(),
-                Forms\Components\Textarea::make('notes')
-                    ->rows(2),
+                    Forms\Components\Select::make('project_id')
+                        ->relationship('project', 'name')
+                        ->required()
+                        ->searchable()
+                        ->preload(),
+                    Forms\Components\Select::make('resource_type')
+                        ->options([
+                            Worker::class => 'עובד',
+                            Team::class => 'צוות',
+                            Subcontractor::class => 'קבלן משנה',
+                        ])
+                        ->required()
+                        ->live(),
+                    Forms\Components\Select::make('resource_id')
+                        ->label('משאב')
+                        ->options(function (Forms\Get $get) {
+                            $type = $get('resource_type');
+                            if (! $type) {
+                                return [];
+                            }
+
+                            return match ($type) {
+                                Worker::class => Worker::pluck('full_name', 'id'),
+                                Team::class => Team::pluck('name', 'id'),
+                                Subcontractor::class => Subcontractor::pluck('name', 'id'),
+                                default => [],
+                            };
+                        })
+                        ->required()
+                        ->searchable(),
+                    Forms\Components\Select::make('engagement_type')
+                        ->options(EngagementType::class)
+                        ->required(),
+                    Forms\Components\DatePicker::make('start_date')
+                        ->required(),
+                    Forms\Components\DatePicker::make('estimated_end_date'),
+                    Forms\Components\DatePicker::make('actual_end_date'),
+                    Forms\Components\Textarea::make('work_description')
+                        ->rows(3),
+                    Forms\Components\TextInput::make('price_per_day')
+                        ->numeric()
+                        ->prefix('NIS'),
+                    Forms\Components\TextInput::make('contract_amount')
+                        ->numeric()
+                        ->prefix('NIS'),
+                    Forms\Components\TextInput::make('commission_rate')
+                        ->numeric()
+                        ->suffix('%'),
+                    Forms\Components\Select::make('status')
+                        ->options(AssignmentStatus::class)
+                        ->required(),
+                    Forms\Components\Textarea::make('notes')
+                        ->rows(2),
                 ]),
             ]);
     }
@@ -122,12 +136,12 @@ class AssignmentResource extends Resource
                     ->options(EngagementType::class),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                EditAction::make(),
+                ViewAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -135,9 +149,9 @@ class AssignmentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Resources\AssignmentResource\Pages\ListAssignments::route('/'),
-            'create' => \App\Filament\Resources\AssignmentResource\Pages\CreateAssignment::route('/create'),
-            'edit' => \App\Filament\Resources\AssignmentResource\Pages\EditAssignment::route('/{record}/edit'),
+            'index' => ListAssignments::route('/'),
+            'create' => CreateAssignment::route('/create'),
+            'edit' => EditAssignment::route('/{record}/edit'),
         ];
     }
 }

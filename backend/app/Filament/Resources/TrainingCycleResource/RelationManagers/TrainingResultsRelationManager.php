@@ -5,11 +5,15 @@ namespace App\Filament\Resources\TrainingCycleResource\RelationManagers;
 use App\Enums\Suitability;
 use App\Jobs\GenerateTrainingCertificate;
 use App\Models\Worker;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Notifications\Notification;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Form as FormContainer;
 use Filament\Schemas\Schema;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -26,10 +30,10 @@ class TrainingResultsRelationManager extends RelationManager
                     ->searchable()
                     ->required(),
                 Forms\Components\Toggle::make('attendance_day1')
-                    ->label('Attendance Day 1')
+                    ->label('נוכחות יום 1')
                     ->default(false),
                 Forms\Components\Toggle::make('attendance_day2')
-                    ->label('Attendance Day 2')
+                    ->label('נוכחות יום 2')
                     ->default(false),
                 Forms\Components\TextInput::make('professional_score')
                     ->numeric()
@@ -54,14 +58,14 @@ class TrainingResultsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('worker.full_name')
-                    ->label('Worker')
+                    ->label('עובד')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('attendance_day1')
                     ->boolean()
-                    ->label('Day 1'),
+                    ->label('יום 1'),
                 Tables\Columns\IconColumn::make('attendance_day2')
                     ->boolean()
-                    ->label('Day 2'),
+                    ->label('יום 2'),
                 Tables\Columns\TextColumn::make('professional_score')
                     ->numeric(decimalPlaces: 2)
                     ->sortable(),
@@ -75,13 +79,13 @@ class TrainingResultsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('classification'),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\Action::make('generateCertificate')
-                    ->label('Generate Certificate')
+                EditAction::make(),
+                DeleteAction::make(),
+                Action::make('generateCertificate')
+                    ->label('צור תעודה')
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('success')
                     ->requiresConfirmation()
@@ -89,7 +93,7 @@ class TrainingResultsRelationManager extends RelationManager
                         GenerateTrainingCertificate::dispatch($record);
 
                         Notification::make()
-                            ->title('Certificate generation queued')
+                            ->title('יצירת תעודה הועברה לתור')
                             ->success()
                             ->send();
                     }),

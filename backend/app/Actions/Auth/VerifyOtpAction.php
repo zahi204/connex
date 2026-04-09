@@ -23,6 +23,15 @@ class VerifyOtpAction
             ['is_active' => true, 'preferred_language' => 'he']
         );
 
+        // Admin & coordinator accounts must use the Filament panel (email + password),
+        // not the phone OTP flow.
+        if ($user->isAdmin()) {
+            return [
+                'success' => false,
+                'message' => 'Admin accounts must sign in via the admin panel.',
+            ];
+        }
+
         $user->update([
             'last_login_at' => now(),
             'last_login_ip' => $request->ip(),

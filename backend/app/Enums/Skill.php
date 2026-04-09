@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum Skill: string
+use Filament\Support\Contracts\HasLabel;
+
+enum Skill: string implements HasLabel
 {
     case Formwork = 'formwork';
     case Rebar = 'rebar';
@@ -13,6 +15,21 @@ enum Skill: string
     case Plumbing = 'plumbing';
     case Painting = 'painting';
     case Waterproofing = 'waterproofing';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::Formwork => 'קופסאות',
+            self::Rebar => 'ברזל',
+            self::General => 'כללי',
+            self::Finishing => 'גימור',
+            self::Skeleton => 'שלד',
+            self::Electrical => 'חשמל',
+            self::Plumbing => 'אינסטלציה',
+            self::Painting => 'צביעה',
+            self::Waterproofing => 'איטום',
+        };
+    }
 
     public function label(): string
     {

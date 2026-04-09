@@ -5,12 +5,22 @@ namespace App\Filament\Resources;
 use App\Actions\Boq\DeliverBoqAction;
 use App\Enums\BoqRequestStatus;
 use App\Enums\BoqUrgency;
+use App\Filament\Resources\BoqRequestResource\Pages\CreateBoqRequest;
+use App\Filament\Resources\BoqRequestResource\Pages\EditBoqRequest;
+use App\Filament\Resources\BoqRequestResource\Pages\ListBoqRequests;
 use App\Filament\Resources\BoqRequestResource\RelationManagers;
 use App\Models\BoqRequest;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ExportAction;
 use Filament\Forms;
-use Filament\Schemas\Components\Form as FormContainer;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -20,66 +30,70 @@ class BoqRequestResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'BOQ';
+    protected static string|\UnitEnum|null $navigationGroup = 'כתב כמויות';
 
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'project_name';
+
+    protected static ?string $modelLabel = 'בקשת כמויות';
+
+    protected static ?string $pluralModelLabel = 'בקשות כמויות';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
                 FormContainer::make([
-                Forms\Components\Tabs::make('BOQ Request')
-                    ->tabs([
-                        Forms\Components\Tabs\Tab::make('Request Info')
-                            ->schema([
-                                Forms\Components\TextInput::make('project_name')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('city')
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('region')
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('project_type')
-                                    ->maxLength(255),
-                                Forms\Components\Textarea::make('scope_description')
-                                    ->rows(4)
-                                    ->columnSpanFull(),
-                                Forms\Components\Select::make('urgency')
-                                    ->options(BoqUrgency::class)
-                                    ->required(),
-                                Forms\Components\Select::make('status')
-                                    ->options(BoqRequestStatus::class)
-                                    ->required(),
-                            ]),
-                        Forms\Components\Tabs\Tab::make('Assignment')
-                            ->schema([
-                                Forms\Components\Select::make('requested_by_user_id')
-                                    ->relationship('requestedBy', 'phone')
-                                    ->searchable()
-                                    ->preload()
-                                    ->label('Requested By'),
-                                Forms\Components\Select::make('prepared_by_user_id')
-                                    ->relationship('preparedBy', 'phone')
-                                    ->searchable()
-                                    ->preload()
-                                    ->label('Prepared By'),
-                            ]),
-                        Forms\Components\Tabs\Tab::make('Financial')
-                            ->schema([
-                                Forms\Components\TextInput::make('price')
-                                    ->numeric()
-                                    ->prefix('SAR')
-                                    ->disabled()
-                                    ->dehydrated(false),
-                                Forms\Components\DateTimePicker::make('delivered_at')
-                                    ->disabled()
-                                    ->dehydrated(false),
-                            ]),
-                    ])
-                    ->columnSpanFull(),
+                    Tabs::make('BOQ Request')
+                        ->tabs([
+                            Tab::make('פרטי בקשה')
+                                ->schema([
+                                    Forms\Components\TextInput::make('project_name')
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('city')
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('region')
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('project_type')
+                                        ->maxLength(255),
+                                    Forms\Components\Textarea::make('scope_description')
+                                        ->rows(4)
+                                        ->columnSpanFull(),
+                                    Forms\Components\Select::make('urgency')
+                                        ->options(BoqUrgency::class)
+                                        ->required(),
+                                    Forms\Components\Select::make('status')
+                                        ->options(BoqRequestStatus::class)
+                                        ->required(),
+                                ]),
+                            Tab::make('שיבוץ')
+                                ->schema([
+                                    Forms\Components\Select::make('requested_by_user_id')
+                                        ->relationship('requestedBy', 'phone')
+                                        ->searchable()
+                                        ->preload()
+                                        ->label('הוגש על ידי'),
+                                    Forms\Components\Select::make('prepared_by_user_id')
+                                        ->relationship('preparedBy', 'phone')
+                                        ->searchable()
+                                        ->preload()
+                                        ->label('הוכן על ידי'),
+                                ]),
+                            Tab::make('פיננסי')
+                                ->schema([
+                                    Forms\Components\TextInput::make('price')
+                                        ->numeric()
+                                        ->prefix('SAR')
+                                        ->disabled()
+                                        ->dehydrated(false),
+                                    Forms\Components\DateTimePicker::make('delivered_at')
+                                        ->disabled()
+                                        ->dehydrated(false),
+                                ]),
+                        ])
+                        ->columnSpanFull(),
                 ]),
             ]);
     }
@@ -112,7 +126,7 @@ class BoqRequestResource extends Resource
                         BoqRequestStatus::Cancelled => 'danger',
                     }),
                 Tables\Columns\TextColumn::make('requestedBy.phone')
-                    ->label('Requested By'),
+                    ->label('הוגש על ידי'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -125,8 +139,8 @@ class BoqRequestResource extends Resource
                     ->options(BoqUrgency::class),
             ])
             ->actions([
-                Tables\Actions\Action::make('accept')
-                    ->label('Accept')
+                Action::make('accept')
+                    ->label('קבל')
                     ->icon('heroicon-o-check-circle')
                     ->color('info')
                     ->requiresConfirmation()
@@ -140,24 +154,24 @@ class BoqRequestResource extends Resource
                             'prepared_by_user_id' => auth()->id(),
                         ]);
                     }),
-                Tables\Actions\Action::make('deliver')
-                    ->label('Deliver')
+                Action::make('deliver')
+                    ->label('מסור')
                     ->icon('heroicon-o-truck')
                     ->color('success')
                     ->requiresConfirmation()
                     ->visible(fn (BoqRequest $record): bool => $record->status === BoqRequestStatus::InPreparation
                         || $record->status === BoqRequestStatus::ReadyForReview)
                     ->action(fn (BoqRequest $record) => app(DeliverBoqAction::class)->execute($record)),
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->headerActions([
-                Tables\Actions\ExportAction::make()
-                    ->label('Export Excel')
+                ExportAction::make()
+                    ->label('ייצוא לאקסל')
                     ->icon('heroicon-o-arrow-down-tray'),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
@@ -173,9 +187,9 @@ class BoqRequestResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Resources\BoqRequestResource\Pages\ListBoqRequests::route('/'),
-            'create' => \App\Filament\Resources\BoqRequestResource\Pages\CreateBoqRequest::route('/create'),
-            'edit' => \App\Filament\Resources\BoqRequestResource\Pages\EditBoqRequest::route('/{record}/edit'),
+            'index' => ListBoqRequests::route('/'),
+            'create' => CreateBoqRequest::route('/create'),
+            'edit' => EditBoqRequest::route('/{record}/edit'),
         ];
     }
 }

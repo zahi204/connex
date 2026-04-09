@@ -3,10 +3,13 @@
 namespace App\Filament\Resources\WorkerResource\RelationManagers;
 
 use App\Enums\DocumentType;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Form as FormContainer;
 use Filament\Schemas\Schema;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -19,17 +22,17 @@ class DocumentsRelationManager extends RelationManager
         return $schema
             ->schema([
                 FormContainer::make([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('document_type')
-                    ->options(DocumentType::class)
-                    ->required(),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('file')
-                    ->collection('documents')
-                    ->required(),
-                Forms\Components\Textarea::make('notes')
-                    ->rows(2),
+                    Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\Select::make('document_type')
+                        ->options(DocumentType::class)
+                        ->required(),
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('file')
+                        ->collection('documents')
+                        ->required(),
+                    Forms\Components\Textarea::make('notes')
+                        ->rows(2),
                 ]),
             ]);
     }
@@ -47,11 +50,11 @@ class DocumentsRelationManager extends RelationManager
                     ->sortable(),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ]);
     }
 }

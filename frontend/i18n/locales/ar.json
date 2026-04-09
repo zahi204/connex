@@ -78,6 +78,108 @@
     "area_label": "المنطقة:",
     "skill_label": "المهارة:"
   },
+  "profile": {
+    "full_name": "الاسم الكامل",
+    "id_number": "رقم الهوية",
+    "primary_skill": "المهارة الأساسية",
+    "secondary_skill": "المهارة الثانوية",
+    "country_of_origin": "بلد المنشأ",
+    "languages": "اللغات",
+    "languages_hint": "مثال: عربي، عبري",
+    "work_area": "منطقة العمل المفضلة",
+    "availability": "التوفر",
+    "payment_status": "حالة الدفع",
+    "approval_hint": "سيتم تقديم التغييرات للموافقة قبل تفعيلها.",
+    "submitted_approval": "تم تقديم تحديث الملف للموافقة.",
+    "save_failed": "فشل حفظ الملف الشخصي.",
+    "no_profile": "لم يتم تحميل أي ملف شخصي."
+  },
+  "assignments": {
+    "project": "المشروع",
+    "role": "النوع",
+    "dates": "التواريخ",
+    "status": "الحالة",
+    "type": "نوع التعاقد",
+    "description": "الوصف",
+    "work_description": "وصف العمل",
+    "notes": "ملاحظات",
+    "details": "تفاصيل التكليف",
+    "from": "من",
+    "to": "إلى",
+    "empty": "لا توجد تكليفات بعد.",
+    "load_failed": "فشل تحميل التكليفات."
+  },
+  "team": {
+    "leader": "قائد الفريق",
+    "members": "أعضاء الفريق",
+    "joined": "انضم",
+    "no_team": "أنت لست في فريق حالياً.",
+    "no_members": "لم يتم العثور على أعضاء فريق.",
+    "load_failed": "فشل تحميل الفريق."
+  },
+  "training": {
+    "latest_score": "آخر درجة",
+    "classification": "التصنيف",
+    "suitability": "الملاءمة",
+    "history": "سجل التدريب",
+    "score": "الدرجة",
+    "cycle": "دورة",
+    "certificate": "شهادة",
+    "no_certificate": "لم تصدر الشهادة بعد.",
+    "empty": "لا توجد نتائج تدريب بعد.",
+    "load_failed": "فشل تحميل التدريب."
+  },
+  "documents": {
+    "upload": "رفع مستند",
+    "name": "اسم المستند",
+    "name_placeholder": "مثال: جواز سفري",
+    "type": "نوع المستند",
+    "uploaded_at": "تم الرفع",
+    "status": "الحالة",
+    "my_documents": "مستنداتي",
+    "empty": "لم يتم العثور على مستندات.",
+    "fill_fields_first": "أدخل الاسم والنوع أولاً لتفعيل الرفع.",
+    "uploaded_approval": "تم رفع المستند وتقديمه للموافقة.",
+    "load_failed": "فشل تحميل المستندات."
+  },
+  "payments": {
+    "month_status": "الشهر الحالي",
+    "last_payment": "آخر دفعة",
+    "year_total": "الإجمالي هذا العام",
+    "description": "الوصف",
+    "date": "التاريخ",
+    "amount": "المبلغ",
+    "status": "الحالة",
+    "empty": "لم يتم العثور على سجلات دفع.",
+    "load_failed": "فشل تحميل المدفوعات."
+  },
+  "notifications": {
+    "mark_all_read": "تحديد الكل كمقروء",
+    "all": "الكل",
+    "assignment": "التكليف",
+    "payment": "الدفع",
+    "training": "التدريب",
+    "system": "النظام",
+    "empty": "لا توجد إشعارات.",
+    "load_failed": "فشل تحميل الإشعارات."
+  },
+  "availability": {
+    "update": "تحديث التوفر",
+    "available_daily": "متاح للعمل اليومي",
+    "available_contract": "متاح للتعاقد",
+    "not_available_until": "غير متاح حتى (اختياري)",
+    "not_available_hint": "اتركه فارغاً إذا كنت متاحاً الآن.",
+    "status": "تجاوز الحالة",
+    "no_override": "— بدون تجاوز —",
+    "approval_hint": "سيتم تقديم التغييرات لموافقة المسؤول.",
+    "submitted_approval": "تم تقديم تغيير التوفر للموافقة.",
+    "save_failed": "فشل إرسال بيانات التوفر.",
+    "load_failed": "فشل تحميل الملف الشخصي."
+  },
+  "upload": {
+    "drop_or_click": "اسحب ملفاً هنا أو انقر للتصفح",
+    "hint": "PDF أو JPG أو PNG · بحد أقصى 10 ميغابايت"
+  },
   "dashboard": {
     "worker": {
       "title": "لوحة العامل",

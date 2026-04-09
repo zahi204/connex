@@ -2,12 +2,21 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\DeveloperResource\Pages\CreateDeveloper;
+use App\Filament\Resources\DeveloperResource\Pages\EditDeveloper;
+use App\Filament\Resources\DeveloperResource\Pages\ListDevelopers;
 use App\Filament\Resources\DeveloperResource\RelationManagers;
 use App\Models\Developer;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
-use Filament\Schemas\Components\Form as FormContainer;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -17,60 +26,64 @@ class DeveloperResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Resources';
+    protected static string|\UnitEnum|null $navigationGroup = 'משאבים';
 
     protected static ?int $navigationSort = 3;
+
+    protected static ?string $modelLabel = 'יזם';
+
+    protected static ?string $pluralModelLabel = 'יזמים';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
                 FormContainer::make([
-                Forms\Components\Tabs::make('Developer')
-                    ->tabs([
-                        Forms\Components\Tabs\Tab::make('Company Info')
-                            ->schema([
-                                Forms\Components\TextInput::make('company_name')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('registration_number')
-                                    ->maxLength(50),
-                                Forms\Components\TextInput::make('email')
-                                    ->email()
-                                    ->maxLength(255),
-                                Forms\Components\Textarea::make('company_description')
-                                    ->rows(3),
-                                Forms\Components\TextInput::make('company_size')
-                                    ->maxLength(50),
-                                Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
-                                    ->collection('logo')
-                                    ->image()
-                                    ->maxSize(2048),
-                                Forms\Components\Select::make('user_id')
-                                    ->relationship('user', 'phone')
-                                    ->searchable()
-                                    ->preload(),
-                            ]),
-                        Forms\Components\Tabs\Tab::make('Operations')
-                            ->schema([
-                                Forms\Components\TagsInput::make('areas_of_operation'),
-                                Forms\Components\TagsInput::make('specializations'),
-                            ]),
-                        Forms\Components\Tabs\Tab::make('Contact Person')
-                            ->schema([
-                                Forms\Components\TextInput::make('contact_person_name')
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('contact_person_role')
-                                    ->maxLength(100),
-                                Forms\Components\TextInput::make('contact_person_phone')
-                                    ->tel()
-                                    ->maxLength(20),
-                                Forms\Components\TextInput::make('contact_person_email')
-                                    ->email()
-                                    ->maxLength(255),
-                            ]),
-                    ])
-                    ->columnSpanFull(),
+                    Tabs::make('Developer')
+                        ->tabs([
+                            Tab::make('פרטי חברה')
+                                ->schema([
+                                    Forms\Components\TextInput::make('company_name')
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('registration_number')
+                                        ->maxLength(50),
+                                    Forms\Components\TextInput::make('email')
+                                        ->email()
+                                        ->maxLength(255),
+                                    Forms\Components\Textarea::make('company_description')
+                                        ->rows(3),
+                                    Forms\Components\TextInput::make('company_size')
+                                        ->maxLength(50),
+                                    Forms\Components\SpatieMediaLibraryFileUpload::make('logo')
+                                        ->collection('logo')
+                                        ->image()
+                                        ->maxSize(2048),
+                                    Forms\Components\Select::make('user_id')
+                                        ->relationship('user', 'phone')
+                                        ->searchable()
+                                        ->preload(),
+                                ]),
+                            Tab::make('תחומי פעילות')
+                                ->schema([
+                                    Forms\Components\TagsInput::make('areas_of_operation'),
+                                    Forms\Components\TagsInput::make('specializations'),
+                                ]),
+                            Tab::make('איש קשר')
+                                ->schema([
+                                    Forms\Components\TextInput::make('contact_person_name')
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('contact_person_role')
+                                        ->maxLength(100),
+                                    Forms\Components\TextInput::make('contact_person_phone')
+                                        ->tel()
+                                        ->maxLength(20),
+                                    Forms\Components\TextInput::make('contact_person_email')
+                                        ->email()
+                                        ->maxLength(255),
+                                ]),
+                        ])
+                        ->columnSpanFull(),
                 ]),
             ]);
     }
@@ -89,18 +102,18 @@ class DeveloperResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('contact_person_name')
-                    ->label('Contact'),
+                    ->label('איש קשר'),
                 Tables\Columns\TextColumn::make('projects_count')
                     ->counts('projects')
-                    ->label('Projects'),
+                    ->label('פרויקטים'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                EditAction::make(),
+                ViewAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -115,9 +128,9 @@ class DeveloperResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Resources\DeveloperResource\Pages\ListDevelopers::route('/'),
-            'create' => \App\Filament\Resources\DeveloperResource\Pages\CreateDeveloper::route('/create'),
-            'edit' => \App\Filament\Resources\DeveloperResource\Pages\EditDeveloper::route('/{record}/edit'),
+            'index' => ListDevelopers::route('/'),
+            'create' => CreateDeveloper::route('/create'),
+            'edit' => EditDeveloper::route('/{record}/edit'),
         ];
     }
 }

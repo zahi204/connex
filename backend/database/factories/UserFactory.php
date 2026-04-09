@@ -13,7 +13,9 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'phone' => '+9725' . fake()->unique()->numerify('########'),
+            'phone' => '+9725'.fake()->unique()->numerify('########'),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => 'password',
             'role' => fake()->randomElement(UserRole::cases()),
             'role_locked' => false,
             'preferred_language' => 'he',

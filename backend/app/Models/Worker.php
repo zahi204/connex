@@ -9,17 +9,18 @@ use App\Enums\WorkerStatus;
 use App\Models\Traits\HasApproval;
 use Database\Factories\WorkerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Worker extends Model
+class Worker extends Model implements HasMedia
 {
     /** @use HasFactory<WorkerFactory> */
-    use HasFactory, SoftDeletes, HasApproval;
+    use HasApproval, HasFactory, InteractsWithMedia, SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -92,7 +93,7 @@ class Worker extends Model
     {
         return $query->where(function ($q) use ($skill) {
             $q->where('primary_skill', $skill)
-              ->orWhere('secondary_skill', $skill);
+                ->orWhere('secondary_skill', $skill);
         });
     }
 

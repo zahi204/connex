@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum BoqRequestStatus: string
+use Filament\Support\Contracts\HasLabel;
+
+enum BoqRequestStatus: string implements HasLabel
 {
     case New = 'new';
     case UnderReview = 'under_review';
@@ -10,6 +12,18 @@ enum BoqRequestStatus: string
     case ReadyForReview = 'ready_for_review';
     case Delivered = 'delivered';
     case Cancelled = 'cancelled';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::New => 'חדש',
+            self::UnderReview => 'בבדיקה',
+            self::InPreparation => 'בהכנה',
+            self::ReadyForReview => 'מוכן לבדיקה',
+            self::Delivered => 'נמסר',
+            self::Cancelled => 'בוטל',
+        };
+    }
 
     public function label(): string
     {

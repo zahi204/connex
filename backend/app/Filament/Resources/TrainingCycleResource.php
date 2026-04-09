@@ -6,10 +6,13 @@ use App\Enums\TrainingCycleStatus;
 use App\Filament\Resources\TrainingCycleResource\Pages;
 use App\Filament\Resources\TrainingCycleResource\RelationManagers;
 use App\Models\TrainingCycle;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
+use Filament\Resources\Resource;
 use Filament\Schemas\Components\Form as FormContainer;
 use Filament\Schemas\Schema;
-use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -19,25 +22,29 @@ class TrainingCycleResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-academic-cap';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Operations';
+    protected static string|\UnitEnum|null $navigationGroup = 'תפעול';
 
     protected static ?int $navigationSort = 3;
+
+    protected static ?string $modelLabel = 'מחזור הכשרה';
+
+    protected static ?string $pluralModelLabel = 'מחזורי הכשרה';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
                 FormContainer::make([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('start_date')
-                    ->required(),
-                Forms\Components\DatePicker::make('end_date')
-                    ->required(),
-                Forms\Components\Select::make('status')
-                    ->options(TrainingCycleStatus::class)
-                    ->required(),
+                    Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\DatePicker::make('start_date')
+                        ->required(),
+                    Forms\Components\DatePicker::make('end_date')
+                        ->required(),
+                    Forms\Components\Select::make('status')
+                        ->options(TrainingCycleStatus::class)
+                        ->required(),
                 ]),
             ]);
     }
@@ -65,18 +72,18 @@ class TrainingCycleResource extends Resource
                     }),
                 Tables\Columns\TextColumn::make('results_count')
                     ->counts('results')
-                    ->label('Results'),
+                    ->label('תוצאות'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options(TrainingCycleStatus::class),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

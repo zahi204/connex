@@ -6,12 +6,21 @@ use App\Enums\ProjectSource;
 use App\Enums\ProjectStatus;
 use App\Enums\ProjectType;
 use App\Enums\Skill;
+use App\Filament\Resources\ProjectResource\Pages\CreateProject;
+use App\Filament\Resources\ProjectResource\Pages\EditProject;
+use App\Filament\Resources\ProjectResource\Pages\ListProjects;
 use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Models\Project;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
-use Filament\Schemas\Components\Form as FormContainer;
-use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -21,63 +30,67 @@ class ProjectResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-building-office';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Operations';
+    protected static string|\UnitEnum|null $navigationGroup = 'תפעול';
 
     protected static ?int $navigationSort = 1;
+
+    protected static ?string $modelLabel = 'פרויקט';
+
+    protected static ?string $pluralModelLabel = 'פרויקטים';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
                 FormContainer::make([
-                Forms\Components\Tabs::make('Project')
-                    ->tabs([
-                        Forms\Components\Tabs\Tab::make('Details')
-                            ->schema([
-                                Forms\Components\TextInput::make('name')
-                                    ->required()
-                                    ->maxLength(255),
-                                Forms\Components\TextInput::make('address')
-                                    ->maxLength(500),
-                                Forms\Components\TextInput::make('city')
-                                    ->maxLength(100),
-                                Forms\Components\TextInput::make('region')
-                                    ->maxLength(100),
-                                Forms\Components\Select::make('project_type')
-                                    ->options(ProjectType::class)
-                                    ->required(),
-                                Forms\Components\Select::make('status')
-                                    ->options(ProjectStatus::class)
-                                    ->required(),
-                                Forms\Components\Select::make('source')
-                                    ->options(ProjectSource::class),
-                                Forms\Components\Select::make('developer_id')
-                                    ->relationship('developer', 'company_name')
-                                    ->searchable()
-                                    ->preload(),
-                            ]),
-                        Forms\Components\Tabs\Tab::make('Timeline')
-                            ->schema([
-                                Forms\Components\DatePicker::make('estimated_start_date'),
-                                Forms\Components\DatePicker::make('estimated_completion'),
-                            ]),
-                        Forms\Components\Tabs\Tab::make('Trades')
-                            ->schema([
-                                Forms\Components\CheckboxList::make('required_trades')
-                                    ->options(
-                                        collect(Skill::cases())
-                                            ->mapWithKeys(fn ($skill) => [$skill->value => $skill->label()])
-                                            ->toArray()
-                                    )
-                                    ->columns(3),
-                            ]),
-                        Forms\Components\Tabs\Tab::make('Notes')
-                            ->schema([
-                                Forms\Components\Textarea::make('notes')
-                                    ->rows(4),
-                            ]),
-                    ])
-                    ->columnSpanFull(),
+                    Tabs::make('Project')
+                        ->tabs([
+                            Tab::make('פרטים')
+                                ->schema([
+                                    Forms\Components\TextInput::make('name')
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('address')
+                                        ->maxLength(500),
+                                    Forms\Components\TextInput::make('city')
+                                        ->maxLength(100),
+                                    Forms\Components\TextInput::make('region')
+                                        ->maxLength(100),
+                                    Forms\Components\Select::make('project_type')
+                                        ->options(ProjectType::class)
+                                        ->required(),
+                                    Forms\Components\Select::make('status')
+                                        ->options(ProjectStatus::class)
+                                        ->required(),
+                                    Forms\Components\Select::make('source')
+                                        ->options(ProjectSource::class),
+                                    Forms\Components\Select::make('developer_id')
+                                        ->relationship('developer', 'company_name')
+                                        ->searchable()
+                                        ->preload(),
+                                ]),
+                            Tab::make('ציר זמן')
+                                ->schema([
+                                    Forms\Components\DatePicker::make('estimated_start_date'),
+                                    Forms\Components\DatePicker::make('estimated_completion'),
+                                ]),
+                            Tab::make('מקצועות')
+                                ->schema([
+                                    Forms\Components\CheckboxList::make('required_trades')
+                                        ->options(
+                                            collect(Skill::cases())
+                                                ->mapWithKeys(fn ($skill) => [$skill->value => $skill->getLabel()])
+                                                ->toArray()
+                                        )
+                                        ->columns(3),
+                                ]),
+                            Tab::make('הערות')
+                                ->schema([
+                                    Forms\Components\Textarea::make('notes')
+                                        ->rows(4),
+                                ]),
+                        ])
+                        ->columnSpanFull(),
                 ]),
             ]);
     }
@@ -104,13 +117,13 @@ class ProjectResource extends Resource
                         ProjectStatus::Cancelled => 'danger',
                     }),
                 Tables\Columns\TextColumn::make('developer.company_name')
-                    ->label('Developer'),
+                    ->label('יזם'),
                 Tables\Columns\TextColumn::make('estimated_start_date')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('assignments_count')
                     ->counts('assignments')
-                    ->label('Assignments'),
+                    ->label('שיבוצים'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
@@ -119,12 +132,12 @@ class ProjectResource extends Resource
                     ->options(ProjectType::class),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                EditAction::make(),
+                ViewAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -140,9 +153,9 @@ class ProjectResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Resources\ProjectResource\Pages\ListProjects::route('/'),
-            'create' => \App\Filament\Resources\ProjectResource\Pages\CreateProject::route('/create'),
-            'edit' => \App\Filament\Resources\ProjectResource\Pages\EditProject::route('/{record}/edit'),
+            'index' => ListProjects::route('/'),
+            'create' => CreateProject::route('/create'),
+            'edit' => EditProject::route('/{record}/edit'),
         ];
     }
 }

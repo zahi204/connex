@@ -8,18 +8,25 @@
 definePageMeta({ middleware: ['auth'] })
 
 const authStore = useAuthStore()
+const config = useRuntimeConfig()
 
 const roleRouteMap: Record<string, string> = {
   worker: '/worker',
   developer: '/developer',
   subcontractor: '/subcontractor',
   agency: '/agency',
-  admin: '/admin',
-  coordinator: '/admin',
 }
 
 onMounted(async () => {
   const role = authStore.userRole
+
+  // Admin & coordinator use the Filament panel on the backend, not the Nuxt app.
+  if (role === 'admin' || role === 'coordinator') {
+    const backend = config.public.apiBaseUrl as string
+    await navigateTo(`${backend}/admin`, { external: true, replace: true })
+    return
+  }
+
   if (role && roleRouteMap[role])
     await navigateTo(roleRouteMap[role], { replace: true })
   else if (!authStore.isAuthenticated)

@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum DocumentType: string
+use Filament\Support\Contracts\HasLabel;
+
+enum DocumentType: string implements HasLabel
 {
     case Passport = 'passport';
     case Visa = 'visa';
@@ -13,6 +15,21 @@ enum DocumentType: string
     case Permit = 'permit';
     case Certificate = 'certificate';
     case Other = 'other';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::Passport => 'דרכון',
+            self::Visa => 'ויזה',
+            self::License => 'רישיון',
+            self::Insurance => 'ביטוח',
+            self::SafetyCert => 'תעודת בטיחות',
+            self::Plan => 'תוכנית',
+            self::Permit => 'היתר',
+            self::Certificate => 'תעודה',
+            self::Other => 'אחר',
+        };
+    }
 
     public function label(): string
     {

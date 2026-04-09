@@ -78,6 +78,108 @@
     "area_label": "אזור:",
     "skill_label": "מיומנות:"
   },
+  "profile": {
+    "full_name": "שם מלא",
+    "id_number": "מספר זהות",
+    "primary_skill": "מיומנות עיקרית",
+    "secondary_skill": "מיומנות משנית",
+    "country_of_origin": "ארץ מוצא",
+    "languages": "שפות",
+    "languages_hint": "לדוגמה: עברית, ערבית",
+    "work_area": "אזור עבודה מועדף",
+    "availability": "זמינות",
+    "payment_status": "סטטוס תשלום",
+    "approval_hint": "השינויים יוגשו לאישור לפני כניסתם לתוקף.",
+    "submitted_approval": "עדכון הפרופיל הוגש לאישור.",
+    "save_failed": "שמירת הפרופיל נכשלה.",
+    "no_profile": "לא נטען פרופיל."
+  },
+  "assignments": {
+    "project": "פרויקט",
+    "role": "סוג",
+    "dates": "תאריכים",
+    "status": "סטטוס",
+    "type": "סוג עיסוק",
+    "description": "תיאור",
+    "work_description": "תיאור עבודה",
+    "notes": "הערות",
+    "details": "פרטי שיבוץ",
+    "from": "מתאריך",
+    "to": "עד תאריך",
+    "empty": "אין שיבוצים עדיין.",
+    "load_failed": "טעינת השיבוצים נכשלה."
+  },
+  "team": {
+    "leader": "ראש צוות",
+    "members": "חברי הצוות",
+    "joined": "הצטרף",
+    "no_team": "אינך משויך לצוות כרגע.",
+    "no_members": "לא נמצאו חברי צוות.",
+    "load_failed": "טעינת הצוות נכשלה."
+  },
+  "training": {
+    "latest_score": "ציון אחרון",
+    "classification": "סיווג",
+    "suitability": "התאמה",
+    "history": "היסטוריית הכשרות",
+    "score": "ציון",
+    "cycle": "מחזור",
+    "certificate": "תעודה",
+    "no_certificate": "תעודה טרם הונפקה.",
+    "empty": "אין תוצאות הכשרה עדיין.",
+    "load_failed": "טעינת ההכשרות נכשלה."
+  },
+  "documents": {
+    "upload": "העלאת מסמך",
+    "name": "שם המסמך",
+    "name_placeholder": "לדוגמה: דרכון שלי",
+    "type": "סוג מסמך",
+    "uploaded_at": "הועלה",
+    "status": "סטטוס",
+    "my_documents": "המסמכים שלי",
+    "empty": "לא נמצאו מסמכים.",
+    "fill_fields_first": "מלא שם וסוג מסמך כדי להפעיל העלאה.",
+    "uploaded_approval": "המסמך הועלה והוגש לאישור.",
+    "load_failed": "טעינת המסמכים נכשלה."
+  },
+  "payments": {
+    "month_status": "החודש הנוכחי",
+    "last_payment": "תשלום אחרון",
+    "year_total": "סה\"כ השנה",
+    "description": "תיאור",
+    "date": "תאריך",
+    "amount": "סכום",
+    "status": "סטטוס",
+    "empty": "לא נמצאו רשומות תשלום.",
+    "load_failed": "טעינת התשלומים נכשלה."
+  },
+  "notifications": {
+    "mark_all_read": "סמן הכל כנקרא",
+    "all": "הכול",
+    "assignment": "שיבוץ",
+    "payment": "תשלום",
+    "training": "הכשרה",
+    "system": "מערכת",
+    "empty": "אין התראות.",
+    "load_failed": "טעינת ההתראות נכשלה."
+  },
+  "availability": {
+    "update": "עדכון זמינות",
+    "available_daily": "זמין לעבודה יומית",
+    "available_contract": "זמין לחוזה",
+    "not_available_until": "לא זמין עד (אופציונלי)",
+    "not_available_hint": "השאר ריק אם אתה זמין כעת.",
+    "status": "עקיפת סטטוס",
+    "no_override": "— ללא עקיפה —",
+    "approval_hint": "השינויים יוגשו לאישור מנהל.",
+    "submitted_approval": "שינוי הזמינות הוגש לאישור.",
+    "save_failed": "שליחת הזמינות נכשלה.",
+    "load_failed": "טעינת הפרופיל נכשלה."
+  },
+  "upload": {
+    "drop_or_click": "גרור קובץ לכאן או לחץ לעיון",
+    "hint": "PDF, JPG או PNG · עד 10 MB"
+  },
   "dashboard": {
     "worker": {
       "title": "לוח בקרת עובד",

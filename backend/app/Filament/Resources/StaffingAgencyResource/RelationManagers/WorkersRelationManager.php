@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\StaffingAgencyResource\RelationManagers;
 
 use App\Enums\WorkerStatus;
+use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -29,6 +30,6 @@ class WorkersRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('professional_rating')->numeric(2)->sortable(),
                 Tables\Columns\TextColumn::make('training_score')->numeric(2),
             ])
-            ->actions([Tables\Actions\ViewAction::make()]);
+            ->actions([ViewAction::make()]);
     }
 }

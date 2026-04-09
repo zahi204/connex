@@ -3,12 +3,18 @@
 namespace App\Filament\Resources\BoqRequestResource\RelationManagers;
 
 use App\Enums\UnitOfMeasure;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms;
-use Filament\Schemas\Components\Form as FormContainer;
-use Filament\Schemas\Schema;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -16,38 +22,38 @@ class LineItemsRelationManager extends RelationManager
 {
     protected static string $relationship = 'lineItems';
 
-    protected static ?string $title = 'Line Items';
+    protected static ?string $title = 'פריטי שורה';
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
                 FormContainer::make([
-                Forms\Components\TextInput::make('trade')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('description')
-                    ->required()
-                    ->maxLength(500),
-                Forms\Components\Select::make('unit_of_measure')
-                    ->options(UnitOfMeasure::class)
-                    ->required(),
-                Forms\Components\TextInput::make('quantity')
-                    ->numeric()
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn (Get $get, Set $set) => self::updateTotalCost($get, $set)),
-                Forms\Components\TextInput::make('unit_price')
-                    ->numeric()
-                    ->required()
-                    ->prefix('SAR')
-                    ->reactive()
-                    ->afterStateUpdated(fn (Get $get, Set $set) => self::updateTotalCost($get, $set)),
-                Forms\Components\TextInput::make('total_cost')
-                    ->numeric()
-                    ->prefix('SAR')
-                    ->disabled()
-                    ->dehydrated(),
+                    Forms\Components\TextInput::make('trade')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('description')
+                        ->required()
+                        ->maxLength(500),
+                    Forms\Components\Select::make('unit_of_measure')
+                        ->options(UnitOfMeasure::class)
+                        ->required(),
+                    Forms\Components\TextInput::make('quantity')
+                        ->numeric()
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(fn (Get $get, Set $set) => self::updateTotalCost($get, $set)),
+                    Forms\Components\TextInput::make('unit_price')
+                        ->numeric()
+                        ->required()
+                        ->prefix('SAR')
+                        ->reactive()
+                        ->afterStateUpdated(fn (Get $get, Set $set) => self::updateTotalCost($get, $set)),
+                    Forms\Components\TextInput::make('total_cost')
+                        ->numeric()
+                        ->prefix('SAR')
+                        ->disabled()
+                        ->dehydrated(),
                 ]),
             ]);
     }
@@ -81,20 +87,20 @@ class LineItemsRelationManager extends RelationManager
             ])
             ->defaultGroup('trade')
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
-                Tables\Actions\Action::make('import')
-                    ->label('Import')
+                CreateAction::make(),
+                Action::make('import')
+                    ->label('ייבוא')
                     ->icon('heroicon-o-arrow-up-tray')
                     ->color('gray')
                     ->action(fn () => null),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

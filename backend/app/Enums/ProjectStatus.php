@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum ProjectStatus: string
+use Filament\Support\Contracts\HasLabel;
+
+enum ProjectStatus: string implements HasLabel
 {
     case New = 'new';
     case UnderReview = 'under_review';
@@ -10,6 +12,18 @@ enum ProjectStatus: string
     case InProgress = 'in_progress';
     case Completed = 'completed';
     case Cancelled = 'cancelled';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::New => 'חדש',
+            self::UnderReview => 'בבדיקה',
+            self::ResourcesAssigned => 'משאבים שובצו',
+            self::InProgress => 'בתהליך',
+            self::Completed => 'הושלם',
+            self::Cancelled => 'בוטל',
+        };
+    }
 
     public function label(): string
     {

@@ -2,10 +2,20 @@
 
 namespace App\Enums;
 
-enum PaymentStatus: string
+use Filament\Support\Contracts\HasLabel;
+
+enum PaymentStatus: string implements HasLabel
 {
     case Paid = 'paid';
     case Overdue = 'overdue';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::Paid => 'שולם',
+            self::Overdue => 'באיחור',
+        };
+    }
 
     public function label(): string
     {

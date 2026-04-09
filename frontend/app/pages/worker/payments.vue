@@ -1,67 +1,90 @@
 <template>
-  <div class="portal-page">
-    <h1>Payment History</h1>
-    <div v-if="loading" class="loading">Loading...</div>
-    <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else>
-      <div v-if="!payments.length" class="empty">No payment records found.</div>
-      <div v-else class="payments-list">
-        <div v-for="p in payments" :key="p.id" class="payment-card">
-          <div class="payment-info">
-            <div class="payment-desc">{{ p.description || 'Payment' }}</div>
-            <div class="payment-meta">
-              <span v-if="p.date">{{ p.date }}</span>
-              <span v-if="p.project_name">{{ p.project_name }}</span>
-            </div>
-          </div>
-          <div class="payment-right">
-            <div class="payment-amount">{{ p.amount ? formatAmount(p.amount) : 'N/A' }}</div>
-            <span class="status-badge" :class="p.status">{{ p.status }}</span>
-          </div>
-        </div>
+  <div class="cx-page">
+    <h1 class="cx-page-title">{{ $t('nav.payments') }}</h1>
+
+    <SharedLoadingState v-if="loading" :rows="5" />
+    <div v-else-if="error" class="cx-toast cx-toast-error" style="position:static;">{{ error }}</div>
+
+    <template v-else-if="paymentsData">
+      <!-- Summary bento -->
+      <div class="cx-bento" style="margin-bottom:1.5rem;">
+        <SharedStatCard
+          :label="$t('payments.month_status')"
+          :value="paymentsData.summary?.current_month_status ?? '—'"
+          :led="paymentLed(paymentsData.summary?.current_month_status)"
+        />
+        <SharedStatCard
+          :label="$t('payments.last_payment')"
+          :value="paymentsData.summary?.last_payment_amount != null
+            ? formatAmount(paymentsData.summary.last_payment_amount) + ' · ' + (paymentsData.summary.last_payment_date ?? '')
+            : '—'"
+        />
+        <SharedStatCard
+          :label="$t('payments.year_total')"
+          :value="paymentsData.summary?.total_paid_year != null
+            ? formatAmount(paymentsData.summary.total_paid_year)
+            : '—'"
+        />
       </div>
-    </div>
+
+      <!-- Payments list -->
+      <div v-if="!paymentRows.length">
+        <SharedEmptyState icon="💳" :title="$t('payments.empty')" />
+      </div>
+      <div v-else class="cx-card" style="padding:0;overflow:hidden;">
+        <table class="cx-table">
+          <thead>
+            <tr>
+              <th>{{ $t('payments.description') }}</th>
+              <th>{{ $t('payments.date') }}</th>
+              <th style="text-align:right;">{{ $t('payments.amount') }}</th>
+              <th>{{ $t('payments.status') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="p in paymentRows" :key="p.id">
+              <td style="color:var(--cx-text-secondary);">{{ p.notes || p.payment_type || '—' }}</td>
+              <td class="cx-mono" style="font-size:var(--cx-font-xs);color:var(--cx-text-muted);">{{ p.payment_date ?? '—' }}</td>
+              <td class="cx-mono" style="text-align:right;font-weight:700;color:var(--cx-text-primary);">{{ formatAmount(p.amount) }}</td>
+              <td><SharedStatusBadge :status="'paid'" type="payment" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
+
+    <SharedEmptyState v-else icon="💳" :title="$t('payments.empty')" />
   </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({ layout: 'worker', middleware: ['auth'] })
 
-const { apiFetch } = useApi()
-const loading = ref(true)
+const { t } = useI18n()
+const { fetchPayments, paymentsData, paymentsLoading: loading } = useWorkerPortal()
+const { paymentStatusLedClass } = useStatusColors()
 const error = ref('')
-const payments = ref<any[]>([])
+
+const paymentRows = computed(() => {
+  const d = paymentsData.value?.payments
+  if (Array.isArray(d)) return d
+  if (d?.data && Array.isArray(d.data)) return d.data
+  return []
+})
 
 function formatAmount(amount: number) {
-  return new Intl.NumberFormat('en-IL', { style: 'currency', currency: 'ILS' }).format(amount)
+  return new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' }).format(amount)
+}
+
+function paymentLed(status?: string) {
+  return paymentStatusLedClass(status ?? '')
 }
 
 onMounted(async () => {
   try {
-    const res = await apiFetch('/worker/payments') as any
-    payments.value = res.data || []
+    await fetchPayments()
   } catch (e: any) {
-    error.value = e?.data?.message || 'Failed to load payments'
-  } finally {
-    loading.value = false
+    error.value = e?.data?.message || t('payments.load_failed')
   }
 })
 </script>
-
-<style scoped>
-.portal-page { padding: 1.5rem; }
-.portal-page h1 { color: var(--cx-text-primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: var(--cx-text-muted); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--cx-led-red); padding: 0.75rem; border-radius: 10px; }
-.empty { color: var(--cx-text-muted); text-align: center; padding: 2rem; }
-.payments-list { display: flex; flex-direction: column; gap: 0.5rem; }
-.payment-card { background: var(--cx-bg-card); border: 1px solid var(--cx-border); border-radius: 10px; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
-.payment-desc { color: var(--cx-text-primary); font-weight: 500; margin-bottom: 0.2rem; }
-.payment-meta { display: flex; gap: 1rem; color: var(--cx-text-muted); font-size: 0.75rem; }
-.payment-right { text-align: right; }
-.payment-amount { color: var(--cx-text-primary); font-weight: 700; font-size: 1.1rem; margin-bottom: 0.25rem; }
-.status-badge { padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
-.status-badge.paid { background: rgba(34,197,94,0.2); color: var(--cx-led-green); }
-.status-badge.pending { background: rgba(234,179,8,0.2); color: #facc15; }
-.status-badge.processing { background: rgba(59,130,246,0.2); color: var(--cx-primary); }
-</style>

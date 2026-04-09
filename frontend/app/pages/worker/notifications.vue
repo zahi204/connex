@@ -1,16 +1,48 @@
 <template>
-  <div class="portal-page">
-    <h1>Notifications</h1>
-    <div v-if="loading" class="loading">Loading...</div>
-    <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else>
-      <div v-if="!notifications.length" class="empty">No notifications.</div>
-      <div v-else class="notifications-list">
-        <div v-for="n in notifications" :key="n.id" class="notification-card" :class="{ unread: !n.read_at }">
-          <div class="notification-content">
-            <div class="notification-title">{{ n.title || n.type }}</div>
-            <div class="notification-body">{{ n.message || n.body }}</div>
-            <div class="notification-time">{{ n.created_at }}</div>
+  <div class="cx-page">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+      <h1 class="cx-page-title" style="margin-bottom:0;">{{ $t('nav.notifications') }}</h1>
+      <button class="cx-btn cx-btn-secondary" :disabled="markingAll" @click="doMarkAllRead">
+        {{ markingAll ? $t('common.loading') : $t('notifications.mark_all_read') }}
+      </button>
+    </div>
+
+    <!-- Category filter chips -->
+    <div class="cx-filter-chips" style="margin-bottom:1.25rem;">
+      <button
+        v-for="cat in categories"
+        :key="cat.value"
+        class="cx-filter-chip"
+        :class="{ active: activeCategory === cat.value }"
+        @click="activeCategory = cat.value"
+      >{{ cat.label }}</button>
+    </div>
+
+    <SharedLoadingState v-if="loading" :rows="5" />
+    <div v-else-if="loadError" class="cx-toast cx-toast-error" style="position:static;">{{ loadError }}</div>
+    <SharedEmptyState v-else-if="!filtered.length" icon="🔔" :title="$t('notifications.empty')" />
+
+    <div v-else style="display:flex;flex-direction:column;gap:0.5rem;">
+      <div
+        v-for="n in filtered"
+        :key="n.id"
+        class="cx-card"
+        :class="{ 'cx-card-accent': !n.read_at }"
+        style="cursor:pointer;"
+        @click="doMarkAsRead(n)"
+      >
+        <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+          <span v-if="!n.read_at" class="cx-led cx-led-blue" style="margin-top:4px;flex-shrink:0;" />
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;color:var(--cx-text-primary);margin-bottom:0.2rem;">
+              {{ n.title || n.type }}
+            </div>
+            <div style="color:var(--cx-text-muted);font-size:var(--cx-font-sm);margin-bottom:0.25rem;">
+              {{ n.message || n.body }}
+            </div>
+            <div style="font-size:var(--cx-font-xs);color:var(--cx-text-muted);">
+              {{ formatRelative(n.created_at) }}
+            </div>
           </div>
         </div>
       </div>
@@ -21,33 +53,57 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'worker', middleware: ['auth'] })
 
-const { apiFetch } = useApi()
+const { t } = useI18n()
+const { list, markAsRead, markAllRead, notifications } = useNotifications()
 const loading = ref(true)
-const error = ref('')
-const notifications = ref<any[]>([])
+const loadError = ref('')
+const markingAll = ref(false)
+const activeCategory = ref('all')
+
+const categories = [
+  { value: 'all',        label: t('notifications.all') },
+  { value: 'assignment', label: t('notifications.assignment') },
+  { value: 'payment',    label: t('notifications.payment') },
+  { value: 'training',   label: t('notifications.training') },
+  { value: 'system',     label: t('notifications.system') },
+]
+
+const filtered = computed(() => {
+  if (activeCategory.value === 'all') return notifications.value
+  return notifications.value.filter(n =>
+    (n.type || '').toLowerCase().includes(activeCategory.value)
+  )
+})
+
+function formatRelative(dt: string) {
+  if (!dt) return ''
+  const d = new Date(dt)
+  const diff = Date.now() - d.getTime()
+  const mins = Math.floor(diff / 60_000)
+  if (mins < 1)  return 'Just now'
+  if (mins < 60) return `${mins}m ago`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24)  return `${hrs}h ago`
+  return d.toLocaleDateString()
+}
+
+async function doMarkAsRead(n: any) {
+  if (!n.read_at) await markAsRead(n.id)
+}
+
+async function doMarkAllRead() {
+  markingAll.value = true
+  await markAllRead()
+  markingAll.value = false
+}
 
 onMounted(async () => {
   try {
-    const res = await apiFetch('/notifications') as any
-    notifications.value = res.data || []
+    await list()
   } catch (e: any) {
-    error.value = e?.data?.message || 'Failed to load notifications'
+    loadError.value = e?.data?.message || t('notifications.load_failed')
   } finally {
     loading.value = false
   }
 })
 </script>
-
-<style scoped>
-.portal-page { padding: 1.5rem; }
-.portal-page h1 { color: var(--cx-text-primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: var(--cx-text-muted); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--cx-led-red); padding: 0.75rem; border-radius: 10px; }
-.empty { color: var(--cx-text-muted); text-align: center; padding: 2rem; }
-.notifications-list { display: flex; flex-direction: column; gap: 0.5rem; }
-.notification-card { background: var(--cx-bg-card); border: 1px solid var(--cx-border); border-radius: 10px; padding: 0.75rem 1rem; }
-.notification-card.unread { border-left: 3px solid #3b82f6; background: rgba(59,130,246,0.08); }
-.notification-title { color: var(--cx-text-primary); font-weight: 500; margin-bottom: 0.25rem; }
-.notification-body { color: var(--cx-text-muted); font-size: 0.85rem; margin-bottom: 0.25rem; }
-.notification-time { color: var(--cx-text-muted); font-size: 0.75rem; }
-</style>

@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum WorkerStatus: string
+use Filament\Support\Contracts\HasLabel;
+
+enum WorkerStatus: string implements HasLabel
 {
     case Available = 'available';
     case Assigned = 'assigned';
@@ -11,6 +13,19 @@ enum WorkerStatus: string
     case Waiting = 'waiting';
     case Inactive = 'inactive';
     case Frozen = 'frozen';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::Available => 'זמין',
+            self::Assigned => 'משובץ',
+            self::FutureAssignment => 'שיבוץ עתידי',
+            self::InTraining => 'בהכשרה',
+            self::Waiting => 'ממתין',
+            self::Inactive => 'לא פעיל',
+            self::Frozen => 'מוקפא',
+        };
+    }
 
     public function label(): string
     {

@@ -854,3 +854,449 @@ a:hover { color: var(--cx-primary-hover); }
   border: 2px solid var(--cx-bg-primary);
 }
 ::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.3); }
+
+/* ---- 19. Toggle — styled switch ---- */
+.cx-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  user-select: none;
+}
+.cx-toggle input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--cx-bg-elevated);
+  border: 1px solid var(--cx-border-strong);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+.cx-toggle input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: var(--cx-text-muted);
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: left 0.2s, background 0.2s;
+}
+.cx-toggle input[type="checkbox"]:checked {
+  background: var(--cx-primary-soft);
+  border-color: var(--cx-primary);
+}
+.cx-toggle input[type="checkbox"]:checked::after {
+  left: 22px;
+  background: var(--cx-primary);
+}
+.cx-toggle-label {
+  color: var(--cx-text-secondary);
+  font-size: var(--cx-font-sm);
+}
+
+/* ---- 20. Drawer — right-side slide panel ---- */
+.cx-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  animation: cx-fade-in 0.18s ease;
+}
+.cx-drawer {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: min(480px, 95vw);
+  background: var(--cx-bg-surface);
+  border-inline-start: 1px solid var(--cx-border);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.4);
+  z-index: 201;
+  display: flex;
+  flex-direction: column;
+  animation: cx-slide-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+.cx-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--cx-border);
+  flex-shrink: 0;
+}
+.cx-drawer-title {
+  font-family: var(--cx-font-display);
+  font-weight: 700;
+  font-size: var(--cx-font-lg);
+  color: var(--cx-text-primary);
+}
+.cx-drawer-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--cx-text-muted);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--cx-radius-sm);
+  font-size: 1.25rem;
+  transition: background 0.15s, color 0.15s;
+}
+.cx-drawer-close:hover { background: var(--cx-bg-elevated); color: var(--cx-text-primary); }
+.cx-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 1.5rem;
+}
+@keyframes cx-slide-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes cx-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---- 21. File drop zone ---- */
+.cx-file-drop {
+  border: 2px dashed var(--cx-border-strong);
+  border-radius: var(--cx-radius-lg);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: var(--cx-bg-muted);
+}
+.cx-file-drop:hover,
+.cx-file-drop.cx-drag-over {
+  border-color: var(--cx-border-accent);
+  background: var(--cx-primary-soft);
+}
+.cx-file-drop-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--cx-text-muted);
+}
+.cx-file-drop-text {
+  color: var(--cx-text-secondary);
+  font-size: var(--cx-font-sm);
+}
+.cx-file-drop-hint {
+  color: var(--cx-text-muted);
+  font-size: var(--cx-font-xs);
+  margin-top: 0.25rem;
+}
+
+/* ---- 22. Skeleton / loading bars ---- */
+@keyframes cx-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.cx-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--cx-bg-elevated) 25%,
+    var(--cx-bg-card-hover) 50%,
+    var(--cx-bg-elevated) 75%
+  );
+  background-size: 200% 100%;
+  animation: cx-shimmer 1.5s infinite;
+  border-radius: var(--cx-radius-sm);
+}
+.cx-skeleton-line {
+  height: 14px;
+  margin-bottom: 0.6rem;
+}
+.cx-skeleton-line:last-child { margin-bottom: 0; width: 60%; }
+
+/* ---- 23. Timeline (activity feed) ---- */
+.cx-timeline {
+  position: relative;
+  padding-inline-start: 1.5rem;
+}
+.cx-timeline::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 7px;
+  width: 2px;
+  background: var(--cx-border);
+}
+.cx-timeline-item {
+  position: relative;
+  padding-bottom: 1.25rem;
+}
+.cx-timeline-item::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(-1.5rem + 3px);
+  inset-block-start: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cx-primary);
+  border: 2px solid var(--cx-bg-primary);
+}
+.cx-timeline-time {
+  font-size: var(--cx-font-xs);
+  color: var(--cx-text-muted);
+  margin-bottom: 0.2rem;
+}
+.cx-timeline-text {
+  font-size: var(--cx-font-sm);
+  color: var(--cx-text-secondary);
+}
+
+/* ---- 24. Avatar ---- */
+.cx-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: visible;
+  flex-shrink: 0;
+}
+.cx-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.cx-avatar-initials {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cx-gradient-accent);
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--cx-font-display);
+  letter-spacing: -0.02em;
+}
+.cx-avatar-led {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--cx-bg-primary);
+}
+.cx-avatar-sm  { width: 36px;  height: 36px;  font-size: 0.8rem; }
+.cx-avatar-md  { width: 48px;  height: 48px;  font-size: 1rem; }
+.cx-avatar-lg  { width: 72px;  height: 72px;  font-size: 1.4rem; }
+.cx-avatar-xl  { width: 96px;  height: 96px;  font-size: 1.75rem; }
+
+/* ---- 25. Rating stars ---- */
+.cx-stars {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+}
+.cx-star {
+  width: 14px;
+  height: 14px;
+  color: var(--cx-led-gray);
+}
+.cx-star.filled { color: var(--cx-primary); }
+.cx-star.half   { color: var(--cx-led-yellow); }
+
+/* ---- 26. Page section heading ---- */
+.cx-section-title {
+  font-family: var(--cx-font-display);
+  font-size: var(--cx-font-lg);
+  font-weight: 700;
+  color: var(--cx-text-primary);
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+/* ---- 27. Info row (label + value pair) ---- */
+.cx-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.cx-info-label {
+  font-size: var(--cx-font-xs);
+  color: var(--cx-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
+}
+.cx-info-value {
+  font-size: var(--cx-font-sm);
+  color: var(--cx-text-primary);
+}
+
+/* ---- 28. Chip / tag inputs ---- */
+.cx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  background: var(--cx-bg-elevated);
+  border: 1px solid var(--cx-border-strong);
+  border-radius: var(--cx-radius-pill);
+  font-size: var(--cx-font-xs);
+  color: var(--cx-text-secondary);
+  font-weight: 500;
+}
+.cx-chip-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--cx-text-muted);
+  font-size: 0.9em;
+  line-height: 1;
+  padding: 0;
+}
+.cx-chip-remove:hover { color: var(--cx-led-red); }
+
+/* ---- 29. Filter chips row ---- */
+.cx-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+.cx-filter-chip {
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--cx-radius-pill);
+  border: 1px solid var(--cx-border-strong);
+  background: transparent;
+  color: var(--cx-text-muted);
+  font-size: var(--cx-font-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.cx-filter-chip:hover {
+  background: var(--cx-bg-elevated);
+  color: var(--cx-text-secondary);
+}
+.cx-filter-chip.active {
+  background: var(--cx-primary-soft);
+  border-color: var(--cx-border-accent);
+  color: var(--cx-primary);
+}
+
+/* ---- 30. Empty state card ---- */
+.cx-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3.5rem 2rem;
+  gap: 1rem;
+  border: 1px dashed var(--cx-border-strong);
+  border-radius: var(--cx-radius-lg);
+  background: var(--cx-bg-muted);
+}
+.cx-empty-state-icon {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+.cx-empty-state-title {
+  font-family: var(--cx-font-display);
+  font-weight: 700;
+  font-size: var(--cx-font-lg);
+  color: var(--cx-text-primary);
+}
+.cx-empty-state-body {
+  color: var(--cx-text-muted);
+  font-size: var(--cx-font-sm);
+  max-width: 32ch;
+}
+
+/* ---- 31. Notification badge ---- */
+.cx-notification-badge {
+  position: relative;
+}
+.cx-notification-count {
+  position: absolute;
+  top: -4px;
+  inset-inline-end: -6px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: var(--cx-radius-pill);
+  background: var(--cx-led-red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid var(--cx-bg-secondary);
+  line-height: 1;
+}
+
+/* ---- 32. Toast notification ---- */
+.cx-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  inset-inline-end: 1.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--cx-radius-md);
+  font-size: var(--cx-font-sm);
+  font-weight: 600;
+  box-shadow: var(--cx-shadow-elevated);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  animation: cx-fade-in 0.2s ease;
+}
+.cx-toast-success {
+  background: rgba(52, 211, 153, 0.15);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: var(--cx-led-green);
+}
+.cx-toast-error {
+  background: rgba(248, 113, 113, 0.15);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: var(--cx-led-red);
+}
+.cx-toast-info {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--cx-primary);
+}
+
+/* ---- 33. Upload progress bar ---- */
+.cx-upload-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--cx-bg-elevated);
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+.cx-upload-progress-bar {
+  height: 100%;
+  background: var(--cx-gradient-accent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  .cx-drawer { width: 100vw; }
+  .cx-page { padding: 1rem; }
+}
