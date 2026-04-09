@@ -9,7 +9,8 @@ RUN composer install \
     --no-interaction \
     --no-scripts \
     --prefer-dist \
-    --optimize-autoloader
+    --optimize-autoloader \
+    --ignore-platform-reqs
 
 # ---------- Vite assets stage (Filament theme, app.css, app.js) ----------
 FROM node:22-alpine AS assets
