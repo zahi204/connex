@@ -37,6 +37,7 @@ class AuthController extends BaseApiController
         return $this->success([
             'user' => new UserResource($result['user']),
             'needs_role_selection' => $result['needs_role_selection'],
+            'needs_onboarding' => $result['needs_onboarding'],
         ]);
     }
 
@@ -46,6 +47,7 @@ class AuthController extends BaseApiController
 
         return $this->success([
             'user' => new UserResource($user),
+            'needs_onboarding' => $user->needsOnboarding(),
         ]);
     }
 

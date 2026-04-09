@@ -1,51 +1,51 @@
 <template>
   <div class="directory-search">
-    <h2 class="cx-page-title">Worker Directory</h2>
+    <h2 class="cx-page-title">{{ $t('directory.title') }}</h2>
 
     <div class="filters-bar">
       <div class="filter-field">
-        <label class="cx-label">Skill</label>
+        <label class="cx-label">{{ $t('directory.skill') }}</label>
         <select v-model="filters.skill" class="cx-select" @change="search">
-          <option value="">All Skills</option>
+          <option value="">{{ $t('directory.all_skills') }}</option>
           <option v-for="s in skills" :key="s" :value="s">{{ s }}</option>
         </select>
       </div>
       <div class="filter-field">
-        <label class="cx-label">Status</label>
+        <label class="cx-label">{{ $t('directory.status') }}</label>
         <select v-model="filters.status" class="cx-select" @change="search">
-          <option value="">All</option>
-          <option value="active">Active</option>
-          <option value="available">Available</option>
-          <option value="assigned">Assigned</option>
+          <option value="">{{ $t('directory.all') }}</option>
+          <option value="active">{{ $t('directory.active') }}</option>
+          <option value="available">{{ $t('directory.available') }}</option>
+          <option value="assigned">{{ $t('directory.assigned') }}</option>
         </select>
       </div>
       <div class="filter-field">
-        <label class="cx-label">Area</label>
+        <label class="cx-label">{{ $t('directory.area') }}</label>
         <select v-model="filters.area" class="cx-select" @change="search">
-          <option value="">All Areas</option>
-          <option value="north">North</option>
-          <option value="center">Center</option>
-          <option value="south">South</option>
+          <option value="">{{ $t('directory.all_areas') }}</option>
+          <option value="north">{{ $t('directory.north') }}</option>
+          <option value="center">{{ $t('directory.center') }}</option>
+          <option value="south">{{ $t('directory.south') }}</option>
         </select>
       </div>
       <div class="filter-field">
-        <label class="cx-label">Min Rating</label>
+        <label class="cx-label">{{ $t('directory.min_rating') }}</label>
         <input v-model.number="filters.min_rating" class="cx-input" type="number" min="0" max="5" step="0.5" placeholder="0" @change="search" />
       </div>
       <div class="filter-field">
-        <button class="cx-btn cx-btn-primary" @click="search">Search</button>
+        <button class="cx-btn cx-btn-primary" @click="search">{{ $t('common.search') }}</button>
       </div>
     </div>
 
     <div class="view-toggle">
-      <button :class="['cx-btn cx-btn-secondary', { active: viewMode === 'card' }]" @click="viewMode = 'card'">Cards</button>
-      <button :class="['cx-btn cx-btn-secondary', { active: viewMode === 'list' }]" @click="viewMode = 'list'">List</button>
+      <button :class="['cx-btn cx-btn-secondary', { active: viewMode === 'card' }]" @click="viewMode = 'card'">{{ $t('common.cards') }}</button>
+      <button :class="['cx-btn cx-btn-secondary', { active: viewMode === 'list' }]" @click="viewMode = 'list'">{{ $t('common.list') }}</button>
     </div>
 
-    <div v-if="loading" class="cx-loading">Searching...</div>
+    <div v-if="loading" class="cx-loading">{{ $t('common.searching') }}</div>
     <div v-else-if="error" class="cx-error">{{ error }}</div>
     <div v-else>
-      <div v-if="!workers.length" class="cx-empty">No workers found matching your criteria.</div>
+      <div v-if="!workers.length" class="cx-empty">{{ $t('directory.no_results') }}</div>
 
       <!-- Card View -->
       <div v-else-if="viewMode === 'card'" class="cx-bento">
@@ -55,9 +55,9 @@
             <span class="cx-badge" :class="statusBadge(w.status)">{{ w.status }}</span>
           </div>
           <div class="card-details">
-            <div v-if="w.primary_skill" class="cx-text-sm cx-text-secondary"><span class="cx-text-muted">Skill:</span> {{ w.primary_skill }}</div>
-            <div v-if="w.preferred_work_area" class="cx-text-sm cx-text-secondary"><span class="cx-text-muted">Area:</span> {{ w.preferred_work_area }}</div>
-            <div v-if="w.professional_rating != null" class="cx-text-sm cx-text-secondary"><span class="cx-text-muted">Rating:</span> <span class="cx-mono">{{ w.professional_rating }}</span></div>
+            <div v-if="w.primary_skill" class="cx-text-sm cx-text-secondary"><span class="cx-text-muted">{{ $t('directory.skill_label') }}</span> {{ w.primary_skill }}</div>
+            <div v-if="w.preferred_work_area" class="cx-text-sm cx-text-secondary"><span class="cx-text-muted">{{ $t('directory.area_label') }}</span> {{ w.preferred_work_area }}</div>
+            <div v-if="w.professional_rating != null" class="cx-text-sm cx-text-secondary"><span class="cx-text-muted">{{ $t('directory.rating_label') }}</span> <span class="cx-mono">{{ w.professional_rating }}</span></div>
           </div>
         </div>
       </div>
@@ -66,11 +66,11 @@
       <table v-else class="cx-table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Skill</th>
-            <th>Area</th>
-            <th>Rating</th>
-            <th>Status</th>
+            <th>{{ $t('directory.name') }}</th>
+            <th>{{ $t('directory.skill') }}</th>
+            <th>{{ $t('directory.area') }}</th>
+            <th>{{ $t('directory.min_rating') }}</th>
+            <th>{{ $t('directory.status') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -86,15 +86,16 @@
 
       <!-- Pagination -->
       <div v-if="totalPages > 1" class="pagination">
-        <button class="cx-btn cx-btn-secondary" :disabled="page <= 1" @click="goToPage(page - 1)">Prev</button>
-        <span class="cx-text-muted cx-text-sm">Page {{ page }} of {{ totalPages }}</span>
-        <button class="cx-btn cx-btn-secondary" :disabled="page >= totalPages" @click="goToPage(page + 1)">Next</button>
+        <button class="cx-btn cx-btn-secondary" :disabled="page <= 1" @click="goToPage(page - 1)">{{ $t('directory.prev') }}</button>
+        <span class="cx-text-muted cx-text-sm">{{ $t('common.page_of', { page, total: totalPages }) }}</span>
+        <button class="cx-btn cx-btn-secondary" :disabled="page >= totalPages" @click="goToPage(page + 1)">{{ $t('common.next') }}</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
 const { apiFetch } = useApi()
 
 const loading = ref(false)
@@ -150,7 +151,7 @@ async function fetchWorkers() {
     workers.value = res.data?.data || res.data || []
     totalPages.value = res.data?.last_page || res.meta?.last_page || 1
   } catch (e: any) {
-    error.value = e?.data?.message || 'Search failed'
+    error.value = e?.data?.message || t('common.search_failed')
   } finally {
     loading.value = false
   }
@@ -195,9 +196,9 @@ onMounted(() => {
 }
 
 .view-toggle .cx-btn.active {
-  background: var(--cx-accent-soft);
-  border-color: var(--cx-border-accent);
-  color: var(--cx-accent);
+  background: var(--cx-primary-soft);
+  border-color: var(--cx-primary);
+  color: var(--cx-primary);
 }
 
 .card-header {

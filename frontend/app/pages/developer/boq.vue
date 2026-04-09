@@ -95,29 +95,29 @@ async function submitRequest() {
 
 <style scoped>
 .portal-page { padding: 1.5rem; }
-.portal-page h1 { color: white; font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: rgba(255,255,255,0.5); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 0.75rem; border-radius: 10px; }
-.success-message { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: #86efac; padding: 0.75rem; border-radius: 10px; }
-.section-header h2 { color: white; font-size: 1.1rem; margin-bottom: 0.75rem; }
-.section-title { color: white; font-size: 1.1rem; margin-bottom: 0.75rem; }
+.portal-page h1 { color: var(--cx-text-primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
+.loading { color: var(--cx-text-muted); }
+.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--cx-led-red); padding: 0.75rem; border-radius: 10px; }
+.success-message { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: var(--cx-led-green); padding: 0.75rem; border-radius: 10px; }
+.section-header h2 { color: var(--cx-text-primary); font-size: 1.1rem; margin-bottom: 0.75rem; }
+.section-title { color: var(--cx-text-primary); font-size: 1.1rem; margin-bottom: 0.75rem; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .field { display: flex; flex-direction: column; gap: 0.25rem; }
 .field.full { grid-column: 1 / -1; }
-.field label { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
-.field select, .field textarea { padding: 0.65rem 0.75rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 0.9rem; }
-.btn-submit { padding: 0.6rem 1.5rem; background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+.field label { color: var(--cx-text-secondary); font-size: 0.85rem; }
+.field select, .field textarea { padding: 0.65rem 0.75rem; background: var(--cx-bg-card); border: 1px solid var(--cx-border); border-radius: 8px; color: var(--cx-text-primary); font-size: 0.9rem; }
+.btn-submit { padding: 0.6rem 1.5rem; background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.3); color: var(--cx-primary); border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
 .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-.divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0; }
-.empty { color: rgba(255,255,255,0.5); text-align: center; padding: 2rem; }
+.divider { border: none; border-top: 1px solid var(--cx-border); margin: 2rem 0; }
+.empty { color: var(--cx-text-muted); text-align: center; padding: 2rem; }
 .requests-list { display: flex; flex-direction: column; gap: 0.5rem; }
-.request-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
-.request-project { color: white; font-weight: 500; margin-bottom: 0.2rem; }
-.request-desc { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
-.request-date { color: rgba(255,255,255,0.3); font-size: 0.75rem; margin-top: 0.2rem; }
+.request-card { background: var(--cx-bg-card); border: 1px solid var(--cx-border); border-radius: 10px; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+.request-project { color: var(--cx-text-primary); font-weight: 500; margin-bottom: 0.2rem; }
+.request-desc { color: var(--cx-text-muted); font-size: 0.85rem; }
+.request-date { color: var(--cx-text-muted); font-size: 0.75rem; margin-top: 0.2rem; }
 .status-badge { padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
 .status-badge.pending { background: rgba(234,179,8,0.2); color: #facc15; }
-.status-badge.approved { background: rgba(34,197,94,0.2); color: #4ade80; }
-.status-badge.rejected { background: rgba(239,68,68,0.2); color: #f87171; }
-.status-badge.processing { background: rgba(59,130,246,0.2); color: #93c5fd; }
+.status-badge.approved { background: rgba(34,197,94,0.2); color: var(--cx-led-green); }
+.status-badge.rejected { background: rgba(239,68,68,0.2); color: var(--cx-led-red); }
+.status-badge.processing { background: rgba(59,130,246,0.2); color: var(--cx-primary); }
 </style>

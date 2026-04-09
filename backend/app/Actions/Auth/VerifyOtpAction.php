@@ -28,16 +28,17 @@ class VerifyOtpAction
             'last_login_ip' => $request->ip(),
         ]);
 
-        // Issue Sanctum session via cookie (SPA auth)
         $request->session()->regenerate();
         auth()->login($user);
 
-        $needsRoleSelection = $user->role === null;
+        $user->refresh();
+        $user->load('profile');
 
         return [
             'success' => true,
-            'user' => $user->load('profile'),
-            'needs_role_selection' => $needsRoleSelection,
+            'user' => $user,
+            'needs_role_selection' => $user->role === null,
+            'needs_onboarding' => $user->needsOnboarding(),
         ];
     }
 }

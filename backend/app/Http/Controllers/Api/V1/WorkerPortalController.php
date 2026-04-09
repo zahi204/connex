@@ -4,14 +4,32 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Actions\Approval\SubmitForApprovalAction;
 use App\Http\Resources\WorkerFullResource;
+use App\Models\Worker;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpResponseException;
 
 class WorkerPortalController extends BaseApiController
 {
+    private function authenticatedWorker(Request $request): Worker
+    {
+        $profile = $request->user()->profile;
+        if (! $profile instanceof Worker) {
+            throw new HttpResponseException(
+                $this->error(
+                    'Worker profile not found. Finish onboarding or contact support if this persists.',
+                    404
+                )
+            );
+        }
+
+        return $profile;
+    }
+
     public function profile(Request $request): JsonResponse
     {
-        $worker = $request->user()->profile;
+        $worker = $this->authenticatedWorker($request);
+
         return $this->success(new WorkerFullResource($worker));
     }
 
@@ -27,7 +45,7 @@ class WorkerPortalController extends BaseApiController
             'languages' => 'nullable|array',
         ]);
 
-        $worker = $request->user()->profile;
+        $worker = $this->authenticatedWorker($request);
         $action->execute($worker, 'profile_update', $data, $request->user());
 
         return $this->success(null, 'Profile update submitted for approval.');
@@ -35,7 +53,7 @@ class WorkerPortalController extends BaseApiController
 
     public function assignments(Request $request): JsonResponse
     {
-        $worker = $request->user()->profile;
+        $worker = $this->authenticatedWorker($request);
         $assignments = $worker->assignments()
             ->with('project:id,name')
             ->latest()
@@ -46,7 +64,7 @@ class WorkerPortalController extends BaseApiController
 
     public function team(Request $request): JsonResponse
     {
-        $worker = $request->user()->profile;
+        $worker = $this->authenticatedWorker($request);
         $membership = $worker->teamMemberships()
             ->whereNull('left_at')
             ->with(['team.teamLeader:id,full_name', 'team.members.worker:id,full_name'])
@@ -57,7 +75,7 @@ class WorkerPortalController extends BaseApiController
 
     public function training(Request $request): JsonResponse
     {
-        $worker = $request->user()->profile;
+        $worker = $this->authenticatedWorker($request);
         $results = $worker->trainingResults()
             ->with('trainingCycle:id,name,start_date,end_date')
             ->latest()
@@ -68,7 +86,8 @@ class WorkerPortalController extends BaseApiController
 
     public function documents(Request $request): JsonResponse
     {
-        $worker = $request->user()->profile;
+        $worker = $this->authenticatedWorker($request);
+
         return $this->success($worker->documents()->latest()->get());
     }
 
@@ -79,7 +98,7 @@ class WorkerPortalController extends BaseApiController
             'document_type' => 'required|string',
         ]);
 
-        $worker = $request->user()->profile;
+        $worker = $this->authenticatedWorker($request);
         $action->execute($worker, 'document_upload', $data, $request->user());
 
         return $this->success(null, 'Document upload submitted for approval.');
@@ -87,7 +106,8 @@ class WorkerPortalController extends BaseApiController
 
     public function payments(Request $request): JsonResponse
     {
-        $worker = $request->user()->profile;
+        $worker = $this->authenticatedWorker($request);
+
         return $this->success($worker->payments()->latest()->paginate(20));
     }
 
@@ -99,7 +119,7 @@ class WorkerPortalController extends BaseApiController
             'status' => 'nullable|string',
         ]);
 
-        $worker = $request->user()->profile;
+        $worker = $this->authenticatedWorker($request);
         $action->execute($worker, 'availability_change', $data, $request->user());
 
         return $this->success(null, 'Availability change submitted for approval.');

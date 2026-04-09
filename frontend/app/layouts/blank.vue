@@ -3,24 +3,39 @@
     <div class="lang-bar">
       <SharedLanguageSwitcher />
     </div>
-    <slot />
+    <div class="blank-layout__content">
+      <slot />
+    </div>
   </div>
 </template>
 
 <style scoped>
 .blank-layout {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100dvh;
+  background: var(--cx-blank-gradient);
+  font-family: var(--cx-font-sans);
+  color: var(--cx-text-primary);
+}
+
+.blank-layout__content {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: 4.75rem;
+  box-sizing: border-box;
 }
 
 .lang-bar {
   position: fixed;
   top: 1rem;
-  left: 1rem;
-  right: 1rem;
+  inset-inline: 1rem;
   display: flex;
   justify-content: flex-end;
   z-index: 10;
+  pointer-events: none;
+}
+
+.lang-bar :deep(.language-switcher) {
+  pointer-events: auto;
 }
 </style>

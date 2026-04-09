@@ -95,7 +95,11 @@ const handleVerifyOtp = async () => {
     const result = await verifyOtp(fullPhone.value, code)
     if (result.needs_role_selection) {
       await navigateTo('/select-role')
-    } else {
+    }
+    else if (result.needs_onboarding && authStore.user?.role) {
+      await navigateTo(`/wizard/${authStore.user.role}`)
+    }
+    else {
       const role = authStore.user?.role
       await navigateTo(`/${role}`)
     }
@@ -128,110 +132,137 @@ const onOtpKeydown = (index: number, event: KeyboardEvent) => {
 
 <style scoped>
 .login-page {
-  min-height: 100vh;
+  min-height: min(100vh, 100dvh);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  background: var(--cx-bg-primary);
+  padding: 1.5rem 1.25rem 2rem;
+  background: transparent;
 }
 
 .login-card {
-  background: var(--cx-bg-card);
-  border: 2px solid var(--cx-border);
+  position: relative;
+  background: rgba(26, 34, 54, 0.7);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--cx-border);
   border-radius: var(--cx-radius-xl);
-  box-shadow: var(--cx-shadow-elevated);
-  padding: 3rem 2.5rem;
+  box-shadow: var(--cx-shadow-elevated), var(--cx-shadow-glow);
+  padding: 2.75rem 2.25rem 2.5rem;
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
+  overflow: hidden;
+}
+
+.login-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.4), transparent 40%, transparent 60%, rgba(129, 140, 248, 0.3));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .brand {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
+  position: relative;
 }
 
 .brand-icon {
-  width: 64px;
-  height: 64px;
-  background: var(--cx-accent);
-  border-radius: var(--cx-radius-lg);
+  width: 60px;
+  height: 60px;
+  background: var(--cx-gradient-accent);
+  border-radius: var(--cx-radius-md);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.75rem;
-  font-weight: 900;
+  font-family: var(--cx-font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
   color: var(--cx-text-inverse);
-  margin-bottom: 1rem;
-  box-shadow: 0 0 24px var(--cx-accent-glow);
+  margin-bottom: 1.1rem;
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.45);
 }
 
 .brand h1 {
-  font-size: var(--cx-font-2xl);
-  font-weight: 900;
-  color: var(--cx-text-primary);
-  margin: 0;
-  letter-spacing: -0.03em;
+  font-family: var(--cx-font-display);
+  font-size: var(--cx-font-xl);
+  font-weight: 800;
+  background: var(--cx-gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.02em;
 }
 
 .phone-input-wrapper {
   display: flex;
   align-items: center;
   background: var(--cx-bg-input);
-  border: 2px solid var(--cx-border);
+  border: 1px solid var(--cx-border);
   border-radius: var(--cx-radius-md);
   overflow: hidden;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .phone-input-wrapper:focus-within {
-  border-color: var(--cx-accent);
-  box-shadow: 0 0 0 3px var(--cx-accent-glow);
+  border-color: var(--cx-primary);
+  box-shadow: 0 0 0 3px var(--cx-primary-ring);
 }
 
 .phone-input-wrapper .prefix {
-  padding: 1rem 1rem;
+  padding: 0.75rem 0.875rem;
   color: var(--cx-text-muted);
   font-size: var(--cx-font-sm);
-  border-inline-end: 2px solid var(--cx-border);
-  font-weight: 700;
+  border-inline-end: 1px solid var(--cx-border);
+  font-weight: 500;
+  background: var(--cx-bg-muted);
 }
 
 .phone-input-wrapper input {
   flex: 1;
-  padding: 1rem;
+  padding: 0.75rem 0.875rem;
   background: transparent;
   border: none;
   color: var(--cx-text-primary);
-  font-size: 1.2rem;
-  letter-spacing: 2px;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
   outline: none;
+  min-width: 0;
 }
 
 .otp-inputs {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .otp-digit {
-  width: 52px;
-  height: 60px;
+  width: 44px;
+  height: 52px;
   background: var(--cx-bg-input);
-  border: 2px solid var(--cx-border);
+  border: 1px solid var(--cx-border);
   border-radius: var(--cx-radius-md);
   color: var(--cx-text-primary);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
   text-align: center;
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .otp-digit:focus {
-  border-color: var(--cx-accent);
-  box-shadow: 0 0 0 3px var(--cx-accent-glow);
+  border-color: var(--cx-primary);
+  box-shadow: 0 0 0 3px var(--cx-primary-ring);
 }
 
 .btn-full {
@@ -241,12 +272,12 @@ const onOtpKeydown = (index: number, event: KeyboardEvent) => {
 .btn-back {
   width: 100%;
   min-height: var(--cx-tap-min);
-  padding: 0.75rem;
+  padding: 0.5rem;
   background: transparent;
   color: var(--cx-text-muted);
   border: none;
   font-size: var(--cx-font-sm);
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   margin-top: 0.5rem;
 }

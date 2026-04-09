@@ -26,7 +26,7 @@ class WorkerPublicResource extends JsonResource
             'status' => $this->status?->value,
             'eligible_for_assignment' => $this->eligible_for_assignment,
             'last_training_date' => $this->last_training_date?->toDateString(),
-            'photo_url' => $this->getFirstMediaUrl('photo'),
+            'photo_url' => $this->photo ?: null,
         ];
     }
 }

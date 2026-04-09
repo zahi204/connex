@@ -1,4 +1,7 @@
 export default defineNuxtRouteMiddleware((to) => {
+  if (import.meta.server)
+    return
+
   const authStore = useAuthStore()
 
   const requiredRole = to.meta.role as string | string[] | undefined

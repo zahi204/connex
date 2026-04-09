@@ -44,17 +44,17 @@ onMounted(async () => {
 
 <style scoped>
 .portal-page { padding: 1.5rem; }
-.portal-page h1 { color: white; font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: rgba(255,255,255,0.5); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 0.75rem; border-radius: 10px; }
-.empty { color: rgba(255,255,255,0.5); text-align: center; padding: 2rem; }
+.portal-page h1 { color: var(--cx-text-primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
+.loading { color: var(--cx-text-muted); }
+.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--cx-led-red); padding: 0.75rem; border-radius: 10px; }
+.empty { color: var(--cx-text-muted); text-align: center; padding: 2rem; }
 .assignments-list { display: flex; flex-direction: column; gap: 0.75rem; }
-.assignment-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1rem 1.25rem; }
+.assignment-card { background: var(--cx-bg-card); border: 1px solid var(--cx-border); border-radius: 12px; padding: 1rem 1.25rem; }
 .assignment-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
-.assignment-header h3 { color: white; margin: 0; font-size: 1rem; }
+.assignment-header h3 { color: var(--cx-text-primary); margin: 0; font-size: 1rem; }
 .status-badge { padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
-.status-badge.active { background: rgba(34,197,94,0.2); color: #4ade80; }
-.status-badge.completed { background: rgba(59,130,246,0.2); color: #93c5fd; }
+.status-badge.active { background: rgba(34,197,94,0.2); color: var(--cx-led-green); }
+.status-badge.completed { background: rgba(59,130,246,0.2); color: var(--cx-primary); }
 .status-badge.pending { background: rgba(234,179,8,0.2); color: #facc15; }
-.assignment-details { display: flex; gap: 1.5rem; color: rgba(255,255,255,0.5); font-size: 0.8rem; }
+.assignment-details { display: flex; gap: 1.5rem; color: var(--cx-text-muted); font-size: 0.8rem; }
 </style>

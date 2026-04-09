@@ -1,8 +1,8 @@
 <template>
   <div class="cx-page">
-    <h1 class="cx-page-title">Developer Dashboard</h1>
+    <h1 class="cx-page-title">{{ $t('dashboard.developer.title') }}</h1>
 
-    <div v-if="loading" class="cx-loading">Loading...</div>
+    <div v-if="loading" class="cx-loading">{{ $t('common.loading') }}</div>
     <div v-else-if="error" class="cx-error">{{ error }}</div>
 
     <template v-else-if="profile">
@@ -19,7 +19,7 @@
           :class="statusBadgeClass"
           style="margin-inline-start: auto;"
         >
-          {{ profile.status ?? 'Unknown' }}
+          {{ profile.status ?? $t('common.unknown') }}
         </span>
       </div>
 
@@ -28,7 +28,7 @@
         <!-- Active Projects -->
         <div class="cx-bento-item">
           <div class="cx-bento-value">{{ profile.active_projects_count ?? 0 }}</div>
-          <div class="cx-bento-label">Active Projects</div>
+          <div class="cx-bento-label">{{ $t('dashboard.developer.active_projects') }}</div>
         </div>
 
         <!-- Pending Approvals -->
@@ -42,13 +42,13 @@
               {{ profile.pending_items_count ?? 0 }}
             </span>
           </div>
-          <div class="cx-bento-label">Pending Approvals</div>
+          <div class="cx-bento-label">{{ $t('dashboard.developer.pending_approvals') }}</div>
         </div>
 
         <!-- BOQ Requests -->
         <div class="cx-bento-item">
           <div class="cx-bento-value">{{ profile.boq_requests_count ?? 0 }}</div>
-          <div class="cx-bento-label">BOQ Requests</div>
+          <div class="cx-bento-label">{{ $t('dashboard.developer.boq_requests') }}</div>
         </div>
 
         <!-- Latest Project Status -->
@@ -59,17 +59,17 @@
               :class="projectStatusLedClass"
             />
             <span class="cx-mono cx-text-accent" style="font-weight: 700; text-transform: uppercase;">
-              {{ profile.latest_project_status || 'None' }}
+              {{ profile.latest_project_status || $t('common.none') }}
             </span>
           </div>
-          <div class="cx-bento-label">Latest Project Status</div>
+          <div class="cx-bento-label">{{ $t('dashboard.developer.latest_project_status') }}</div>
         </div>
       </div>
 
       <!-- Quick Action -->
       <div style="margin-top: 1.5rem;">
         <NuxtLink to="/developer/projects/create" class="cx-btn cx-btn-primary">
-          Submit New Project
+          {{ $t('dashboard.developer.submit_new_project') }}
         </NuxtLink>
       </div>
     </template>
@@ -79,6 +79,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'developer', middleware: ['auth'] })
 
+const { t } = useI18n()
 const { apiFetch } = useApi()
 const loading = ref(true)
 const error = ref('')
@@ -118,7 +119,7 @@ onMounted(async () => {
     const res = await apiFetch('/developer/profile') as any
     profile.value = res.data
   } catch (e: any) {
-    error.value = e?.data?.message || 'Failed to load dashboard'
+    error.value = e?.data?.message || t('dashboard.developer.load_failed')
   } finally {
     loading.value = false
   }

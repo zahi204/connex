@@ -1,8 +1,8 @@
 <template>
   <div class="cx-page">
-    <h1 class="cx-page-title">Subcontractor Dashboard</h1>
+    <h1 class="cx-page-title">{{ $t('dashboard.subcontractor.title') }}</h1>
 
-    <div v-if="loading" class="cx-loading">Loading...</div>
+    <div v-if="loading" class="cx-loading">{{ $t('common.loading') }}</div>
     <div v-else-if="error" class="cx-error">{{ error }}</div>
 
     <template v-else-if="profile">
@@ -13,7 +13,7 @@
           :class="statusLedClass"
         />
         <span style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
-          {{ profile.status ?? 'Unknown' }}
+          {{ profile.status ?? $t('common.unknown') }}
         </span>
         <span class="cx-text-muted" style="margin-inline-start: auto;">
           {{ profile.company_name || profile.full_name }}
@@ -25,7 +25,7 @@
         <!-- Rating -->
         <div class="cx-bento-item">
           <div class="cx-bento-value">{{ profile.rating ?? '--' }}</div>
-          <div class="cx-bento-label">Rating</div>
+          <div class="cx-bento-label">{{ $t('dashboard.subcontractor.rating') }}</div>
         </div>
 
         <!-- Current Assignment -->
@@ -36,10 +36,10 @@
               :class="profile.current_assignment ? 'cx-led-green' : 'cx-led-yellow'"
             />
             <span class="cx-mono cx-text-accent" style="font-weight: 700;">
-              {{ profile.current_assignment || 'None' }}
+              {{ profile.current_assignment || $t('common.none') }}
             </span>
           </div>
-          <div class="cx-bento-label">Current Assignment</div>
+          <div class="cx-bento-label">{{ $t('dashboard.subcontractor.current_assignment') }}</div>
         </div>
 
         <!-- Availability Date -->
@@ -47,20 +47,20 @@
           <div class="cx-bento-value" style="font-size: 1.25rem;">
             {{ profile.availability_date || profile.availability || '--' }}
           </div>
-          <div class="cx-bento-label">Availability Date</div>
+          <div class="cx-bento-label">{{ $t('dashboard.subcontractor.availability_date') }}</div>
         </div>
 
         <!-- Worker Count -->
         <div class="cx-bento-item">
           <div class="cx-bento-value">{{ profile.worker_count ?? 0 }}</div>
-          <div class="cx-bento-label">Worker Count</div>
+          <div class="cx-bento-label">{{ $t('dashboard.subcontractor.worker_count') }}</div>
         </div>
       </div>
 
       <!-- Quick Action -->
       <div style="margin-top: 1.5rem;">
         <NuxtLink to="/subcontractor/availability" class="cx-btn cx-btn-primary">
-          Update Availability
+          {{ $t('dashboard.subcontractor.update_availability') }}
         </NuxtLink>
       </div>
     </template>
@@ -70,6 +70,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'subcontractor', middleware: ['auth'] })
 
+const { t } = useI18n()
 const { apiFetch } = useApi()
 const loading = ref(true)
 const error = ref('')
@@ -90,7 +91,7 @@ onMounted(async () => {
     const res = await apiFetch('/subcontractor/profile') as any
     profile.value = res.data
   } catch (e: any) {
-    error.value = e?.data?.message || 'Failed to load dashboard'
+    error.value = e?.data?.message || t('dashboard.subcontractor.load_failed')
   } finally {
     loading.value = false
   }

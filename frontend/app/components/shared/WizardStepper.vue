@@ -33,7 +33,7 @@
         class="cx-btn cx-btn-secondary"
         @click="$emit('prev')"
       >
-        BACK
+        {{ $t('common.back') }}
       </button>
       <div class="spacer" />
       <button
@@ -42,7 +42,7 @@
         :disabled="!canProceed"
         @click="$emit('next')"
       >
-        NEXT STEP
+        {{ $t('common.next_step') }}
       </button>
       <button
         v-else
@@ -50,7 +50,7 @@
         :disabled="loading"
         @click="$emit('submit')"
       >
-        {{ loading ? $t('common.loading') : 'CONFIRM & REGISTER' }}
+        {{ loading ? $t('common.loading') : $t('wizard.confirm_register') }}
       </button>
     </div>
   </div>
@@ -72,24 +72,25 @@ defineEmits(['next', 'prev', 'submit'])
 
 .progress-track {
   height: 4px;
-  background: var(--cx-border);
-  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 9999px;
   margin-bottom: 1.5rem;
   overflow: hidden;
+  position: relative;
 }
 
 .progress-fill {
   height: 100%;
-  background: var(--cx-accent);
-  border-radius: 2px;
-  transition: width 0.3s ease;
-  box-shadow: 0 0 8px var(--cx-accent-glow);
+  background: var(--cx-gradient-accent);
+  border-radius: 9999px;
+  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
 }
 
 .steps-indicator {
   display: flex;
   justify-content: center;
-  gap: 0.35rem;
+  gap: 0.5rem;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
 }
@@ -97,47 +98,49 @@ defineEmits(['next', 'prev', 'submit'])
 .step-item {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  opacity: 0.3;
-  transition: opacity 0.2s;
+  gap: 0.5rem;
+  color: var(--cx-text-muted);
+  transition: color 0.2s;
 }
 
 .step-item.active,
-.step-item.completed { opacity: 1; }
+.step-item.completed { color: var(--cx-text-primary); }
 
 .step-circle {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--cx-font-mono);
   font-size: var(--cx-font-xs);
-  font-weight: 800;
+  font-weight: 600;
   background: var(--cx-bg-card);
   color: var(--cx-text-muted);
-  border: 2px solid var(--cx-border);
+  border: 1px solid var(--cx-border-strong);
+  transition: all 0.25s;
 }
 
 .step-item.active .step-circle {
-  background: var(--cx-accent);
-  border-color: var(--cx-accent);
+  background: var(--cx-gradient-accent);
+  border-color: transparent;
   color: var(--cx-text-inverse);
-  box-shadow: 0 0 12px var(--cx-accent-glow);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.45);
 }
 
 .step-item.completed .step-circle {
   background: var(--cx-led-green);
-  border-color: var(--cx-led-green);
+  border-color: transparent;
   color: var(--cx-text-inverse);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
 }
 
 .step-label {
   font-size: var(--cx-font-xs);
-  font-weight: 700;
-  color: var(--cx-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
   display: none;
 }
 
@@ -152,7 +155,7 @@ defineEmits(['next', 'prev', 'submit'])
 
 .step-actions {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-top: 1.5rem;
 }
 

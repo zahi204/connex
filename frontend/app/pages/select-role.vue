@@ -1,8 +1,8 @@
 <template>
-  <div class="role-page">
-    <div class="role-container">
-      <h1>{{ $t('auth.select_role') }}</h1>
-      <p class="cx-text-muted" style="margin: 0 0 2rem; font-weight: 600;">Choose how you'll use Connex</p>
+  <div class="role-page cx-flow-page">
+    <div class="role-container cx-glass-panel">
+      <h1 class="cx-wizard-title">{{ $t('auth.select_role') }}</h1>
+      <p class="cx-text-muted subtitle">Choose how you'll use Connex</p>
 
       <div class="roles-grid">
         <button
@@ -72,12 +72,10 @@ const handleContinue = async () => {
 
 <style scoped>
 .role-page {
-  min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 2rem;
-  background: var(--cx-bg-primary);
+  padding-top: 0.5rem;
 }
 
 .role-container {
@@ -86,11 +84,9 @@ const handleContinue = async () => {
   max-width: 640px;
 }
 
-.role-container h1 {
-  font-size: var(--cx-font-xl);
-  font-weight: 900;
-  color: var(--cx-text-primary);
-  margin: 0 0 0.5rem;
+.subtitle {
+  margin: 0 0 2rem;
+  font-weight: 500;
 }
 
 .roles-grid {
@@ -105,29 +101,39 @@ const handleContinue = async () => {
   text-align: center;
   padding: 1.75rem 1.25rem;
   position: relative;
-  min-height: 140px;
+  min-height: 150px;
+  background: var(--cx-bg-card);
+  border: 1px solid var(--cx-border);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background 0.25s;
 }
 
 .role-card:hover {
-  border-color: var(--cx-accent);
+  border-color: var(--cx-border-accent);
+  transform: translateY(-2px);
+  box-shadow: var(--cx-shadow-glow);
 }
 
 .role-card.selected {
-  border-color: var(--cx-accent);
-  background: var(--cx-accent-soft);
-  box-shadow: 0 0 20px var(--cx-accent-glow);
+  border-color: transparent;
+  background: linear-gradient(var(--cx-bg-card), var(--cx-bg-card)) padding-box,
+              var(--cx-gradient-accent) border-box;
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35), var(--cx-shadow-glow);
 }
 
 .role-icon {
   font-size: 2.25rem;
   margin-bottom: 0.75rem;
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.25));
 }
 
 .role-name {
+  font-family: var(--cx-font-display);
   color: var(--cx-text-primary);
   font-weight: 700;
   font-size: var(--cx-font-sm);
   margin-bottom: 0.4rem;
+  letter-spacing: -0.01em;
 }
 
 .role-desc {

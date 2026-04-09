@@ -6,20 +6,20 @@
         <span class="cx-sidebar-title">Connex</span>
       </div>
       <nav>
-        <NuxtLink to="/worker" class="cx-nav-item">Dashboard</NuxtLink>
-        <NuxtLink to="/worker/profile" class="cx-nav-item">Profile</NuxtLink>
-        <NuxtLink to="/worker/assignments" class="cx-nav-item">Assignments</NuxtLink>
-        <NuxtLink to="/worker/team" class="cx-nav-item">My Team</NuxtLink>
-        <NuxtLink to="/worker/training" class="cx-nav-item">Training</NuxtLink>
-        <NuxtLink to="/worker/documents" class="cx-nav-item">Documents</NuxtLink>
-        <NuxtLink to="/worker/payments" class="cx-nav-item">Payments</NuxtLink>
-        <NuxtLink to="/worker/notifications" class="cx-nav-item">Notifications</NuxtLink>
+        <NuxtLink to="/worker" class="cx-nav-item">{{ $t('nav.dashboard') }}</NuxtLink>
+        <NuxtLink to="/worker/profile" class="cx-nav-item">{{ $t('nav.profile') }}</NuxtLink>
+        <NuxtLink to="/worker/assignments" class="cx-nav-item">{{ $t('nav.assignments') }}</NuxtLink>
+        <NuxtLink to="/worker/team" class="cx-nav-item">{{ $t('nav.team') }}</NuxtLink>
+        <NuxtLink to="/worker/training" class="cx-nav-item">{{ $t('nav.training') }}</NuxtLink>
+        <NuxtLink to="/worker/documents" class="cx-nav-item">{{ $t('nav.documents') }}</NuxtLink>
+        <NuxtLink to="/worker/payments" class="cx-nav-item">{{ $t('nav.payments') }}</NuxtLink>
+        <NuxtLink to="/worker/notifications" class="cx-nav-item">{{ $t('nav.notifications') }}</NuxtLink>
       </nav>
     </aside>
     <main class="main-content">
       <header class="cx-topbar">
-        <LanguageSwitcher />
-        <button class="cx-btn cx-btn-danger btn-sm" @click="logout">LOGOUT</button>
+        <SharedLanguageSwitcher />
+        <button class="cx-btn cx-btn-ghost btn-sm" @click="logout">{{ $t('common.logout') }}</button>
       </header>
       <div class="page-content">
         <slot />
@@ -34,7 +34,18 @@ const { logout } = useAuth()
 
 <style scoped>
 .portal-layout { display: flex; min-height: 100vh; background: var(--cx-bg-primary); }
-.main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-.page-content { flex: 1; overflow-y: auto; }
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.page-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--cx-bg-primary);
+}
 .btn-sm { min-height: 40px; padding: 0 1rem; font-size: var(--cx-font-xs); }
 </style>

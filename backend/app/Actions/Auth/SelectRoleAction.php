@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Auth;
 
 use App\Enums\UserRole;
@@ -14,6 +16,10 @@ class SelectRoleAction
         'agency',
     ];
 
+    public function __construct(
+        private readonly ProvisionRoleProfileAction $provisionProfile,
+    ) {}
+
     public function execute(User $user, string $role): User
     {
         if (! in_array($role, self::SELF_SELECTABLE_ROLES)) {
@@ -24,11 +30,16 @@ class SelectRoleAction
             throw new \InvalidArgumentException('Role is already locked.');
         }
 
+        $roleEnum = UserRole::from($role);
+
         $user->update([
-            'role' => UserRole::from($role),
-            'role_locked' => false, // locked after wizard completion
+            'role' => $roleEnum,
+            'role_locked' => false,
         ]);
 
-        return $user->fresh();
+        $user->refresh();
+        $this->provisionProfile->execute($user, $roleEnum);
+
+        return $user->fresh(['profile']);
     }
 }

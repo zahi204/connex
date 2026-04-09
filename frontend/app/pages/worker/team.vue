@@ -45,16 +45,16 @@ onMounted(async () => {
 
 <style scoped>
 .portal-page { padding: 1.5rem; }
-.portal-page h1 { color: white; font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: rgba(255,255,255,0.5); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 0.75rem; border-radius: 10px; }
-.empty { color: rgba(255,255,255,0.5); text-align: center; padding: 2rem; }
+.portal-page h1 { color: var(--cx-text-primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
+.loading { color: var(--cx-text-muted); }
+.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--cx-led-red); padding: 0.75rem; border-radius: 10px; }
+.empty { color: var(--cx-text-muted); text-align: center; padding: 2rem; }
 .team-header { margin-bottom: 1.5rem; }
-.team-header h2 { color: white; margin: 0 0 0.25rem; font-size: 1.2rem; }
-.team-leader { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+.team-header h2 { color: var(--cx-text-primary); margin: 0 0 0.25rem; font-size: 1.2rem; }
+.team-leader { color: var(--cx-text-muted); font-size: 0.85rem; }
 .members-list { display: flex; flex-direction: column; gap: 0.5rem; }
-.member-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
-.member-name { color: white; font-weight: 500; }
-.member-details { display: flex; gap: 1rem; color: rgba(255,255,255,0.5); font-size: 0.8rem; }
+.member-card { background: var(--cx-bg-card); border: 1px solid var(--cx-border); border-radius: 10px; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+.member-name { color: var(--cx-text-primary); font-weight: 500; }
+.member-details { display: flex; gap: 1rem; color: var(--cx-text-muted); font-size: 0.8rem; }
 .member-role { background: rgba(139,92,246,0.2); color: #c4b5fd; padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.7rem; }
 </style>

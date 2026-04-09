@@ -86,24 +86,24 @@ async function saveProfile() {
 
 <style scoped>
 .portal-page { padding: 1.5rem; }
-.portal-page h1 { color: white; font-size: 1.5rem; margin-bottom: 1.5rem; }
-.loading { color: rgba(255,255,255,0.5); }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 0.75rem; border-radius: 10px; }
-.success-message { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: #86efac; padding: 0.75rem; border-radius: 10px; margin-bottom: 1rem; }
+.portal-page h1 { color: var(--cx-text-primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
+.loading { color: var(--cx-text-muted); }
+.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--cx-led-red); padding: 0.75rem; border-radius: 10px; }
+.success-message { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: var(--cx-led-green); padding: 0.75rem; border-radius: 10px; margin-bottom: 1rem; }
 .profile-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-.profile-header h2 { color: white; margin: 0; font-size: 1.2rem; }
+.profile-header h2 { color: var(--cx-text-primary); margin: 0; font-size: 1.2rem; }
 .btn-edit, .btn-save, .btn-cancel { padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
-.btn-edit { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
-.btn-save { background: rgba(34,197,94,0.2); color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
-.btn-cancel { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.15); }
+.btn-edit { background: rgba(59,130,246,0.2); color: var(--cx-primary); border: 1px solid rgba(59,130,246,0.3); }
+.btn-save { background: rgba(34,197,94,0.2); color: var(--cx-led-green); border: 1px solid rgba(34,197,94,0.3); }
+.btn-cancel { background: var(--cx-bg-muted); color: var(--cx-text-secondary); border: 1px solid var(--cx-border); }
 .edit-actions { display: flex; gap: 0.5rem; }
 .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.info-item { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 1rem; }
-.info-item .label { display: block; color: rgba(255,255,255,0.5); font-size: 0.75rem; margin-bottom: 0.25rem; }
-.info-item .value { color: white; font-size: 0.95rem; }
+.info-item { background: var(--cx-bg-card); border-radius: 8px; padding: 1rem; }
+.info-item .label { display: block; color: var(--cx-text-muted); font-size: 0.75rem; margin-bottom: 0.25rem; }
+.info-item .value { color: var(--cx-text-primary); font-size: 0.95rem; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .field { display: flex; flex-direction: column; gap: 0.25rem; }
-.field label { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
-.field input { padding: 0.65rem 0.75rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 0.9rem; }
-.hint { color: rgba(255,255,255,0.4); font-style: italic; grid-column: 1 / -1; font-size: 0.85rem; }
+.field label { color: var(--cx-text-secondary); font-size: 0.85rem; }
+.field input { padding: 0.65rem 0.75rem; background: var(--cx-bg-card); border: 1px solid var(--cx-border); border-radius: 8px; color: var(--cx-text-primary); font-size: 0.9rem; }
+.hint { color: var(--cx-text-muted); font-style: italic; grid-column: 1 / -1; font-size: 0.85rem; }
 </style>

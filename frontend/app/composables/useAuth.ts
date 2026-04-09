@@ -5,7 +5,9 @@ export const useAuth = () => {
   const fetchUser = async () => {
     try {
       const response = await apiFetch('/me') as any
-      authStore.setUser(response.data.user)
+      const rawUser = response?.data?.user
+      if (!rawUser || !authStore.setUserFromApi(rawUser))
+        authStore.logout()
     }
     catch {
       authStore.logout()
@@ -25,12 +27,15 @@ export const useAuth = () => {
   }
 
   const verifyOtp = async (phone: string, code: string) => {
+    await initCsrf()
     const response = await apiFetch('/auth/verify-otp', {
       method: 'POST',
       body: { phone, code },
     }) as any
 
-    authStore.setUser(response.data.user)
+    const rawUser = response?.data?.user
+    if (rawUser)
+      authStore.setUserFromApi(rawUser)
     return response.data
   }
 
@@ -40,7 +45,9 @@ export const useAuth = () => {
       body: { role },
     }) as any
 
-    authStore.setUser(response.data.user)
+    const rawUser = response?.data?.user
+    if (rawUser)
+      authStore.setUserFromApi(rawUser)
     return response.data
   }
 

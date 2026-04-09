@@ -14,6 +14,7 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'role' => $this->role?->value,
             'role_locked' => $this->role_locked,
+            'needs_onboarding' => $this->needsOnboarding(),
             'preferred_language' => $this->preferred_language,
             'is_active' => $this->is_active,
             'last_login_at' => $this->last_login_at?->toISOString(),

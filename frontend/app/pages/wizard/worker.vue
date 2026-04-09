@@ -1,7 +1,8 @@
 <template>
-  <div class="wizard-page cx-page">
-    <h1 class="cx-page-title" style="text-align: center;">Worker Registration</h1>
-    <WizardStepper
+  <div class="wizard-page cx-flow-page">
+    <div class="cx-glass-panel cx-wizard-shell">
+      <h1 class="cx-wizard-title">Worker registration</h1>
+      <SharedWizardStepper
       :steps="steps"
       :current-step="step"
       :can-proceed="canProceed"
@@ -73,8 +74,9 @@
           <div class="review-row"><span class="cx-label" style="margin: 0;">Country</span><span class="cx-text-secondary">{{ form.country_of_origin || 'Not set' }}</span></div>
         </div>
       </template>
-    </WizardStepper>
-    <div v-if="error" class="cx-error" style="text-align: center; margin-top: 1rem;">{{ error }}</div>
+      </SharedWizardStepper>
+      <div v-if="error" class="cx-error" style="text-align: center; margin-top: 1rem;">{{ error }}</div>
+    </div>
   </div>
 </template>
 
@@ -130,7 +132,7 @@ const handleSubmit = async () => {
   error.value = ''
   try {
     const res = await apiFetch('/wizards/worker', { method: 'POST', body: { ...form } }) as any
-    authStore.setUser(res.data.user)
+    authStore.setUserFromApi(res.data.user)
     await navigateTo('/worker')
   } catch (e: any) {
     error.value = e?.data?.message || 'Registration failed'
@@ -141,7 +143,6 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-.wizard-page { min-height: 100vh; background: var(--cx-bg-primary); }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
 .field { display: flex; flex-direction: column; gap: 0.35rem; }
 .field.full { grid-column: 1 / -1; }
@@ -157,7 +158,7 @@ const handleSubmit = async () => {
   cursor: pointer; min-height: var(--cx-tap-min);
 }
 .review-section { padding: 0.5rem 0; }
-.review-section h3 { color: var(--cx-text-primary); font-weight: 800; margin: 0 0 1.25rem; }
+.review-section h3 { color: var(--cx-text-primary); font-weight: 600; margin: 0 0 1.25rem; }
 .review-row {
   display: flex; justify-content: space-between; align-items: center;
   padding: 0.75rem 0; border-bottom: 1px solid var(--cx-border);

@@ -128,33 +128,33 @@ async function handleSubmit() {
 
 <style scoped>
 .portal-page { padding: 1.5rem; }
-.portal-page h1 { color: white; font-size: 1.5rem; margin-bottom: 1.5rem; }
-.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 0.75rem; border-radius: 10px; margin-bottom: 1rem; }
+.portal-page h1 { color: var(--cx-text-primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
+.error-message { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--cx-led-red); padding: 0.75rem; border-radius: 10px; margin-bottom: 1rem; }
 .steps-indicator { display: flex; gap: 0.5rem; margin-bottom: 2rem; overflow-x: auto; }
-.step-dot { display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: rgba(255,255,255,0.06); border-radius: 20px; white-space: nowrap; }
+.step-dot { display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: var(--cx-bg-card); border-radius: 20px; white-space: nowrap; }
 .step-dot.active { background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.4); }
 .step-dot.done { background: rgba(34,197,94,0.15); }
-.step-num { color: rgba(255,255,255,0.5); font-size: 0.75rem; font-weight: 700; }
-.step-dot.active .step-num { color: #93c5fd; }
-.step-dot.done .step-num { color: #4ade80; }
-.step-title { color: rgba(255,255,255,0.5); font-size: 0.75rem; }
-.step-dot.active .step-title { color: #93c5fd; }
+.step-num { color: var(--cx-text-muted); font-size: 0.75rem; font-weight: 700; }
+.step-dot.active .step-num { color: var(--cx-primary); }
+.step-dot.done .step-num { color: var(--cx-led-green); }
+.step-title { color: var(--cx-text-muted); font-size: 0.75rem; }
+.step-dot.active .step-title { color: var(--cx-primary); }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .field { display: flex; flex-direction: column; gap: 0.25rem; }
 .field.full { grid-column: 1 / -1; }
-.field label { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
-.field input, .field textarea { padding: 0.65rem 0.75rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: white; font-size: 0.9rem; }
-.hint { color: rgba(255,255,255,0.4); font-style: italic; grid-column: 1 / -1; }
-.review-section { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; }
-.review-section h3 { color: white; margin: 0 0 1rem; }
+.field label { color: var(--cx-text-secondary); font-size: 0.85rem; }
+.field input, .field textarea { padding: 0.65rem 0.75rem; background: var(--cx-bg-card); border: 1px solid var(--cx-border); border-radius: 8px; color: var(--cx-text-primary); font-size: 0.9rem; }
+.hint { color: var(--cx-text-muted); font-style: italic; grid-column: 1 / -1; }
+.review-section { background: var(--cx-bg-card); border-radius: 12px; padding: 1.5rem; }
+.review-section h3 { color: var(--cx-text-primary); margin: 0 0 1rem; }
 .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-.review-item { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
-.review-item strong { color: rgba(255,255,255,0.9); }
+.review-item { color: var(--cx-text-secondary); font-size: 0.9rem; }
+.review-item strong { color: var(--cx-text-secondary); }
 .wizard-actions { display: flex; align-items: center; margin-top: 2rem; gap: 0.75rem; }
 .spacer { flex: 1; }
 .btn-prev, .btn-next, .btn-submit { padding: 0.6rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
-.btn-prev { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.15); }
-.btn-next { background: rgba(59,130,246,0.2); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); }
-.btn-submit { background: rgba(34,197,94,0.2); color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
+.btn-prev { background: var(--cx-bg-muted); color: var(--cx-text-secondary); border: 1px solid var(--cx-border); }
+.btn-next { background: rgba(59,130,246,0.2); color: var(--cx-primary); border: 1px solid rgba(59,130,246,0.3); }
+.btn-submit { background: rgba(34,197,94,0.2); color: var(--cx-led-green); border: 1px solid rgba(34,197,94,0.3); }
 .btn-next:disabled, .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>

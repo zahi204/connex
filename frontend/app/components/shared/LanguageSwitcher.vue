@@ -32,33 +32,37 @@ const switchLocale = async (code: LocaleCode) => {
 
 <style scoped>
 .language-switcher {
-  display: flex;
-  gap: 0.25rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 0.25rem;
-  backdrop-filter: blur(10px);
+  display: inline-flex;
+  gap: 0.125rem;
+  background: rgba(26, 34, 54, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--cx-border);
+  border-radius: var(--cx-radius-md);
+  padding: 0.2rem;
 }
 
 .language-switcher button {
-  padding: 0.4rem 0.75rem;
+  padding: 0.4rem 0.85rem;
   border: none;
-  border-radius: 6px;
+  border-radius: calc(var(--cx-radius-md) - 4px);
   background: transparent;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--cx-text-muted);
   cursor: pointer;
-  font-size: 0.8rem;
+  font-family: inherit;
+  font-size: 0.78rem;
   font-weight: 500;
+  letter-spacing: 0.02em;
   transition: all 0.2s;
 }
 
 .language-switcher button:hover {
-  color: white;
-  background: rgba(255, 255, 255, 0.1);
+  color: var(--cx-text-primary);
 }
 
 .language-switcher button.active {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: var(--cx-primary-soft);
+  color: var(--cx-primary);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.25), 0 0 12px rgba(56, 189, 248, 0.15);
 }
 </style>

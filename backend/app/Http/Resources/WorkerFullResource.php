@@ -36,7 +36,7 @@ class WorkerFullResource extends JsonResource
             'last_training_date' => $this->last_training_date?->toDateString(),
             'general_notes' => $this->general_notes,
             'staffing_agency_id' => $this->staffing_agency_id,
-            'photo_url' => $this->getFirstMediaUrl('photo'),
+            'photo_url' => $this->photo ?: null,
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];

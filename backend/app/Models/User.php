@@ -40,6 +40,24 @@ class User extends Authenticatable
         return $this->morphTo('profileable');
     }
 
+    /**
+     * True when the user chose a role but hasn't completed the wizard yet.
+     * role_locked is set to true only after wizard completion.
+     */
+    public function needsOnboarding(): bool
+    {
+        if ($this->role === null || $this->role_locked) {
+            return false;
+        }
+
+        return in_array($this->role, [
+            UserRole::Worker,
+            UserRole::Developer,
+            UserRole::Subcontractor,
+            UserRole::Agency,
+        ]);
+    }
+
     public function isAdmin(): bool
     {
         return in_array($this->role, [UserRole::Admin, UserRole::Coordinator]);

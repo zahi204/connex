@@ -1,5 +1,7 @@
 <template>
-  <div />
+  <div class="home-redirect cx-loading" style="min-height: 70vh; display: flex; align-items: center; justify-content: center;">
+    {{ $t('common.loading') }}
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -16,12 +18,13 @@ const roleRouteMap: Record<string, string> = {
   coordinator: '/admin',
 }
 
-const role = authStore.userRole
-if (role && roleRouteMap[role]) {
-  navigateTo(roleRouteMap[role])
-} else if (!authStore.isAuthenticated) {
-  navigateTo('/login')
-} else {
-  navigateTo('/select-role')
-}
+onMounted(async () => {
+  const role = authStore.userRole
+  if (role && roleRouteMap[role])
+    await navigateTo(roleRouteMap[role], { replace: true })
+  else if (!authStore.isAuthenticated)
+    await navigateTo('/login', { replace: true })
+  else
+    await navigateTo('/select-role', { replace: true })
+})
 </script>

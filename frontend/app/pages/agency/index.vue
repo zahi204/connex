@@ -1,8 +1,8 @@
 <template>
   <div class="cx-page">
-    <h1 class="cx-page-title">Agency Dashboard</h1>
+    <h1 class="cx-page-title">{{ $t('dashboard.agency.title') }}</h1>
 
-    <div v-if="loading" class="cx-loading">Loading...</div>
+    <div v-if="loading" class="cx-loading">{{ $t('common.loading') }}</div>
     <div v-else-if="error" class="cx-error">{{ error }}</div>
 
     <template v-else-if="quality">
@@ -11,7 +11,7 @@
         <!-- Total Workers -->
         <div class="cx-bento-item">
           <div class="cx-bento-value">{{ quality.worker_count ?? 0 }}</div>
-          <div class="cx-bento-label">Total Workers</div>
+          <div class="cx-bento-label">{{ $t('dashboard.agency.total_workers') }}</div>
         </div>
 
         <!-- Average Quality Rating -->
@@ -25,13 +25,13 @@
               {{ quality.average_rating ?? '--' }}
             </span>
           </div>
-          <div class="cx-bento-label">Average Quality Rating</div>
+          <div class="cx-bento-label">{{ $t('dashboard.agency.average_quality_rating') }}</div>
         </div>
 
         <!-- Workers Trained -->
         <div class="cx-bento-item">
           <div class="cx-bento-value">{{ quality.workers_trained ?? 0 }}</div>
-          <div class="cx-bento-label">Workers Trained</div>
+          <div class="cx-bento-label">{{ $t('dashboard.agency.workers_trained') }}</div>
         </div>
 
         <!-- Outstanding Balance -->
@@ -39,18 +39,18 @@
           <div class="cx-bento-value">
             {{ formatNIS(quality.outstanding_balance) }}
           </div>
-          <div class="cx-bento-label">Outstanding Balance</div>
+          <div class="cx-bento-label">{{ $t('dashboard.agency.outstanding_balance') }}</div>
         </div>
       </div>
 
       <!-- Quality Metrics Section -->
       <div class="cx-card" style="margin-top: 1.5rem;">
         <h2 style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; font-size: 1rem;">
-          Quality Metrics
+          {{ $t('dashboard.agency.quality_metrics') }}
         </h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
           <div>
-            <div class="cx-bento-label">Training Pass Rate</div>
+            <div class="cx-bento-label">{{ $t('dashboard.agency.training_pass_rate') }}</div>
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
               <span
                 class="cx-led"
@@ -62,7 +62,7 @@
             </div>
           </div>
           <div>
-            <div class="cx-bento-label">Quality Score</div>
+            <div class="cx-bento-label">{{ $t('dashboard.agency.quality_score') }}</div>
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
               <span
                 class="cx-led"
@@ -74,10 +74,10 @@
             </div>
           </div>
           <div>
-            <div class="cx-bento-label">Agency Status</div>
+            <div class="cx-bento-label">{{ $t('dashboard.agency.agency_status') }}</div>
             <div style="margin-top: 0.25rem;">
               <span :class="statusBadgeClass">
-                {{ quality.status ?? 'Unknown' }}
+                {{ quality.status ?? $t('common.unknown') }}
               </span>
             </div>
           </div>
@@ -90,6 +90,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'agency', middleware: ['auth'] })
 
+const { t, locale } = useI18n()
 const { apiFetch } = useApi()
 const loading = ref(true)
 const error = ref('')
@@ -97,7 +98,7 @@ const quality = ref<any>(null)
 
 function formatNIS(value: number | null | undefined): string {
   if (value == null) return '--'
-  return new Intl.NumberFormat('he-IL', {
+  return new Intl.NumberFormat(locale.value === 'ar' ? 'ar' : locale.value === 'he' ? 'he-IL' : 'en-IL', {
     style: 'currency',
     currency: 'ILS',
     minimumFractionDigits: 0,
@@ -143,7 +144,7 @@ onMounted(async () => {
     const res = await apiFetch('/agency/quality') as any
     quality.value = res.data
   } catch (e: any) {
-    error.value = e?.data?.message || 'Failed to load dashboard'
+    error.value = e?.data?.message || t('dashboard.agency.load_failed')
   } finally {
     loading.value = false
   }
