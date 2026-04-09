@@ -1,0 +1,113 @@
+# Production / staging stack for dev.connex-build.co.il
+# Local development still uses docker-compose.yml (unchanged).
+#
+# Usage:
+#   docker compose -f docker-compose.prod.yml --env-file .env.staging up -d --build
+#
+# All environment values come from the root .env.staging file.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+
+  app:
+    build:
+      context: ./backend
+      target: web
+    restart: unless-stopped
+    env_file: .env.staging
+    environment:
+      PHP_OPCACHE_ENABLE: 1
+      SSL_MODE: "off"
+    volumes:
+      - app_storage:/var/www/html/storage/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    expose:
+      - "8080"
+
+  queue:
+    build:
+      context: ./backend
+      target: cli
+    restart: unless-stopped
+    env_file: .env.staging
+    command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=120", "--sleep=3"]
+    volumes:
+      - app_storage:/var/www/html/storage/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  scheduler:
+    build:
+      context: ./backend
+      target: cli
+    restart: unless-stopped
+    env_file: .env.staging
+    command: ["php", "artisan", "schedule:work"]
+    volumes:
+      - app_storage:/var/www/html/storage/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    environment:
+      NUXT_PUBLIC_API_BASE_URL: ${APP_URL}
+    expose:
+      - "3000"
+    depends_on:
+      - app
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+      - frontend
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+
+volumes:
+  pgdata:
+  redisdata:
+  app_storage:
+  caddy_data:
+  caddy_config:

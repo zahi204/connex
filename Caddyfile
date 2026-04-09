@@ -1,0 +1,27 @@
+# Reverse proxy for the Connex staging stack.
+# Laravel (Filament admin, API, Sanctum, Livewire, storage) goes to `app`.
+# Everything else (the Nuxt worker portal) goes to `frontend`.
+
+{$APP_DOMAIN} {
+    encode zstd gzip
+
+    # Max upload size (worker photos, documents)
+    request_body {
+        max_size 50MB
+    }
+
+    # --- Laravel routes ---
+    @laravel {
+        path /api/* /sanctum/* /admin /admin/* /livewire/* /storage/* /build/* /up /horizon /horizon/*
+    }
+    reverse_proxy @laravel app:8080
+
+    # --- Everything else → Nuxt SSR ---
+    reverse_proxy frontend:3000
+
+    # Log access to stdout so `docker compose logs caddy` shows them
+    log {
+        output stdout
+        format console
+    }
+}
