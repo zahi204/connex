@@ -23,7 +23,6 @@ class StagingSeeder extends Seeder
         User::updateOrCreate(
             ['email' => $adminEmail],
             [
-                'name' => 'Staging Admin',
                 'phone' => '+972500000001',
                 'password' => $adminPassword,
                 'role' => UserRole::Admin,
