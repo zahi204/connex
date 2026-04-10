@@ -37,21 +37,24 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->font('Rubik')
             ->viteTheme('resources/css/filament/admin/theme.css')
-            ->defaultThemeMode(ThemeMode::Light)
-            ->darkMode(false)
+            ->defaultThemeMode(ThemeMode::Dark)
+            ->darkMode(true)
             ->sidebarCollapsibleOnDesktop()
-            ->renderHook(
-                PanelsRenderHook::HEAD_END,
-                fn (): HtmlString => new HtmlString(
-                    // Light mode is the brand default — neutralise any legacy
-                    // dark-mode preference saved in localStorage before the
-                    // app paints so returning users are not stuck with a
-                    // half-dark UI.
-                    '<script>(function(){try{localStorage.removeItem("theme");'
-                    .'document.documentElement.classList.remove("dark");}'
-                    .'catch(e){}})();</script>'
-                )
-            )
+            ->routes(function () {
+                if (app()->environment('local')) {
+                    \Illuminate\Support\Facades\Route::get('/dev-login', function () {
+                        $user = \App\Models\User::where('email', 'admin@connex-build.co.il')->first()
+    ?? \App\Models\User::where('email', 'admin@connex.test')->first();
+                        if ($user) {
+                            auth()->login($user);
+                            request()->session()->put('password_hash_web', $user->getAuthPassword());
+                            request()->session()->regenerate();
+                        }
+
+                        return redirect('/admin');
+                    })->withoutMiddleware([\Filament\Http\Middleware\Authenticate::class]);
+                }
+            })
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

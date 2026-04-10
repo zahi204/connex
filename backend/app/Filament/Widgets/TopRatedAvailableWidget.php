@@ -12,10 +12,7 @@ class TopRatedAvailableWidget extends BaseWidget
 {
     protected static ?int $sort = 4;
 
-    protected int|string|array $columnSpan = [
-        'md' => 2,
-        'xl' => 1,
-    ];
+    protected int|string|array $columnSpan = 'full';
 
     protected ?string $pollingInterval = '60s';
 
@@ -26,22 +23,42 @@ class TopRatedAvailableWidget extends BaseWidget
         return $table
             ->query(
                 Worker::where('status', WorkerStatus::Available)
+                    ->where('blocked', false)
                     ->whereNotNull('professional_rating')
                     ->orderByDesc('professional_rating')
                     ->limit(10)
             )
             ->columns([
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('photo')
+                    ->label('')
+                    ->collection('photo')
+                    ->circular()
+                    ->size(36),
                 Tables\Columns\TextColumn::make('full_name')
-                    ->url(fn (Worker $r) => route('filament.admin.resources.workers.edit', $r)),
+                    ->label('שם')
+                    ->weight('bold')
+                    ->url(fn (Worker $r) => route('filament.admin.resources.workers.edit', $r))
+                    ->description(fn (Worker $r): ?string => $r->country_of_origin),
                 Tables\Columns\TextColumn::make('primary_skill')
-                    ->badge(),
+                    ->label('מקצוע')
+                    ->badge()
+                    ->icon('heroicon-o-wrench-screwdriver'),
                 Tables\Columns\TextColumn::make('professional_rating')
                     ->label('דירוג')
-                    ->numeric(2)
-                    ->sortable(),
+                    ->numeric(1)
+                    ->sortable()
+                    ->icon('heroicon-o-star')
+                    ->color(fn (?float $state): string => $state >= 8.0 ? 'success' : 'warning'),
+                Tables\Columns\TextColumn::make('reliability_rating')
+                    ->label('אמינות')
+                    ->numeric(1)
+                    ->icon('heroicon-o-shield-check'),
                 Tables\Columns\TextColumn::make('preferred_work_area')
-                    ->badge(),
+                    ->label('אזור')
+                    ->badge()
+                    ->icon('heroicon-o-map-pin'),
             ])
-            ->paginated(false);
+            ->paginated(false)
+            ->striped();
     }
 }

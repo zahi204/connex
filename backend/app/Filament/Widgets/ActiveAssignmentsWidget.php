@@ -10,12 +10,11 @@ class ActiveAssignmentsWidget extends BaseWidget
 {
     protected static ?int $sort = 5;
 
-    protected int|string|array $columnSpan = [
-        'md' => 2,
-        'xl' => 1,
-    ];
+    protected int|string|array $columnSpan = 'full';
 
     protected ?string $pollingInterval = '60s';
+
+    protected ?string $heading = 'שיבוצים פעילים';
 
     protected function getStats(): array
     {
@@ -29,13 +28,18 @@ class ActiveAssignmentsWidget extends BaseWidget
             ->toArray();
 
         $stats = [
-            Stat::make('שיבוצים פעילים', $active)
+            Stat::make('סה"כ שיבוצים פעילים', $active)
                 ->icon('heroicon-o-briefcase')
-                ->color('info'),
+                ->color('info')
+                ->description('שיבוצים בסטטוס פעיל או חדש'),
         ];
 
         foreach ($byType as $type => $count) {
-            $stats[] = Stat::make("{$type} שיבוצים", $count)->icon('heroicon-o-users');
+            $icon = $type === 'Worker' ? 'heroicon-o-user' : 'heroicon-o-building-office';
+            $label = $type === 'Worker' ? 'עובדים' : 'קבלנים';
+            $stats[] = Stat::make("שיבוצי {$label}", $count)
+                ->icon($icon)
+                ->color($type === 'Worker' ? 'primary' : 'warning');
         }
 
         return $stats;

@@ -46,7 +46,7 @@
                             </td>
                             <td class="px-4 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs">
                                 @if($oldValue === null)
-                                    <em class="text-gray-400">—</em>
+                                    <em class="text-gray-400 dark:text-gray-500">—</em>
                                 @elseif(is_array($oldValue))
                                     {{ implode(', ', $oldValue) }}
                                 @elseif(is_bool($oldValue))
@@ -57,7 +57,7 @@
                             </td>
                             <td class="px-4 py-3 font-mono text-xs {{ $changed ? 'text-green-700 dark:text-green-300 font-semibold' : 'text-gray-500 dark:text-gray-400' }}">
                                 @if($newValue === null)
-                                    <em class="text-gray-400">—</em>
+                                    <em class="text-gray-400 dark:text-gray-500">—</em>
                                 @elseif(is_array($newValue))
                                     {{ implode(', ', $newValue) }}
                                 @elseif(is_bool($newValue))

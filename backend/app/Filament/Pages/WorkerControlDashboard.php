@@ -12,7 +12,7 @@ use Filament\Pages\Page;
 
 class WorkerControlDashboard extends Page
 {
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-squares-2x2';
 
     protected static string|\UnitEnum|null $navigationGroup = 'תפעול';
 
@@ -29,8 +29,8 @@ class WorkerControlDashboard extends Page
         return [
             WorkerStatusBreakdownWidget::class,
             PendingApprovalsWidget::class,
-            OverduePaymentsWidget::class,
             TopRatedAvailableWidget::class,
+            OverduePaymentsWidget::class,
             ActiveAssignmentsWidget::class,
             TrainingPipelineWidget::class,
         ];
@@ -38,6 +38,10 @@ class WorkerControlDashboard extends Page
 
     public function getColumns(): int|string|array
     {
-        return 2;
+        return [
+            'default' => 1,
+            'md' => 2,
+            'xl' => 3,
+        ];
     }
 }

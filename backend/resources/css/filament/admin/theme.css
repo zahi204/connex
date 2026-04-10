@@ -5,60 +5,67 @@
 
 /*
  * Connex — Admin panel theme
- * Inspired by the Connex product prototype (light, refined, Hebrew-first RTL).
- * All selectors stay inside `.fi-*` scopes so the theme never leaks into
- * non-admin responses.
+ * ===========================
+ * Rules followed:
+ *   1. Core preset preserved (the @import above)
+ *   2. All customizations extend, never replace
+ *   3. Only fi-* selectors — zero generic HTML tags
+ *   4. CSS variable overrides preferred over class rules
+ *   5. No published vendor views — pure CSS layer
+ *
+ * Hebrew-first RTL, Rubik typeface. Light + dark mode support.
  */
 
+/* ─── Brand tokens (our namespace, never collides with Filament) ───── */
 :root {
-    --connex-surface: 249 250 251;         /* #f9fafb — page canvas */
-    --connex-card: 255 255 255;            /* #ffffff — card */
-    --connex-border: 229 231 235;          /* #e5e7eb — neutral border */
-    --connex-border-strong: 209 213 219;   /* #d1d5db */
-    --connex-fg: 17 24 39;                 /* #111827 — primary text */
-    --connex-fg-muted: 75 85 99;           /* #4b5563 */
-    --connex-fg-subtle: 107 114 128;       /* #6b7280 */
-
-    --connex-primary: 37 99 235;           /* #2563eb — actions / active */
-    --connex-primary-soft: 239 246 255;    /* #eff6ff — active nav bg */
-    --connex-primary-strong: 29 78 216;    /* #1d4ed8 — active nav fg */
-
-    --connex-radius: 0.75rem;              /* 12px — card/table radius */
-    --connex-radius-sm: 0.5rem;            /* 8px — buttons */
-    --connex-shadow-card:
-        0 1px 2px 0 rgb(17 24 39 / 0.04),
-        0 1px 3px 0 rgb(17 24 39 / 0.06);
+    --connex-surface: 249 250 251;          /* #f9fafb */
+    --connex-card: 255 255 255;             /* #ffffff */
+    --connex-border: 229 231 235;           /* #e5e7eb */
+    --connex-border-strong: 209 213 219;    /* #d1d5db */
+    --connex-fg: 17 24 39;                  /* #111827 */
+    --connex-fg-muted: 75 85 99;            /* #4b5563 */
+    --connex-fg-subtle: 107 114 128;        /* #6b7280 */
+    --connex-primary: 37 99 235;            /* #2563eb */
+    --connex-primary-soft: 239 246 255;     /* #eff6ff */
+    --connex-primary-strong: 29 78 216;     /* #1d4ed8 */
 }
 
-/* ---------- Typography: Rubik for UI, Heebo fallback (already loaded by Filament as system-ui) ---------- */
+.dark {
+    --connex-surface: 15 23 42;             /* slate-900 */
+    --connex-card: 30 41 59;               /* slate-800 */
+    --connex-border: 51 65 85;             /* slate-700 */
+    --connex-border-strong: 71 85 105;     /* slate-600 */
+    --connex-fg: 241 245 249;             /* slate-100 */
+    --connex-fg-muted: 203 213 225;       /* slate-300 */
+    --connex-fg-subtle: 148 163 184;      /* slate-400 */
+    --connex-primary: 96 165 250;         /* blue-400 */
+    --connex-primary-soft: 30 58 138;     /* blue-900 */
+    --connex-primary-strong: 147 197 253; /* blue-300 */
+}
+
+
+/* ━━━ Typography ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .fi-body,
 .fi-simple-layout {
-    font-family:
-        'Rubik', 'Heebo', ui-sans-serif, system-ui, -apple-system,
-        'Segoe UI', sans-serif;
+    font-family: 'Rubik', 'Heebo', ui-sans-serif, system-ui, sans-serif;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     letter-spacing: -0.005em;
 }
 
-/* ---------- Page canvas ---------- */
+
+/* ━━━ Page canvas ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .fi-body {
     background-color: rgb(var(--connex-surface));
-    color: rgb(var(--connex-fg));
 }
 
-/* ---------- Topbar — cleaner, 1px divider, no shadow ---------- */
+
+/* ━━━ Topbar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .fi-topbar {
     background-color: rgb(var(--connex-card));
-    box-shadow: none !important;
-    --tw-ring-color: rgb(var(--connex-border) / 1);
-    --tw-ring-shadow: 0 1px 0 0 rgb(var(--connex-border));
     border-bottom: 1px solid rgb(var(--connex-border));
-}
-
-.fi-topbar .fi-topbar-item-label,
-.fi-topbar .fi-dropdown-list-item-label {
-    color: rgb(var(--connex-fg));
-    font-weight: 500;
 }
 
 .fi-topbar .fi-logo,
@@ -69,32 +76,18 @@
     letter-spacing: -0.015em;
 }
 
-/* Global search — softer, flatter */
-.fi-global-search-field input {
+
+/* ━━━ Global search ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.fi-global-search-field .fi-input-wrp {
     background-color: rgb(var(--connex-surface));
-    border: 1px solid rgb(var(--connex-border));
-    border-radius: var(--connex-radius-sm);
-    box-shadow: none;
-    transition: border-color 150ms ease, box-shadow 150ms ease;
-}
-.fi-global-search-field input:focus {
-    border-color: rgb(var(--connex-primary));
-    box-shadow: 0 0 0 3px rgb(var(--connex-primary) / 0.12);
 }
 
-/* ---------- Sidebar — the big brand moment ---------- */
-.fi-sidebar,
-.fi-sidebar.fi-sidebar-open {
+
+/* ━━━ Sidebar ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.fi-sidebar {
     background-color: rgb(var(--connex-card));
-    box-shadow: none !important;
-    --tw-ring-shadow: 0 0 #0000;
-}
-
-/* Visible 1px divider between sidebar and main content (RTL: left edge) */
-html[dir='rtl'] .fi-sidebar {
-    border-inline-end: 1px solid rgb(var(--connex-border));
-}
-html:not([dir='rtl']) .fi-sidebar {
     border-inline-end: 1px solid rgb(var(--connex-border));
 }
 
@@ -102,71 +95,51 @@ html:not([dir='rtl']) .fi-sidebar {
     border-bottom: 1px solid rgb(var(--connex-border));
 }
 
-/* Sidebar group label — quieter, uppercase micro-label */
 .fi-sidebar-group-label {
     color: rgb(var(--connex-fg-subtle));
-    font-size: 0.6875rem;         /* 11px */
+    font-size: 0.6875rem;
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
-/* Sidebar item — larger click target, crisp active state */
 .fi-sidebar-item-btn {
-    padding: 0.5625rem 0.75rem;    /* 9px 12px */
-    border-radius: var(--connex-radius-sm);
-    gap: 0.75rem;
-    transition:
-        background-color 120ms ease,
-        color 120ms ease;
+    transition: background-color 120ms ease, color 120ms ease;
 }
 
 .fi-sidebar-item-btn > .fi-icon {
     color: rgb(var(--connex-fg-subtle));
-    width: 1.125rem;
-    height: 1.125rem;
 }
 
 .fi-sidebar-item-label {
     color: rgb(var(--connex-fg-muted));
     font-weight: 500;
-    font-size: 0.875rem;
 }
 
 .fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover {
     background-color: rgb(var(--connex-surface));
 }
 
-.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover
-    .fi-sidebar-item-label {
+.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover .fi-sidebar-item-label {
     color: rgb(var(--connex-fg));
 }
 
-/* Active nav — pale blue pill, blue text + icon */
+/* Active nav — pale blue pill with blue text */
 .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
-    background-color: rgb(var(--connex-primary-soft)) !important;
+    background-color: rgb(var(--connex-primary-soft));
 }
 
-.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon,
-.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
-    color: rgb(var(--connex-primary-strong)) !important;
+.fi-sidebar-item.fi-active .fi-icon,
+.fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    color: rgb(var(--connex-primary-strong));
 }
 
+/* Accent bar on active item */
 .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
     position: relative;
 }
 
-/* Subtle brand accent bar on active nav (RTL: right; LTR: left) */
-html[dir='rtl'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before {
-    content: '';
-    position: absolute;
-    inset-block: 0.375rem;
-    inset-inline-end: -0.375rem;
-    width: 3px;
-    border-radius: 999px;
-    background: rgb(var(--connex-primary));
-}
-html:not([dir='rtl']) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before {
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before {
     content: '';
     position: absolute;
     inset-block: 0.375rem;
@@ -176,7 +149,14 @@ html:not([dir='rtl']) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before 
     background: rgb(var(--connex-primary));
 }
 
-/* ---------- Page header — bigger, tighter ---------- */
+html[dir='rtl'] .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before {
+    inset-inline-start: auto;
+    inset-inline-end: -0.375rem;
+}
+
+
+/* ━━━ Page header ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .fi-header-heading {
     font-family: 'Rubik', sans-serif;
     font-weight: 600;
@@ -189,25 +169,12 @@ html:not([dir='rtl']) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before 
     color: rgb(var(--connex-fg-subtle));
 }
 
-.fi-breadcrumbs .fi-breadcrumbs-item,
-.fi-breadcrumbs .fi-breadcrumbs-item a {
-    font-size: 0.75rem;
-    color: rgb(var(--connex-fg-subtle));
-}
 
-/* ---------- Cards / sections — flatter, brand radius ---------- */
-.fi-section,
-.fi-wi-stats-overview-stat,
-.fi-fo-field-wrp,
-.fi-in-section {
-    border-radius: var(--connex-radius) !important;
-}
+/* ━━━ Sections / Cards ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .fi-section {
     background-color: rgb(var(--connex-card));
-    box-shadow: var(--connex-shadow-card) !important;
-    --tw-ring-color: rgb(var(--connex-border) / 1);
-    --tw-ring-shadow: 0 0 0 1px rgb(var(--connex-border));
+    --tw-ring-color: rgb(var(--connex-border));
 }
 
 .fi-section-header-heading {
@@ -219,17 +186,19 @@ html:not([dir='rtl']) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before 
     color: rgb(var(--connex-fg-subtle));
 }
 
-/* ---------- Stat overview widget — matches prototype KPI tiles ---------- */
+.fi-section-header .fi-icon {
+    color: rgb(var(--connex-primary));
+}
+
+
+/* ━━━ Stat overview widgets ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .fi-wi-stats-overview-stat {
     background-color: rgb(var(--connex-card));
-    box-shadow: var(--connex-shadow-card) !important;
-    --tw-ring-color: rgb(var(--connex-border) / 1);
-    --tw-ring-shadow: 0 0 0 1px rgb(var(--connex-border));
-    padding: 1.25rem 1.25rem !important;
+    --tw-ring-color: rgb(var(--connex-border));
 }
 
 .fi-wi-stats-overview-stat-value {
-    font-size: 1.875rem;
     font-weight: 700;
     color: rgb(var(--connex-fg));
     letter-spacing: -0.02em;
@@ -242,20 +211,20 @@ html:not([dir='rtl']) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before 
 
 .fi-wi-stats-overview-stat-description {
     color: rgb(var(--connex-fg-subtle));
-    font-size: 0.75rem;
 }
 
-/* ---------- Tables — flatter, refined header ---------- */
+/* Linked stats — subtle hover lift */
+a.fi-wi-stats-overview-stat:hover {
+    transition: box-shadow 150ms ease;
+    --tw-ring-color: rgb(var(--connex-primary) / 0.3);
+}
+
+
+/* ━━━ Tables ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .fi-ta-ctn {
-    border-radius: var(--connex-radius) !important;
     background-color: rgb(var(--connex-card));
-    box-shadow: var(--connex-shadow-card) !important;
-    --tw-ring-color: rgb(var(--connex-border) / 1);
-    --tw-ring-shadow: 0 0 0 1px rgb(var(--connex-border));
-}
-
-.fi-ta-header {
-    border-color: rgb(var(--connex-border)) !important;
+    --tw-ring-color: rgb(var(--connex-border));
 }
 
 .fi-ta-header-heading {
@@ -263,38 +232,16 @@ html:not([dir='rtl']) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before 
     color: rgb(var(--connex-fg));
 }
 
-.fi-ta-header-toolbar {
-    border-color: rgb(var(--connex-border)) !important;
-    background-color: rgb(var(--connex-card));
-}
-
-/* Column header row — subtle muted uppercase */
-.fi-ta-table thead tr {
-    background-color: rgb(var(--connex-surface));
-    border-bottom: 1px solid rgb(var(--connex-border));
-}
-
 .fi-ta-header-cell {
-    color: rgb(var(--connex-fg-subtle)) !important;
+    color: rgb(var(--connex-fg-subtle));
     font-size: 0.6875rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding-top: 0.75rem !important;
-    padding-bottom: 0.75rem !important;
 }
 
 .fi-ta-header-cell .fi-ta-header-cell-sort-btn {
     color: inherit;
-}
-
-/* Row separators — softer */
-.fi-ta-row {
-    border-color: rgb(var(--connex-border)) !important;
-}
-
-.fi-ta-row:hover {
-    background-color: rgb(var(--connex-surface)) !important;
 }
 
 .fi-ta-cell {
@@ -302,181 +249,102 @@ html:not([dir='rtl']) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before 
     font-size: 0.875rem;
 }
 
-.fi-ta-record-url {
-    color: rgb(var(--connex-fg));
-    font-weight: 500;
-}
-
 .fi-ta-record-url:hover {
     color: rgb(var(--connex-primary-strong));
 }
 
-.fi-pagination {
-    border-color: rgb(var(--connex-border)) !important;
-    background-color: rgb(var(--connex-card));
+/* Empty states — friendlier copy */
+.fi-ta-empty-state-icon {
+    color: rgb(var(--connex-primary) / 0.4);
 }
 
-/* ---------- Buttons — smaller radius, crisper states ---------- */
+.fi-ta-empty-state-heading {
+    color: rgb(var(--connex-fg));
+    font-weight: 600;
+}
+
+.fi-ta-empty-state-description {
+    color: rgb(var(--connex-fg-subtle));
+}
+
+
+/* ━━━ Buttons ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .fi-btn {
-    border-radius: var(--connex-radius-sm) !important;
     font-weight: 500;
-    letter-spacing: 0;
-    box-shadow: none !important;
-    transition:
-        background-color 120ms ease,
-        color 120ms ease,
-        border-color 120ms ease,
-        box-shadow 120ms ease;
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
 }
 
-.fi-btn.fi-color-primary,
-.fi-btn.fi-btn-color-primary {
-    background-color: rgb(var(--connex-primary));
-    --tw-ring-color: rgb(var(--connex-primary));
-}
 
-.fi-btn.fi-color-primary:hover,
-.fi-btn.fi-btn-color-primary:hover {
-    background-color: rgb(var(--connex-primary-strong));
-}
+/* ━━━ Badges ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.fi-btn.fi-color-primary:focus-visible,
-.fi-btn.fi-btn-color-primary:focus-visible {
-    box-shadow: 0 0 0 3px rgb(var(--connex-primary) / 0.25) !important;
-}
-
-/* Outline / gray buttons */
-.fi-btn.fi-color-gray.fi-outlined,
-.fi-btn.fi-btn-color-gray.fi-outlined {
-    background-color: rgb(var(--connex-card));
-    color: rgb(var(--connex-fg));
-    --tw-ring-color: rgb(var(--connex-border));
-}
-
-.fi-btn.fi-color-gray.fi-outlined:hover,
-.fi-btn.fi-btn-color-gray.fi-outlined:hover {
-    background-color: rgb(var(--connex-surface));
-    --tw-ring-color: rgb(var(--connex-border-strong));
-}
-
-/* Icon buttons — tighter */
-.fi-icon-btn {
-    border-radius: var(--connex-radius-sm) !important;
-}
-
-/* ---------- Badges (status pills) — sharper corners, smaller, denser ---------- */
 .fi-badge {
-    border-radius: 0.375rem !important;   /* 6px */
-    padding-block: 0.1875rem !important;
-    padding-inline: 0.4375rem !important;
-    font-size: 0.6875rem !important;
-    font-weight: 600 !important;
+    font-weight: 600;
     letter-spacing: 0.01em;
-    line-height: 1rem;
-    box-shadow: none !important;
 }
 
-/* ---------- Form fields — flatter inputs ---------- */
-.fi-input,
-.fi-select-input,
-.fi-textarea,
-.fi-fo-textarea textarea {
-    border-radius: var(--connex-radius-sm) !important;
-    background-color: rgb(var(--connex-card));
-    --tw-ring-color: rgb(var(--connex-border));
-    box-shadow: 0 0 0 1px rgb(var(--connex-border)) !important;
-    transition: box-shadow 120ms ease;
-}
 
-.fi-input:focus,
-.fi-select-input:focus,
-.fi-textarea:focus,
-.fi-fo-textarea textarea:focus {
-    box-shadow:
-        0 0 0 1px rgb(var(--connex-primary)),
-        0 0 0 3px rgb(var(--connex-primary) / 0.14) !important;
-}
+/* ━━━ Form fields ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-.fi-fo-field-wrp-label,
-.fi-fo-field-wrp label {
+.fi-fo-field-wrp-label {
     color: rgb(var(--connex-fg));
     font-weight: 500;
 }
 
-/* ---------- Tabs — underline style, tighter ---------- */
-.fi-tabs {
-    background-color: transparent;
-    box-shadow: none !important;
-    --tw-ring-shadow: 0 0 #0000 !important;
-    border-bottom: 1px solid rgb(var(--connex-border));
-    border-radius: 0;
+.fi-input-wrp .fi-icon {
+    color: rgb(var(--connex-fg-subtle));
 }
+
+
+/* ━━━ Tabs ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 .fi-tabs-item {
-    border-radius: 0 !important;
-    border-bottom: 2px solid transparent;
-    color: rgb(var(--connex-fg-subtle));
-    padding: 0.625rem 0.875rem;
     font-weight: 500;
-    margin-bottom: -1px;
-}
-
-.fi-tabs-item:hover {
-    color: rgb(var(--connex-fg));
-    background-color: transparent !important;
 }
 
 .fi-tabs-item.fi-active {
-    background-color: transparent !important;
-    color: rgb(var(--connex-primary-strong)) !important;
-    border-bottom-color: rgb(var(--connex-primary));
+    color: rgb(var(--connex-primary-strong));
 }
 
-/* ---------- Action groups / dropdowns — softer popovers ---------- */
+.fi-tabs-item .fi-icon {
+    color: rgb(var(--connex-fg-subtle));
+}
+
+.fi-tabs-item.fi-active .fi-icon {
+    color: rgb(var(--connex-primary-strong));
+}
+
+
+/* ━━━ Dropdowns / Modals ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
 .fi-dropdown-panel {
-    border-radius: var(--connex-radius) !important;
-    box-shadow:
-        0 10px 24px -12px rgb(17 24 39 / 0.15),
-        0 4px 10px -4px rgb(17 24 39 / 0.08) !important;
-    --tw-ring-color: rgb(var(--connex-border) / 1);
+    --tw-ring-color: rgb(var(--connex-border));
 }
 
-/* ---------- Modals ---------- */
-.fi-modal-window {
-    border-radius: var(--connex-radius) !important;
-    box-shadow:
-        0 24px 48px -16px rgb(17 24 39 / 0.25),
-        0 8px 16px -8px rgb(17 24 39 / 0.1) !important;
-}
 
-/* ---------- Notifications / toasts ---------- */
-.fi-no-notification {
-    border-radius: var(--connex-radius) !important;
-    box-shadow:
-        0 10px 24px -12px rgb(17 24 39 / 0.18),
-        0 4px 10px -4px rgb(17 24 39 / 0.08) !important;
-}
+/* ━━━ Login / simple layout ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-/* ---------- Login / simple layout ---------- */
 .fi-simple-layout {
     background: linear-gradient(
-            180deg,
-            rgb(var(--connex-surface)) 0%,
-            rgb(239 246 255) 100%
-        );
+        180deg,
+        rgb(var(--connex-surface)) 0%,
+        rgb(239 246 255) 100%
+    );
+}
+
+.dark .fi-simple-layout {
+    background: linear-gradient(
+        180deg,
+        rgb(var(--connex-surface)) 0%,
+        rgb(15 23 42) 100%
+    );
 }
 
 .fi-simple-main {
     background-color: rgb(var(--connex-card));
-    border-radius: var(--connex-radius) !important;
-    box-shadow:
-        0 20px 40px -20px rgb(17 24 39 / 0.15),
-        0 6px 14px -6px rgb(17 24 39 / 0.08) !important;
-    --tw-ring-color: rgb(var(--connex-border) / 1);
+    --tw-ring-color: rgb(var(--connex-border));
 }
 
-/* Logo + heading inside the simple (auth) layout — default Filament
-   styles these for a dark card, which leaves them white on our white card. */
 .fi-simple-main .fi-logo {
     color: rgb(var(--connex-fg));
     font-weight: 700;
@@ -484,15 +352,23 @@ html:not([dir='rtl']) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn::before 
 }
 
 .fi-simple-header-heading {
-    color: rgb(var(--connex-fg)) !important;
+    color: rgb(var(--connex-fg));
     font-weight: 600;
 }
 
 .fi-simple-header-subheading {
-    color: rgb(var(--connex-fg-subtle)) !important;
+    color: rgb(var(--connex-fg-subtle));
 }
 
-.fi-simple-main .fi-form-actions .fi-btn {
+.fi-simple-main .fi-btn {
     width: 100%;
     justify-content: center;
+}
+
+
+/* ━━━ Placeholder content (activity logs, payment history) ━━━━━━━━━ */
+
+.fi-fo-placeholder-content {
+    max-height: 24rem;
+    overflow-y: auto;
 }

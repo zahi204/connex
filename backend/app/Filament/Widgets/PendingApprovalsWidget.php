@@ -12,12 +12,11 @@ class PendingApprovalsWidget extends BaseWidget
 {
     protected static ?int $sort = 2;
 
-    protected int|string|array $columnSpan = [
-        'md' => 2,
-        'xl' => 1,
-    ];
+    protected int|string|array $columnSpan = 'full';
 
     protected ?string $pollingInterval = '60s';
+
+    protected ?string $heading = 'אישורים ממתינים';
 
     protected function getStats(): array
     {
@@ -40,16 +39,18 @@ class PendingApprovalsWidget extends BaseWidget
             Stat::make('סה"כ ממתינים', $total)
                 ->icon('heroicon-o-clock')
                 ->color($total > 0 ? 'warning' : 'success')
+                ->description($total > 0 ? 'דורש טיפול' : 'הכל מטופל')
                 ->url(route('filament.admin.pages.approval-queue')),
             Stat::make('ישנים (> 48 שעות)', $stale)
                 ->icon('heroicon-o-exclamation-triangle')
-                ->color($stale > 0 ? 'danger' : 'success'),
+                ->color($stale > 0 ? 'danger' : 'success')
+                ->description($stale > 0 ? 'דחוף!' : 'תקין'),
             Stat::make('עדכוני פרופיל', $profileUpdates)
                 ->icon('heroicon-o-user'),
             Stat::make('העלאות מסמכים', $docUploads)
-                ->icon('heroicon-o-document'),
+                ->icon('heroicon-o-document-arrow-up'),
             Stat::make('שינויי זמינות', $availChanges)
-                ->icon('heroicon-o-calendar'),
+                ->icon('heroicon-o-calendar-days'),
         ];
     }
 }

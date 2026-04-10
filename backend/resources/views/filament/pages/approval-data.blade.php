@@ -13,6 +13,6 @@
             </div>
         @endforeach
     @else
-        <p class="text-gray-500">No data submitted.</p>
+        <p class="text-gray-500 dark:text-gray-400">No data submitted.</p>
     @endif
 </div>

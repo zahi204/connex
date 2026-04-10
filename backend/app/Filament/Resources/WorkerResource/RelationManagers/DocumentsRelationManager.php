@@ -9,6 +9,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Form as FormContainer;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,22 +18,38 @@ class DocumentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'documents';
 
+    protected static ?string $title = 'מסמכים';
+
+    protected static string|\BackedEnum|null $icon = 'heroicon-o-document-text';
+
     public function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
                 FormContainer::make([
-                    Forms\Components\TextInput::make('name')
-                        ->required()
-                        ->maxLength(255),
-                    Forms\Components\Select::make('document_type')
-                        ->options(DocumentType::class)
-                        ->required(),
+                    Grid::make(2)
+                        ->schema([
+                            Forms\Components\TextInput::make('name')
+                                ->label('שם מסמך')
+                                ->required()
+                                ->maxLength(255)
+                                ->prefixIcon('heroicon-o-document-text'),
+                            Forms\Components\Select::make('document_type')
+                                ->label('סוג מסמך')
+                                ->options(DocumentType::class)
+                                ->required()
+                                ->prefixIcon('heroicon-o-tag'),
+                        ]),
                     Forms\Components\SpatieMediaLibraryFileUpload::make('file')
+                        ->label('קובץ')
                         ->collection('documents')
-                        ->required(),
+                        ->required()
+                        ->columnSpanFull(),
                     Forms\Components\Textarea::make('notes')
-                        ->rows(2),
+                        ->label('הערות')
+                        ->rows(2)
+                        ->placeholder('הערות על המסמך...')
+                        ->columnSpanFull(),
                 ]),
             ]);
     }
@@ -42,19 +59,39 @@ class DocumentsRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->label('שם')
+                    ->weight('bold')
+                    ->searchable()
+                    ->icon('heroicon-o-document-text'),
                 Tables\Columns\TextColumn::make('document_type')
-                    ->badge(),
+                    ->label('סוג')
+                    ->badge()
+                    ->icon('heroicon-o-tag'),
+                Tables\Columns\TextColumn::make('notes')
+                    ->label('הערות')
+                    ->limit(40)
+                    ->tooltip(fn ($state) => $state)
+                    ->placeholder('—'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('נוצר')
+                    ->since()
                     ->sortable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->icon('heroicon-o-plus')
+                    ->label('העלאת מסמך'),
             ])
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
-            ]);
+                EditAction::make()
+                    ->iconButton(),
+                DeleteAction::make()
+                    ->iconButton(),
+            ])
+            ->striped()
+            ->emptyStateHeading('אין מסמכים')
+            ->emptyStateDescription('העלה מסמכים כמו דרכון, אישורים, או חוזים')
+            ->emptyStateIcon('heroicon-o-document-text');
     }
 }
