@@ -12,7 +12,7 @@
 
     # --- Laravel routes ---
     @laravel {
-        path /api/* /sanctum/* /admin /admin/* /livewire/* /storage/* /build/* /up /horizon /horizon/*
+        path /api/* /sanctum/* /admin /admin/* /livewire/* /livewire-* /storage/* /build/* /up /horizon /horizon/* /js/filament/* /css/filament/* /fonts/filament/*
     }
     reverse_proxy @laravel app:8080
 
