@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 
 /**
  * Minimal seeder for the staging environment.
- * Creates only the admin + coordinator accounts needed for Filament login.
+ * Creates only the admin account needed for Filament login.
  *
  * Run with:
  *   php artisan db:seed --class=StagingSeeder --force
@@ -28,7 +28,6 @@ class StagingSeeder extends Seeder
                 'role' => UserRole::Admin,
                 'role_locked' => true,
                 'is_active' => true,
-                'email_verified_at' => now(),
             ],
         );
 
