@@ -38,7 +38,7 @@ $COMPOSE exec -T app php artisan filament:optimize || true
 echo "==> Storage symlink"
 $COMPOSE exec -T app php artisan storage:link || true
 
-echo "==> Restarting queue + scheduler so they pick up new code"
-$COMPOSE restart queue scheduler
+echo "==> Restarting queue, scheduler, and caddy"
+$COMPOSE restart queue scheduler caddy
 
 echo "==> Done. https://${APP_DOMAIN:-dev.connex-build.co.il}"

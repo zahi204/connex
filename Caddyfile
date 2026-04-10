@@ -11,7 +11,7 @@
     }
 
     # --- Laravel routes (regex prefix match covers nested paths) ---
-    @laravel expression path_regexp('^/(api|sanctum|admin|livewire|storage|build|horizon|js/filament|css/filament|fonts/filament)(/|$)') || path('/up')
+    @laravel expression path_regexp('^/(api|sanctum|admin|livewire[^/]*|storage|build|horizon|js/filament|css/filament|fonts/filament)(/|$)') || path('/up')
     reverse_proxy @laravel app:8080
 
     # --- Everything else → Nuxt SSR ---
