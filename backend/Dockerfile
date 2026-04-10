@@ -23,7 +23,7 @@ COPY --from=vendor /app/vendor ./vendor
 RUN npm run build
 
 # ---------- Web (PHP-FPM + nginx) ----------
-FROM serversideup/php:8.3-fpm-nginx-alpine AS web
+FROM serversideup/php:8.4-fpm-nginx-alpine AS web
 
 USER root
 
@@ -50,7 +50,7 @@ RUN composer dump-autoload --optimize --no-dev --no-scripts \
 USER www-data
 
 # ---------- CLI (queue workers, scheduler, artisan one-offs) ----------
-FROM serversideup/php:8.3-cli-alpine AS cli
+FROM serversideup/php:8.4-cli-alpine AS cli
 
 USER root
 
