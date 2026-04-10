@@ -10,10 +10,8 @@
         max_size 50MB
     }
 
-    # --- Laravel routes ---
-    @laravel {
-        path /api/* /sanctum/* /admin /admin/* /livewire/* /livewire-* /storage/* /build/* /up /horizon /horizon/* /js/filament/* /css/filament/* /fonts/filament/*
-    }
+    # --- Laravel routes (regex prefix match covers nested paths) ---
+    @laravel expression path_regexp('^/(api|sanctum|admin|livewire|storage|build|horizon|js/filament|css/filament|fonts/filament)(/|$)') || path('/up')
     reverse_proxy @laravel app:8080
 
     # --- Everything else → Nuxt SSR ---

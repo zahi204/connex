@@ -42,10 +42,18 @@ COPY --from=assets --chown=www-data:www-data /app/public/build /var/www/html/pub
 
 WORKDIR /var/www/html
 
-# Finish autoload + optimize (needs full source)
+# Finish autoload + publish vendor assets (Filament, Livewire)
+# A dummy APP_KEY lets artisan boot without a real env for asset publishing only.
 RUN composer dump-autoload --optimize --no-dev --no-scripts \
  && mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache \
- && chown -R www-data:www-data storage bootstrap/cache
+ && chown -R www-data:www-data storage bootstrap/cache \
+ && APP_KEY=base64:dummykeyforbuildonlyxxxxxxxxxx= \
+    DB_CONNECTION=sqlite \
+    php artisan filament:assets --ansi \
+ && APP_KEY=base64:dummykeyforbuildonlyxxxxxxxxxx= \
+    DB_CONNECTION=sqlite \
+    php artisan vendor:publish --tag=laravel-assets --force --ansi \
+ && chown -R www-data:www-data public
 
 USER www-data
 
